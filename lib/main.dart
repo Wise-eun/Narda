@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:speelow/kakao_screen.dart';
 import 'package:speelow/main_screen.dart';
 import 'package:speelow/signup_screen.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 
 void main() {
+  KakaoSdk.init(nativeAppKey: '3e8531d2fdf84a885535fc7c4ac309ca');
   runApp(const MyApp());
 }
 
