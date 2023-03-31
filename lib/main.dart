@@ -3,6 +3,10 @@ import 'package:speelow/kakao_screen.dart';
 import 'package:speelow/main_screen.dart';
 import 'package:speelow/signup_screen.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'kakao_login.dart';
+import 'main_view_model.dart';
+//import 'package:firebase_core/firebase_core.dart';
+//import 'firebase_options.dart';
 
 
 void main() {
@@ -23,14 +27,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue
       ),
-      home: const LoginScreen(),
+      home: LoginScreen(),
     );
   }
 }
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
-
+  //const LoginScreen({Key? key}) : super(key: key);
+  final viewModel = MainViewModel(KakaoLogin());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +43,26 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            //아래 이미지는 로그인 화면에 나타나는 이미지 (현재는 없음)
+            //Image.network(viewModel.user?.kakaoAccount?.profile?.profileImageUrl ?? ''),
+            Text(
+              '${viewModel.isLogined}',
+             // style: Theme.of(context).textTheme.headline4,
+            ),
+            ElevatedButton(
+                onPressed: () async{
+                  await viewModel.login();
+                  //setState(() {});
+                },
+                child: Text('Login'),
+            ),
+            ElevatedButton(
+              onPressed: () async{
+                await viewModel.logout();
+                //setState(() {});
+              },
+              child: Text('Logout'),
+            ),
             Container(
               height: 45,
               margin: EdgeInsets.only(left:50,right:50),
