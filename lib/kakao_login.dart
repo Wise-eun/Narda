@@ -10,7 +10,8 @@ class KakaoLogin implements SocialLogin {
       if (isIsntalled) {
         try{
           //카카오톡으로 로그인
-          await UserApi.instance.loginWithKakaoTalk();
+          OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
+          print('카카오톡 로그인 성공 ${token.accessToken}');
           return true;
         } catch (e) {
           return false;
@@ -18,7 +19,8 @@ class KakaoLogin implements SocialLogin {
       } else {
         try {
           //카카오톡 계정부터 받아오기
-          await UserApi.instance.loginWithKakaoAccount();
+          OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
+          print('카카오 계정으로 로그인 성공 ${token.accessToken}');
           return true;
         } catch (e) {
           return false;
