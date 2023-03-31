@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "770424883655",
+    "project_id": "arhelmet-64be1",
+    "storage_bucket": "arhelmet-64be1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770424883655:android:b30d3b4e24e26a9a9f71e2",
+        "android_client_info": {
+          "package_name": "com.example.speelow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770424883655-9cmngd3oos5bkils5vs17830kp5npv25.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwlvaodaPoxA9FUkSej4Oc7ehGYphD7U8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770424883655-9cmngd3oos5bkils5vs17830kp5npv25.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
