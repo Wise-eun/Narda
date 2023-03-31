@@ -5,12 +5,16 @@ import 'package:speelow/signup_screen.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'kakao_login.dart';
 import 'main_view_model.dart';
-//import 'package:firebase_core/firebase_core.dart';
-//import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   KakaoSdk.init(nativeAppKey: '3e8531d2fdf84a885535fc7c4ac309ca');
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ); //얘때문에 main에 async 넣음
   runApp(const MyApp());
 }
 
@@ -35,6 +39,7 @@ class MyApp extends StatelessWidget {
 class LoginScreen extends StatelessWidget {
   //const LoginScreen({Key? key}) : super(key: key);
   final viewModel = MainViewModel(KakaoLogin());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +52,7 @@ class LoginScreen extends StatelessWidget {
             //Image.network(viewModel.user?.kakaoAccount?.profile?.profileImageUrl ?? ''),
             Text(
               '${viewModel.isLogined}',
-             // style: Theme.of(context).textTheme.headline4,
+               style: Theme.of(context).textTheme.headline4,
             ),
             ElevatedButton(
                 onPressed: () async{
@@ -63,6 +68,7 @@ class LoginScreen extends StatelessWidget {
               },
               child: Text('Logout'),
             ),
+
             Container(
               height: 45,
               margin: EdgeInsets.only(left:50,right:50),

@@ -2,16 +2,25 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:speelow/social_login.dart';
 
 class KakaoLogin implements SocialLogin {
+
+  void _get_user_info() async{
+    try {
+      User user = await UserApi.instance.me();
+      print('success');
+    } catch(error) {
+        print('error');
+    }
+  }
   @override
   Future<bool> login() async{
     try {
       //카카오톡 설치가 돼있으면
-      bool isIsntalled = await isKakaoTalkInstalled();
-      if (isIsntalled) {
+      bool isInstalled = await isKakaoTalkInstalled();
+      if (isInstalled) {
         try{
           //카카오톡으로 로그인
-          OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
-          print('카카오톡 로그인 성공 ${token.accessToken}');
+          await UserApi.instance.loginWithKakaoTalk();
+          _get_user_info();
           return true;
         } catch (e) {
           return false;
@@ -19,8 +28,7 @@ class KakaoLogin implements SocialLogin {
       } else {
         try {
           //카카오톡 계정부터 받아오기
-          OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
-          print('카카오 계정으로 로그인 성공 ${token.accessToken}');
+          await UserApi.instance.loginWithKakaoAccount();
           return true;
         } catch (e) {
           return false;

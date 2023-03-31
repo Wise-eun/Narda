@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "770424883655",
+    "firebase_url": "https://arhelmet-64be1-default-rtdb.firebaseio.com",
     "project_id": "arhelmet-64be1",
     "storage_bucket": "arhelmet-64be1.appspot.com"
   },
@@ -29,6 +30,13 @@
             {
               "client_id": "770424883655-9cmngd3oos5bkils5vs17830kp5npv25.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "770424883655-dvreapchogp20f9e6bd7rjdafflhh0kc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.speelow"
+              }
             }
           ]
         }
