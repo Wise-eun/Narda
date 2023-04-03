@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "770424883655-bh7o1chqtrvg1s6d2uo8n4cj657hc6qi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.speelow",
+            "certificate_hash": "b3f97ecb7ad5198ce0fe48b01c3801dac792af5a"
+          }
+        },
+        {
           "client_id": "770424883655-9cmngd3oos5bkils5vs17830kp5npv25.apps.googleusercontent.com",
           "client_type": 3
         }

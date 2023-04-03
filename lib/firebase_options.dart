@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -49,11 +46,23 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyD6aC23BpdQINXB2Wu9EKqeEAUJj-vDD5U',
+    appId: '1:770424883655:web:4a5698ea567a40ef9f71e2',
+    messagingSenderId: '770424883655',
+    projectId: 'arhelmet-64be1',
+    authDomain: 'arhelmet-64be1.firebaseapp.com',
+    databaseURL: 'https://arhelmet-64be1-default-rtdb.firebaseio.com',
+    storageBucket: 'arhelmet-64be1.appspot.com',
+    measurementId: 'G-7X1391GE4P',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDwlvaodaPoxA9FUkSej4Oc7ehGYphD7U8',
     appId: '1:770424883655:android:b30d3b4e24e26a9a9f71e2',
     messagingSenderId: '770424883655',
     projectId: 'arhelmet-64be1',
+    databaseURL: 'https://arhelmet-64be1-default-rtdb.firebaseio.com',
     storageBucket: 'arhelmet-64be1.appspot.com',
   );
 
@@ -62,7 +71,9 @@ class DefaultFirebaseOptions {
     appId: '1:770424883655:ios:907831f19f7e77d89f71e2',
     messagingSenderId: '770424883655',
     projectId: 'arhelmet-64be1',
+    databaseURL: 'https://arhelmet-64be1-default-rtdb.firebaseio.com',
     storageBucket: 'arhelmet-64be1.appspot.com',
+    androidClientId: '770424883655-bh7o1chqtrvg1s6d2uo8n4cj657hc6qi.apps.googleusercontent.com',
     iosClientId: '770424883655-dvreapchogp20f9e6bd7rjdafflhh0kc.apps.googleusercontent.com',
     iosBundleId: 'com.example.speelow',
   );
