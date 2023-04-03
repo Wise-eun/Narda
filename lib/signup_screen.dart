@@ -32,12 +32,39 @@ final db = FirebaseFirestore.instance;
 
   void createUserData(String id, String phone_num, String pw)
   {
-final userCollectionReference = db.collection("user").doc(id);
+final userCollectionReference = db.collection("user").doc();
 userCollectionReference.set({
   "id":id,
   "phone_num":phone_num,
   "pw":pw,
 });
+  }
+
+  void CheckUserID()
+  {
+if(_idTextEditController.text == "")
+  {
+    ShowToastMessage("아이디 값을 입력해주세요");
+  }
+else
+  {
+    db.collection("user").where("id", isEqualTo: _idTextEditController.text).get().then(
+            (querySnapshot) {
+          for (var docSnapshot in querySnapshot.docs) {
+            print('${docSnapshot.id}');
+          }
+          if (querySnapshot.size != 0) {
+            //중복되는 아이디 존재
+            ShowToastMessage("사용할 수 없는 아이디입니다.");
+            showIdField();
+          }
+          else {
+            ShowToastMessage("사용할 수 있는 아이디입니다.");
+            hideIdField();
+          }
+        });
+  }
+
   }
 
   void ShowToastMessage(String msg)
@@ -51,31 +78,18 @@ userCollectionReference.set({
      toastLength: Toast.LENGTH_SHORT
    );
   }
+void hideIdField()
+{
+  setState(() {
+    checkID = true;
+  });
+}
 
-
-  bool checkUserID(String id)
+  void showIdField()
   {
-
-
-
-    final docRef = db.collection("user").doc(id);
-    docRef.get().then(
-        (DocumentSnapshot doc){
-          final data = doc.data() as Map<String,dynamic>;
-
-          if(data.isNotEmpty)
-          {
-            return true;
-          }
-          else
-          {
-            return false;
-          }
-        },
-    );
-return false;
-
-
+    setState(() {
+      checkID = false;
+    });
   }
 
   @override
@@ -91,20 +105,26 @@ return false;
               SizedBox(
                 height: 10,
               ),
-
-              Container(
-                height: 45,
-                margin: EdgeInsets.only(left:50,right:50),
-                child:
-                TextField(
-                  controller: _idTextEditController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: '아이디',
-                  ),
-                ),
-              ),
-
+Visibility(
+    child:    Container(
+      height: 45,
+      margin: EdgeInsets.only(left:50,right:50),
+      child:
+      TextFormField(
+        controller: _idTextEditController,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: '아이디',
+        ),
+      ),
+    ),
+  visible: !checkID,
+)
+           ,
+Visibility(
+    child: Text("아이디 : "+_idTextEditController.text),
+              visible:checkID),
               SizedBox(
                 height: 10,
               ),
@@ -113,17 +133,7 @@ return false;
                       backgroundColor: MaterialStateProperty.all(Colors.white)
                   ),
                   onPressed: (){
-                        if(checkUserID(_idTextEditController.text))
-                          {
-                            ShowToastMessage("사용할 수 없는 아이디입니다.");
-                            checkID = false;
-                          }
-                          else
-                            {
-                              ShowToastMessage("사용할 수 있는 아이디입니다.");
-                              checkID = true;
-
-                            }
+                    CheckUserID();
                   },
                   child: Text("중복확인"))
               ,
@@ -135,8 +145,9 @@ return false;
                 height: 45,
                 margin: EdgeInsets.only(left:50,right:50),
                 child:
-                TextField(
+                TextFormField(
                   controller: _pwTextEditController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: '비밀번호',
@@ -151,8 +162,9 @@ return false;
                 height: 45,
                 margin: EdgeInsets.only(left:50,right:50),
                 child:
-                TextField(
+                TextFormField(
                   controller: _pwCheckTextEditController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: '비밀번호 확인',
@@ -166,8 +178,10 @@ return false;
                 height: 45,
                 margin: EdgeInsets.only(left:50,right:50),
                 child:
-                TextField(
+                TextFormField(
                   controller: _phoneTextEditController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: '휴대폰 번호',
@@ -182,28 +196,36 @@ return false;
                       backgroundColor: MaterialStateProperty.all(Colors.white)
                   ),
                   onPressed: (){
-                    if(_pwTextEditController.text.compareTo(_pwCheckTextEditController.text) == 0 )
+                    if(_idTextEditController.text == "" ||
+                        _pwTextEditController.text == ""||
+                        _pwCheckTextEditController.text == "")
                     {
-
-                      print("비밀번호 서로 같음");
-                      //id 중복확인
-                      bool checkID = checkUserID(_idTextEditController.text);
-if(checkID)
-  {
-    createUserData(_idTextEditController.text,_phoneTextEditController.text,
-        _pwTextEditController.text);
-  }
-else
-  {
-ShowToastMessage("아이디 중복확인을 해주세요");
-  }
-
-
+                      ShowToastMessage("빈칸이 있는지 확인해주세요");
                     }
                     else
-                    {
-                      print("비밀번호 서로 안같음");
-                    }
+                      {
+
+                        if(_pwTextEditController.text.compareTo(_pwCheckTextEditController.text) == 0 )
+                        {
+                          print("비밀번호 서로 같음");
+                          if(checkID)
+                          {
+                            createUserData(_idTextEditController.text,_phoneTextEditController.text,
+                                _pwTextEditController.text);
+                            Navigator.pop(context);
+                          }
+                          else
+                          {
+                            ShowToastMessage("아이디 중복확인을 해주세요");
+                          }
+                        }
+                        else
+                        {
+                          ShowToastMessage("비밀번호를 다시 확인해주세요");
+                          print("비밀번호 서로 안같음");
+                        }
+                      }
+
                   },
                   child: Text("회원가입"))
               ,

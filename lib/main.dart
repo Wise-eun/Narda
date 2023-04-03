@@ -7,7 +7,8 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fluttertoast/fluttertoast_web.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +53,17 @@ class _LoginscreenState extends State<Loginscreen> {
   final TextEditingController _idController = TextEditingController(); //입력되는 값을 제어
   final TextEditingController _pwController = TextEditingController();
 
+  void ShowToastMessage(String msg)
+  {
+    Fluttertoast.showToast(
+        msg: msg,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        fontSize: 20,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_SHORT
+    );
+  }
   Widget _userIdWidget(){
     return TextFormField(
       controller: _idController,
@@ -128,12 +140,7 @@ class _LoginscreenState extends State<Loginscreen> {
                           else{
                             //로그인 실패 시 실패 팝업 띄우기
                             String message = '사용자가 존재하지 않습니다.';
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(message),
-                                backgroundColor: Colors.deepOrange,
-                              ),
-                            );
+                           ShowToastMessage(message);
                           }
                         },
                         onError: (e) => print("Error completing: $e"),
