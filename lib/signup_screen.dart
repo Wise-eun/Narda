@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fluttertoast/fluttertoast_web.dart';
+
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -44,7 +43,7 @@ userCollectionReference.set({
   {
 if(_idTextEditController.text == "")
   {
-    ShowToastMessage("아이디 값을 입력해주세요");
+  //  ShowToastMessage("아이디 값을 입력해주세요");
   }
 else
   {
@@ -55,18 +54,18 @@ else
           }
           if (querySnapshot.size != 0) {
             //중복되는 아이디 존재
-            ShowToastMessage("사용할 수 없는 아이디입니다.");
+        //    ShowToastMessage("사용할 수 없는 아이디입니다.");
             showIdField();
           }
           else {
-            ShowToastMessage("사용할 수 있는 아이디입니다.");
+          //  ShowToastMessage("사용할 수 있는 아이디입니다.");
             hideIdField();
           }
         });
   }
 
   }
-
+/*
   void ShowToastMessage(String msg)
   {
    Fluttertoast.showToast(
@@ -77,7 +76,7 @@ else
      textColor: Colors.white,
      toastLength: Toast.LENGTH_SHORT
    );
-  }
+  }*/
 void hideIdField()
 {
   setState(() {
@@ -200,7 +199,7 @@ Visibility(
                         _pwTextEditController.text == ""||
                         _pwCheckTextEditController.text == "")
                     {
-                      ShowToastMessage("빈칸이 있는지 확인해주세요");
+                 //     ShowToastMessage("빈칸이 있는지 확인해주세요");
                     }
                     else
                       {
@@ -216,12 +215,12 @@ Visibility(
                           }
                           else
                           {
-                            ShowToastMessage("아이디 중복확인을 해주세요");
+                        //    ShowToastMessage("아이디 중복확인을 해주세요");
                           }
                         }
                         else
                         {
-                          ShowToastMessage("비밀번호를 다시 확인해주세요");
+                         // ShowToastMessage("비밀번호를 다시 확인해주세요");
                           print("비밀번호 서로 안같음");
                         }
                       }
