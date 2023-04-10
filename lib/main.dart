@@ -4,6 +4,7 @@ import 'package:speelow/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 void main() async {
@@ -47,7 +48,7 @@ class _LoginscreenState extends State<Loginscreen> {
 
   final TextEditingController _idController = TextEditingController(); //입력되는 값을 제어
   final TextEditingController _pwController = TextEditingController();
-/*
+
   void ShowToastMessage(String msg)
   {
     Fluttertoast.showToast(
@@ -58,7 +59,7 @@ class _LoginscreenState extends State<Loginscreen> {
         textColor: Colors.white,
         toastLength: Toast.LENGTH_SHORT
     );
-  }*/
+  }
   Widget _userIdWidget(){
     return TextFormField(
       controller: _idController,

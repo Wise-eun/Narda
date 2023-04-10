@@ -31,6 +31,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   css_colors:
+  url_launcher: ^6.1.10
   flutter:
     sdk: flutter
 

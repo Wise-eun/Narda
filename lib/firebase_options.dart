@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
     projectId: 'arhelmet-64be1',
     databaseURL: 'https://arhelmet-64be1-default-rtdb.firebaseio.com',
     storageBucket: 'arhelmet-64be1.appspot.com',
-    androidClientId: '770424883655-bh7o1chqtrvg1s6d2uo8n4cj657hc6qi.apps.googleusercontent.com',
+    androidClientId: '770424883655-aq6jpgukoe2tgo4fbnicjfqgk7kuiung.apps.googleusercontent.com',
     iosClientId: '770424883655-dvreapchogp20f9e6bd7rjdafflhh0kc.apps.googleusercontent.com',
     iosBundleId: 'com.example.speelow',
   );
