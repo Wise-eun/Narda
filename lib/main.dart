@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:speelow/main_screen.dart';
 import 'package:speelow/signup_screen.dart';
@@ -5,7 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:http/http.dart' as http;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -118,29 +120,59 @@ class _LoginscreenState extends State<Loginscreen> {
                       backgroundColor:  MaterialStateProperty.all(Colors.grey[350]),
                     ),
 
-                    onPressed: (){
+                    onPressed: () async {
                       // final user = FirebaseFirestore.instance.collection("user").doc("vxO6VnTgUA9zwRPUdq53");
                       // user.update({"phone_num":"x"});
-                      db.collection("user").where("id", isEqualTo: _idController.text).where("pw", isEqualTo: _pwController.text).get().then(
-                            (querySnapshot) {
-                          for (var docSnapshot in querySnapshot.docs) {
-                            print('${docSnapshot.id}');
-                          }
-                          if(querySnapshot.size!=0){
-                            //로그인 성공 시
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const MainScreen()),
-                            );
-                          }
-                          else{
-                            //로그인 실패 시 실패 팝업 띄우기
-                            String message = '사용자가 존재하지 않습니다.';
-                        //   ShowToastMessage(message);
-                          }
-                        },
-                        onError: (e) => print("Error completing: $e"),
-                      );
+                      // db.collection("user").where("id", isEqualTo: _idController.text).where("pw", isEqualTo: _pwController.text).get().then(
+                      //       (querySnapshot) {
+                      //     for (var docSnapshot in querySnapshot.docs) {
+                      //       print('${docSnapshot.id}');
+                      //     }
+                      //     if(querySnapshot.size!=0){
+                      //       //로그인 성공 시
+                      //       Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(builder: (context) => const MainScreen()),
+                      //       );
+                      //     }
+                      //     else{
+                      //       //로그인 실패 시 실패 팝업 띄우기
+                      //       String message = '사용자가 존재하지 않습니다.';
+                      //   //   ShowToastMessage(message);
+                      //     }
+                      //   },
+                      //   onError: (e) => print("Error completing: $e"),
+                      // );
+                      var url = Uri.parse('http://speelow.ivyro.net/login.php');
+
+                      //회원가입 할 때 사용할 코드
+                      // http.Response response = await http.post(url,
+                      //     body: <String,String> {
+                      //       'userId' : 'user2',
+                      //       'userPw' : 'user2!',
+                      //       'userPhoneNum' : '01032123481'
+                      //     });
+
+                      //로그인 할 때 사용하는 코드
+                      print(_idController.text + _pwController.text);
+                      http.Response response = await http.post(url,
+                          body: <String,String> {
+                            'userId' : _idController.text,
+                            'userPw' : _pwController.text
+                          });
+                      var data = json.decode(response.body);
+                      print(data.toString());
+                      if(data.toString() == "Success"){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const MainScreen()),
+                        );
+                      }
+                      else{
+                        String message = '사용자가 존재하지 않습니다.';
+                        print(message);
+                        // showToast(message);
+                      }
                     },
                     child: Text('로그인')),
                 const SizedBox(
