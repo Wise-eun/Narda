@@ -500,7 +500,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 setState(() {
                                   showLoading = false;
                                   Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) => MainScreen()),);
+                                      builder: (context) => MainScreen(userId: _idController.text)),);
                                 });
                               }
                               else {

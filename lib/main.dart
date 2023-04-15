@@ -1,15 +1,18 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:speelow/find_id_screen.dart';
 import 'package:speelow/main_screen.dart';
 import 'package:speelow/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'api/api.dart';
+import 'find_pw_screen.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'model/user.dart';
+
+import 'initial_setting_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,8 +73,8 @@ class _LoginscreenState extends State<Loginscreen> {
           RiderUser userInfo = RiderUser.fromJson(responseBody['userData']);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const MainScreen()),
-          );
+            MaterialPageRoute(builder: (context) => MainScreen(userId: _idController.text)),
+    );
 
         }
         else{
@@ -81,28 +84,52 @@ class _LoginscreenState extends State<Loginscreen> {
     }catch(e){print(e.toString());}
   }
 
-  findId() async{
+  validateId() async{
     try{
       var response = await http.post(
-          Uri.parse(API.findId),
+          Uri.parse(API.validateId),
           body:{
-            'userName' : "이애사",
-            'userPhoneNum' : "01044444444"
+            'userId' : "user" //오른쪽에 validate 확인할 id 입력
+          }
+      );
+      if(response.statusCode == 200){
+        var responseBody = jsonDecode(response.body);
+        if(responseBody['exist'] == true){
+          //이미 존재하는 아이디
+          print("이미 존재하는 아이디");
+        }
+        else{
+          //존재하지 않는 아이디 (사용가능한)
+          print("존재하지 않는 아이디 ");
+        }
+      }
+    }catch(e){print(e.toString());}
+  }
+
+  singUp() async{
+    try{
+      var response = await http.post(
+          Uri.parse(API.signup),
+          body: <String,String> { //오른쪽에 signup할 정보 입력
+            'userId' : 'user4',
+            'userPw' : 'user4!',
+            'userPhoneNum' : '01044444444',
+            'userName' : '이애사'
           }
       );
       if(response.statusCode == 200){
         var responseBody = jsonDecode(response.body);
         if(responseBody['success'] == true){
-          print("아이디 찾기 성공 ");
-          RiderUser userInfo = RiderUser.fromJson(responseBody['userData']);
-          print("아이디 : ${userInfo.userId}");
+          print("회원가입 성공");
         }
         else{
-          print("아이디 찾기 실패");
+          print("회원가입 실패");
         }
       }
     }catch(e){print(e.toString());}
   }
+
+
 
   identification() async{
     try{
@@ -127,26 +154,7 @@ class _LoginscreenState extends State<Loginscreen> {
     }catch(e){print(e.toString());}
   }
 
-  resetPw() async{
-    try{
-      var response = await http.post(
-          Uri.parse(API.resetPw),
-          body:{
-            'userId' : "user4",
-            'newPw' : "user4!"
-          }
-      );
-      if(response.statusCode == 200){
-        var responseBody = jsonDecode(response.body);
-        if(responseBody['success'] == true){
-          print("비밀번호 변경 완료");
-        }
-        else{
-          print("비밀번호 변경 실패");
-        }
-      }
-    }catch(e){print(e.toString());}
-  }
+
 
   void ShowToastMessage(String msg)
   {
@@ -261,6 +269,34 @@ class _LoginscreenState extends State<Loginscreen> {
                         MaterialPageRoute(builder: (context) =>  SignupScreen()),
                       );},
                     child: Text('회원가입')),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextButton(
+                    style: ButtonStyle(
+                        backgroundColor:  MaterialStateProperty.all(Colors.grey[350])
+                    ),
+                    onPressed: (){
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>  FindIdScreen()),
+                      );},
+                    child: Text('아이디 찾기')),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextButton(
+                    style: ButtonStyle(
+                        backgroundColor:  MaterialStateProperty.all(Colors.grey[350])
+                    ),
+                    onPressed: (){
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>  FindPwScreen()),
+                      );},
+                    child: Text('비밀번호 찾기')),
                 const SizedBox(
                   height: 10,
                 ),

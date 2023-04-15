@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
-
+  const MainScreen({Key? key, required this.userId}) : super(key: key);
+  final String userId;
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
