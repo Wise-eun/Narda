@@ -11,10 +11,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'model/user.dart';
-
+import 'dart:developer' show log;
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'initial_setting_screen.dart';
 
 void main() async {
+  await _initialize();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -23,6 +25,13 @@ void main() async {
 
   runApp(const MyApp());
 }
+Future<void> _initialize() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NaverMapSdk.instance.initialize(
+      clientId: '41fe7y8m8r',
+      onAuthFailed: (ex) => log("********* 네이버맵 인증오류 : $ex *********"));
+}
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

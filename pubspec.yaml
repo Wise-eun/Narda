@@ -45,7 +45,7 @@ dependencies:
   cloud_firestore: ^4.5.0
   fluttertoast: ^8.2.1
   http: ^0.13.5
-
+  flutter_naver_map: ^1.0.0-dev.5
 
 dev_dependencies:
   flutter_test:

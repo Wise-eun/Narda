@@ -15,6 +15,8 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.MethodCall;
 import com.skt.Tmap.TMapTapi;
+import com.skt.Tmap.TMapView;
+import android.widget.RelativeLayout;
 public class MainActivity extends FlutterActivity {
     private static final String mChannel = "mobile/parameters";
 
@@ -27,11 +29,14 @@ public class MainActivity extends FlutterActivity {
 
     private MethodChannel.MethodCallHandler handler = (methodCall, result) -> {
         TMapTapi tMapTapi = new TMapTapi(this);
+        TMapView tmapview = new TMapView(this);
+        RelativeLayout relativeLayout = new RelativeLayout(this);
         if(methodCall.method.equals("initTmapAPI")) {
              tMapTapi = new TMapTapi(this);
             tMapTapi.setSKTMapAuthentication("yIvsQzTPnWa2bnrbh6HeN9iq4CbOhadO3M3g46RT");
             result.success("initTmapAPI");
-        } else if(methodCall.method.equals("isTmapApplicationInstalled")) {
+        }
+        else if(methodCall.method.equals("isTmapApplicationInstalled")) {
             if(tMapTapi.isTmapApplicationInstalled()) {
                 result.success("");
             } else {
@@ -40,5 +45,21 @@ public class MainActivity extends FlutterActivity {
                 result.success(uri.toString());
             }
         }
+        else if(methodCall.method.equals("tmapViewAPI"))
+        {
+
+            tmapview.setSKTMapApiKey("yIvsQzTPnWa2bnrbh6HeN9iq4CbOhadO3M3g46RT");
+            tmapview.setLanguage(TMapView.LANGUAGE_KOREAN);
+            tmapview.setIconVisibility(true);
+            tmapview.setZoomLevel(10);
+            tmapview.setMapType(TMapView.MAPTYPE_STANDARD);
+            tmapview.setCompassMode(true);
+            tmapview.setTrackingMode(true);
+
+          //  relativeLayout.addView(tmapview);
+          //  result.success(relativeLayout);
+           // result.success("얍");
+        }
+
     };
 }
