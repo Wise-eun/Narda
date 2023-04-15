@@ -9,10 +9,7 @@ import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-
 import 'model/user.dart';
-
-import 'initial_setting_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,8 +33,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.blue
       ),
-      home: InitialSettingScreen(),
-      //home:Loginscreen(),
+      //home: InitialSettingScreen(),
+      home:Loginscreen(),
     );
   }
 }
@@ -70,7 +67,7 @@ class _LoginscreenState extends State<Loginscreen> {
         var responseBody = jsonDecode(response.body);
         if(responseBody['success'] == true){
           print("로그인 성공");
-          User userInfo = User.fromJson(responseBody['userData']);
+          RiderUser userInfo = RiderUser.fromJson(responseBody['userData']);
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const MainScreen()),
@@ -79,51 +76,6 @@ class _LoginscreenState extends State<Loginscreen> {
         }
         else{
           print("로그인 실패");
-        }
-      }
-    }catch(e){print(e.toString());}
-  }
-
-  validateId() async{
-    try{
-      var response = await http.post(
-          Uri.parse(API.validateId),
-          body:{
-            'userId' : "user" //오른쪽에 validate 확인할 id 입력
-          }
-      );
-      if(response.statusCode == 200){
-        var responseBody = jsonDecode(response.body);
-        if(responseBody['exist'] == true){
-          //이미 존재하는 아이디
-          print("이미 존재하는 아이디");
-        }
-        else{
-          //존재하지 않는 아이디 (사용가능한)
-          print("존재하지 않는 아이디 ");
-        }
-      }
-    }catch(e){print(e.toString());}
-  }
-
-  singUp() async{
-    try{
-      var response = await http.post(
-          Uri.parse(API.signup),
-          body: <String,String> { //오른쪽에 signup할 정보 입력
-            'userId' : 'user4',
-            'userPw' : 'user4!',
-            'userPhoneNum' : '01044444444',
-            'userName' : '이애사'
-          }
-      );
-      if(response.statusCode == 200){
-        var responseBody = jsonDecode(response.body);
-        if(responseBody['success'] == true){
-          print("회원가입 성공");
-        }
-        else{
-          print("회원가입 실패");
         }
       }
     }catch(e){print(e.toString());}
@@ -142,7 +94,7 @@ class _LoginscreenState extends State<Loginscreen> {
         var responseBody = jsonDecode(response.body);
         if(responseBody['success'] == true){
           print("아이디 찾기 성공 ");
-          User userInfo = User.fromJson(responseBody['userData']);
+          RiderUser userInfo = RiderUser.fromJson(responseBody['userData']);
           print("아이디 : ${userInfo.userId}");
         }
         else{
@@ -165,7 +117,7 @@ class _LoginscreenState extends State<Loginscreen> {
         var responseBody = jsonDecode(response.body);
         if(responseBody['success'] == true){
           print("본인확인 완료");
-          User userInfo = User.fromJson(responseBody['userData']);
+          RiderUser userInfo = RiderUser.fromJson(responseBody['userData']);
           print("아이디 : ${userInfo.userId}");
         }
         else{

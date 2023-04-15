@@ -28,12 +28,13 @@ let appKey:String = "yIvsQzTPnWa2bnrbh6HeN9iq4CbOhadO3M3g46RT";
     case "isTmapApplicationInstalled":
         if(TMapApi.isTmapApplicationInstalled())
         {
-            result("")
+            let url = TMapApi.getTMapDownUrl()
+                        result(url)
         }
         else
         {
-            let url = TMapApi.getTMapDownUrl()
-            result(url)
+
+            result("")
         }
         break;
   default:

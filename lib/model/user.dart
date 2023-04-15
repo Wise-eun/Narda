@@ -1,12 +1,12 @@
-class User{
+class RiderUser{
   String userId;
   String userPw;
   String userPhoneNum;
   String userName;
 
-  User(this.userId, this.userPw, this.userPhoneNum, this.userName);
+  RiderUser(this.userId, this.userPw, this.userPhoneNum, this.userName);
 
-  factory User.fromJson(Map<String,dynamic> json) => User(
+  factory RiderUser.fromJson(Map<String,dynamic> json) => RiderUser(
     json['userId'] as String,
     json['userPw'] as String,
     json['userPhoneNum'] as String,
