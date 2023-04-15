@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:speelow/main_screen.dart';
 import 'package:speelow/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'api/api.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+
+import 'model/user.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +32,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'SpeeLow',
       theme: ThemeData(
-        primarySwatch: Colors.blue
+          primarySwatch: Colors.blue
       ),
       home: Loginscreen(),
     );
@@ -50,6 +53,145 @@ class _LoginscreenState extends State<Loginscreen> {
 
   final TextEditingController _idController = TextEditingController(); //입력되는 값을 제어
   final TextEditingController _pwController = TextEditingController();
+
+  login() async{
+    try{
+      var response = await http.post(
+          Uri.parse(API.login),
+          body:{
+            'userId' : _idController.text.trim(), //오른쪽에 validate 확인할 id 입력
+            'userPw' : _pwController.text.trim()
+          }
+      );
+      if(response.statusCode == 200){
+        var responseBody = jsonDecode(response.body);
+        if(responseBody['success'] == true){
+          print("로그인 성공");
+          User userInfo = User.fromJson(responseBody['userData']);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MainScreen()),
+          );
+
+        }
+        else{
+          print("로그인 실패");
+        }
+      }
+    }catch(e){print(e.toString());}
+  }
+
+  validateId() async{
+    try{
+      var response = await http.post(
+          Uri.parse(API.validateId),
+          body:{
+            'userId' : "user" //오른쪽에 validate 확인할 id 입력
+          }
+      );
+      if(response.statusCode == 200){
+        var responseBody = jsonDecode(response.body);
+        if(responseBody['exist'] == true){
+          //이미 존재하는 아이디
+          print("이미 존재하는 아이디");
+        }
+        else{
+          //존재하지 않는 아이디 (사용가능한)
+          print("존재하지 않는 아이디 ");
+        }
+      }
+    }catch(e){print(e.toString());}
+  }
+
+  singUp() async{
+    try{
+      var response = await http.post(
+          Uri.parse(API.signup),
+          body: <String,String> { //오른쪽에 signup할 정보 입력
+            'userId' : 'user4',
+            'userPw' : 'user4!',
+            'userPhoneNum' : '01044444444',
+            'userName' : '이애사'
+          }
+      );
+      if(response.statusCode == 200){
+        var responseBody = jsonDecode(response.body);
+        if(responseBody['success'] == true){
+          print("회원가입 성공");
+        }
+        else{
+          print("회원가입 실패");
+        }
+      }
+    }catch(e){print(e.toString());}
+  }
+
+  findId() async{
+    try{
+      var response = await http.post(
+          Uri.parse(API.findId),
+          body:{
+            'userName' : "이애사",
+            'userPhoneNum' : "01044444444"
+          }
+      );
+      if(response.statusCode == 200){
+        var responseBody = jsonDecode(response.body);
+        if(responseBody['success'] == true){
+          print("아이디 찾기 성공 ");
+          User userInfo = User.fromJson(responseBody['userData']);
+          print("아이디 : ${userInfo.userId}");
+        }
+        else{
+          print("아이디 찾기 실패");
+        }
+      }
+    }catch(e){print(e.toString());}
+  }
+
+  identification() async{
+    try{
+      var response = await http.post(
+          Uri.parse(API.identification),
+          body:{
+            'userId' : "user4",
+            'userPhoneNum' : "01044444444"
+          }
+      );
+      if(response.statusCode == 200){
+        var responseBody = jsonDecode(response.body);
+        if(responseBody['success'] == true){
+          print("본인확인 완료");
+          User userInfo = User.fromJson(responseBody['userData']);
+          print("아이디 : ${userInfo.userId}");
+        }
+        else{
+          print("본인확인 실패");
+        }
+      }
+    }catch(e){print(e.toString());}
+  }
+
+  resetPw() async{
+    try{
+      var response = await http.post(
+          Uri.parse(API.resetPw),
+          body:{
+            'userId' : "user4",
+            'newPw' : "user4!"
+          }
+      );
+      if(response.statusCode == 200){
+        var responseBody = jsonDecode(response.body);
+        if(responseBody['success'] == true){
+          print("비밀번호 변경 완료");
+        }
+        else{
+          print("비밀번호 변경 실패");
+        }
+      }
+    }catch(e){print(e.toString());}
+  }
 
   void ShowToastMessage(String msg)
   {
@@ -121,6 +263,7 @@ class _LoginscreenState extends State<Loginscreen> {
                     ),
 
                     onPressed: () async {
+                      //firebase 코드
                       // final user = FirebaseFirestore.instance.collection("user").doc("vxO6VnTgUA9zwRPUdq53");
                       // user.update({"phone_num":"x"});
                       // db.collection("user").where("id", isEqualTo: _idController.text).where("pw", isEqualTo: _pwController.text).get().then(
@@ -143,36 +286,10 @@ class _LoginscreenState extends State<Loginscreen> {
                       //   },
                       //   onError: (e) => print("Error completing: $e"),
                       // );
-                      var url = Uri.parse('http://speelow.ivyro.net/login.php');
 
-                      //회원가입 할 때 사용할 코드
-                      // http.Response response = await http.post(url,
-                      //     body: <String,String> {
-                      //       'userId' : 'user2',
-                      //       'userPw' : 'user2!',
-                      //       'userPhoneNum' : '01032123481'
-                      //     });
+                      //로그인 코드
+                      login();
 
-                      //로그인 할 때 사용하는 코드
-                      print(_idController.text + _pwController.text);
-                      http.Response response = await http.post(url,
-                          body: <String,String> {
-                            'userId' : _idController.text,
-                            'userPw' : _pwController.text
-                          });
-                      var data = json.decode(response.body);
-                      print(data.toString());
-                      if(data.toString() == "Success"){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const MainScreen()),
-                        );
-                      }
-                      else{
-                        String message = '사용자가 존재하지 않습니다.';
-                        print(message);
-                        // showToast(message);
-                      }
                     },
                     child: Text('로그인')),
                 const SizedBox(
