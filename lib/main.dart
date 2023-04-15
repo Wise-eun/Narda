@@ -12,6 +12,8 @@ import 'package:http/http.dart' as http;
 
 import 'model/user.dart';
 
+import 'initial_setting_screen.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -34,7 +36,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.blue
       ),
-      home: Loginscreen(),
+      home: InitialSettingScreen(),
+      //home:Loginscreen(),
     );
   }
 }
