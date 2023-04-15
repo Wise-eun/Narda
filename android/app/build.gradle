@@ -55,6 +55,11 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+}
+dependencies {
+    implementation files("libs/com.skt.Tmap_1.74.jar")
+    //  implementation fileTree( dir: 'libs' ,include: ['*.jar'])
 }
 
 flutter {

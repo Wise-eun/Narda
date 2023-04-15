@@ -33,18 +33,20 @@ class _MainScreenState extends State<MainScreen> {
       print('is TmapApplicationInstalled result : $result');
 
       if (result.isEmpty || result.length == 0) {
-        String url = "${Uri.encodeFull(
-            "https://apis.openapi.sk.com/tmap/app/routes?appKey=yIvsQzTPnWa2bnrbh6HeN9iq4CbOhadO3M3g46RT&name=SKT타워&lon=126.984098&lat=37.566385")}";
+        if (await canLaunch(result)) {
+          print("미설치되어서 설치페이지로 이동");
+          await launch(result, forceSafariVC: false, forceWebView: false);
+        }
+      }
+        else {
+        String url = Uri.encodeFull(
+            "https://apis.openapi.sk.com/tmap/app/routes?appKey=yIvsQzTPnWa2bnrbh6HeN9iq4CbOhadO3M3g46RT&name=SKT타워&lon=126.984098&lat=37.566385");
+        print("1");
         if (await canLaunch(url)) {
           print("설치");
           await launch(url, forceSafariVC: false, forceWebView: false);
         }
-        else {
-          if (await canLaunch(result)) {
-            print("미설치되어서 설치페이지로 이동");
-            await launch(result, forceSafariVC: false, forceWebView: false);
-          }
-        }
+
       }
     }
     on PlatformException {
