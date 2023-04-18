@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +7,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:speelow/main_screen.dart';
 import 'package:http/http.dart' as http;
 import 'api/api.dart';
-import 'model/user.dart';
 
 
 class SignupScreen extends StatefulWidget {
@@ -18,7 +16,6 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  final _formKey=GlobalKey<FormState>();
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _idController = TextEditingController();
@@ -44,7 +41,6 @@ class _SignupScreenState extends State<SignupScreen> {
   bool showLoading = false; //폰인증 보낼 때와 로그인할 때 완료될 때까지 로딩 화면 보일 수 있도록 하는 장치
 
   FirebaseAuth _auth = FirebaseAuth.instance;
-  final db = FirebaseFirestore.instance;
 
   void dispose() {
     // TODO: implement dispose
@@ -465,7 +461,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                     PhoneAuthCredential phoneAuthCredential =
                                     PhoneAuthProvider.credential(
                                         verificationId: verificationId, smsCode: _otpController.text);
-
                                     signInWithPhoneAuthCredential(phoneAuthCredential);
                                   },
                                   child: Text("확인")),
