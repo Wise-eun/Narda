@@ -34,6 +34,10 @@ dependencies:
   url_launcher: ^6.1.10
   flutter:
     sdk: flutter
+  # 권한 확인
+  permission_handler: ^10.2.0
+  # 위치 관련 패키지
+  geolocator: ^9.0.2
   naver_map_plugin:
     git: https://github.com/LBSTECH/naver_map_plugin.git
   # The following adds the Cupertino Icons font to your application.
