@@ -60,6 +60,8 @@ android {
 dependencies {
     implementation files("libs/com.skt.Tmap_1.74.jar")
     //  implementation fileTree( dir: 'libs' ,include: ['*.jar'])
+
+    api 'com.google.android.gms:play-services-location:21.0.1'
 }
 
 flutter {

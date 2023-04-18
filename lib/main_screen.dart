@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
-
+import 'package:naver_map_plugin/naver_map_plugin.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key, required this.userId}) : super(key: key);
@@ -111,6 +112,46 @@ class TestPageState extends State<TestPage> {
   late NaverMapController _mapController;
   final Completer<NaverMapController> mapControllerCompleter = Completer();
 
+  late double latitude = 36.598654;
+  late double longitude = 125.25654;
+
+
+  Future<void> getMyCurrentLocation() async {
+
+    // 위치권한을 가지고 있는지 확인
+
+    var requestStatus = await Permission.location.request();
+    if(requestStatus.isGranted)
+{
+  print("권한 동의");
+}
+    else
+      {
+        print("권한 비동의");
+      }
+
+    if (requestStatus.isGranted) {
+      LocationPermission permission = await Geolocator.requestPermission();
+      // 1-2. 권한이 있는 경우 위치정보를 받아와서 변수에 저장합니다.
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+      latitude = position.latitude;
+      longitude = position.longitude;
+
+      print("latitude : " + latitude.toString() + ", longitude : " +longitude.toString() );
+    } else {
+      // 1-3. 권한이 없는 경우
+      print("위치 권한이 필요합니다.");
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getMyCurrentLocation();
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -134,14 +175,11 @@ class TestPageState extends State<TestPage> {
   }
 
   Widget _naverMapSection() => NaverMap(
-    options: const NaverMapViewOptions(
-        indoorEnable: true,
-        locationButtonEnable: false,
-        consumeSymbolTapEvents: false),
-    onMapReady: (controller) async {
-      _mapController = controller;
-      mapControllerCompleter.complete(controller);
-    },
+    initialCameraPosition:CameraPosition(
+        target: LatLng(latitude,longitude),
+        zoom: 17
+    ),
+
   );
 }
 
