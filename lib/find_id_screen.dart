@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'model/user.dart';
 import 'api/api.dart';
@@ -37,6 +38,13 @@ class _FindIdScreenState extends State<FindIdScreen> {
         }
         else {
           print("아이디 찾기 실패");
+          await Fluttertoast.showToast(
+              msg: "해당 정보가 존재하지 않습니다.",
+              toastLength: Toast.LENGTH_SHORT,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.grey,
+              fontSize: 14.0
+          );
         }}
       } catch (e) {
       print(e.toString());

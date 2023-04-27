@@ -1,9 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+//import 'package:naver_map_plugin/naver_map_plugin.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:naver_map_plugin/naver_map_plugin.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -21,6 +21,7 @@ class _MainScreenState extends State<MainScreen> {
     try{
       final String result = await _methodChannel.invokeMethod('initTmapAPI');
       print('initTmapAPI result : $result');
+      //Positioned position = (await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)) as Positioned;
     }on PlatformException{
       print('PratformException');
     }
@@ -110,48 +111,80 @@ class TestPage extends StatefulWidget {
 
 class TestPageState extends State<TestPage> {
   late NaverMapController _mapController;
-  final Completer<NaverMapController> mapControllerCompleter = Completer();
+  Completer<NaverMapController> mapControllerCompleter = Completer();
 
-  late double latitude = 36.598654;
-  late double longitude = 125.25654;
+ double latitude = 37.58886;
+ double longitude = 26.3546;
+  bool _serviceEnabled = false;
+ // late PermissionStatus _permissionGranted;
 
 
-  Future<void> getMyCurrentLocation() async {
 
-    // 위치권한을 가지고 있는지 확인
-
-    var requestStatus = await Permission.location.request();
-    if(requestStatus.isGranted)
+   getCurrentLocation() async {
+     await NaverMapSdk.instance.initialize(clientId: "41fe7y8m8r");
+    try {
+      var status_position = await Permission.location.status;
+      var requestStatus = await Permission.location.request();
+      if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
+      //if (status_position.isGranted) {
+        // 1-2. 권한이 있는 경우 위치정보를 받아와서 변수에 저장합니다.
+     //   Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((position)
 {
-  print("권한 동의");
+
+  setState(() {
+    print("latitude : " + latitude.toString()  + ", " + "longitude : " + longitude.toString());
+
+    latitude = position.latitude;
+    longitude = position.longitude;
+NLatLng target = new NLatLng(latitude,longitude);
+    NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
+      target: NLatLng(latitude,longitude),
+      zoom: 20,
+
+    );
+
+
+//.scrollAndZoomTo(target, 10)
+    _mapController.updateCamera(nCameraUpdate);
+  });
 }
-    else
-      {
-        print("권한 비동의");
+);
+
+      } else {
+        // 1-3. 권한이 없는 경우
+        print("위치 권한이 필요합니다.");
       }
 
-    if (requestStatus.isGranted) {
-      LocationPermission permission = await Geolocator.requestPermission();
-      // 1-2. 권한이 있는 경우 위치정보를 받아와서 변수에 저장합니다.
-      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      /*
+      if(!_serviceEnabled)
+{
+  _serviceEnabled = await location.requestService();
+  if(!_serviceEnabled)
+    {
+      return;
+    }
+}
 
-      latitude = position.latitude;
-      longitude = position.longitude;
+      _locationData = await location.getLocation();
 
-      print("latitude : " + latitude.toString() + ", longitude : " +longitude.toString() );
-    } else {
-      // 1-3. 권한이 없는 경우
-      print("위치 권한이 필요합니다.");
+      // Geolocator API로 위도, 경도 호출
+
+      this.latitude = _locationData.latitude!;
+      this.longitude = _locationData.longitude!;
+*/
+    } catch (e) {
+      print(e);
     }
   }
+
+
 
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
-    getMyCurrentLocation();
+    getCurrentLocation();
   }
-
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -161,26 +194,79 @@ class TestPageState extends State<TestPage> {
     final physicalSize =
     Size(mapSize.width * pixelRatio, mapSize.height * pixelRatio);
 
+    double lon = this.longitude;
+    double lat = this.latitude;
     print("physicalSize: $physicalSize");
 
     return Scaffold(
       backgroundColor: const Color(0xFF343945),
-      body: Center(
-          child: SizedBox(
+      body:
+      Center(
+          child:
+              Column(
+                children: [
+                  /*
+                  Text("Lat: $latitude, Lng: $longitude"),
+                  TextButton(
+                    child: Text("Locate Me"),
+                    onPressed: () => getCurrentLocation(),
+                  )*/
+                  SizedBox(
+                      width: mapSize.width,
+                      height: mapSize.height,
+                      // color: Colors.greenAccent,
+                      child:
+
+                      NaverMap(
+
+options:  NaverMapViewOptions(
+  initialCameraPosition: NCameraPosition(target:
+  NLatLng(latitude, longitude), zoom: 10, bearing: 0, tilt: 0)
+),
+                        onMapReady:(controller) {
+_mapController = controller;
+                        },
+
+//onCameraChange: onChanged(LatLng(latitude, longitude), CameraChangeReason.location, true),
+
+                      )
+
+                  ),
+                  TextButton(
+                    child: Text("Locate Me"),
+                    onPressed: () => getCurrentLocation(),
+                  )
+
+                ],
+              )
+
+        /*
+          SizedBox(
               width: mapSize.width,
               height: mapSize.height,
               // color: Colors.greenAccent,
-              child: _naverMapSection())),
+              child:
+              NaverMap(
+                initialCameraPosition:CameraPosition(
+                  target: LatLng(latitude,longitude),
+                  zoom: 17,
+
+                ),
+
+              )
+
+          )
+*/      ),
     );
   }
 
-  Widget _naverMapSection() => NaverMap(
-    initialCameraPosition:CameraPosition(
-        target: LatLng(latitude,longitude),
-        zoom: 17
-    ),
 
-  );
+
+  void onMapCreated(NaverMapController controller) {
+    if (mapControllerCompleter.isCompleted) mapControllerCompleter = Completer();
+    mapControllerCompleter.complete(controller);
+  }
+
 }
 
 

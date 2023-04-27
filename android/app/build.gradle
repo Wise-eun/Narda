@@ -29,6 +29,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+   // compileSdkVersion 31
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -59,6 +60,8 @@ android {
 }
 dependencies {
     implementation files("libs/com.skt.Tmap_1.74.jar")
+    implementation 'com.naver.maps:map-sdk:3.10.2'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
     //  implementation fileTree( dir: 'libs' ,include: ['*.jar'])
 
     api 'com.google.android.gms:play-services-location:21.0.1'
