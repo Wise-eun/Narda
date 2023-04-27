@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue
       ),
       //home: InitialSettingScreen(),
+      //home:MainScreen(userId: 'speelow',),
       home:Loginscreen(),
     );
   }
