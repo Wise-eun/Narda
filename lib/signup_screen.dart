@@ -16,7 +16,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-//
+  final _formKey=GlobalKey<FormState>();
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _idController = TextEditingController();
@@ -462,6 +462,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                     PhoneAuthCredential phoneAuthCredential =
                                     PhoneAuthProvider.credential(
                                         verificationId: verificationId, smsCode: _otpController.text);
+
                                     signInWithPhoneAuthCredential(phoneAuthCredential);
                                   },
                                   child: Text("확인")),
