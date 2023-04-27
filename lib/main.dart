@@ -3,20 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:speelow/find_id_screen.dart';
 import 'package:speelow/main_screen.dart';
 import 'package:speelow/signup_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart' hide Order;
 import 'api/api.dart';
 import 'find_pw_screen.dart';
-import 'firebase_options.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'firebase_options.dart' hide Order;
+import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'model/user.dart';
-import 'dart:developer' show log;
-import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'model/order.dart';
+
+
 import 'initial_setting_screen.dart';
+import 'order_list.dart';
 
 void main() async {
-  await _initialize();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -25,13 +26,6 @@ void main() async {
 
   runApp(const MyApp());
 }
-Future<void> _initialize() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await NaverMapSdk.instance.initialize(
-      clientId: '41fe7y8m8r',
-      onAuthFailed: (ex) => log("********* 네이버맵 인증오류 : $ex *********"));
-}
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -52,7 +46,6 @@ class MyApp extends StatelessWidget {
 }
 class Loginscreen extends StatefulWidget {
   const Loginscreen({Key? key}) : super(key: key);
-
   @override
   _LoginscreenState createState() => _LoginscreenState();
 }
@@ -65,6 +58,8 @@ class _LoginscreenState extends State<Loginscreen> {
 
   final TextEditingController _idController = TextEditingController(); //입력되는 값을 제어
   final TextEditingController _pwController = TextEditingController();
+
+
 
   login() async{
     try{
@@ -159,6 +154,36 @@ class _LoginscreenState extends State<Loginscreen> {
         else{
           print("본인확인 실패");
         }
+      }
+    }catch(e){print(e.toString());}
+  }
+
+  orderList() async{
+    try{
+      List<Order> orders = [];
+
+      var response = await http.post(
+        Uri.parse(API.orderList),
+          body:{
+            'sort' : "deliveryFee",
+          }
+      );
+      if(response.statusCode == 200){
+        var responseBody = jsonDecode(response.body);
+        if(responseBody['success'] == true){
+          print("오더 리스트 불러오기 성공");
+
+          List<dynamic> responseList = responseBody['userData'];
+          for(int i=0; i<responseList.length; i++){
+            print(Order.fromJson(responseList[i]));
+            orders.add(Order.fromJson(responseList[i]));
+          }
+        }
+        else {
+          print("오더 리스트 불러오기 실패");
+        }
+        print(orders.runtimeType);
+        return orders;
       }
     }catch(e){print(e.toString());}
   }
@@ -306,9 +331,28 @@ class _LoginscreenState extends State<Loginscreen> {
                         MaterialPageRoute(builder: (context) =>  FindPwScreen()),
                       );},
                     child: Text('비밀번호 찾기')),
-                const SizedBox(
-                  height: 10,
-                ),
+                TextButton(
+                    style: ButtonStyle(
+                        backgroundColor:  MaterialStateProperty.all(Colors.grey[350])
+                    ),
+                    onPressed: (){
+                      Future<dynamic> orders = orderList();
+                      orders.then((val) {
+                        // int가 나오면 해당 값을 출력
+                        print('val: $val');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) =>  ListviewPage()),
+
+                          // MaterialPageRoute(builder: (context) =>  ListviewPage(orders: val)),
+                        );
+                      }).catchError((error) {
+                        // error가 해당 에러를 출력
+                        print('error: $error');
+                      });
+
+                      },
+                    child: Text('오더 리스트 뷰')),
               ],
             )
         )

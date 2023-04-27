@@ -7,5 +7,7 @@ class API{
   static const validateId = "$hostConnect/validateId.php";
   static const identification = "$hostConnect/identification.php";
   static const resetPw = "$hostConnect/resetPw.php";
+  static const orderList = "$hostConnect/orderList.php";
+  static const orderDetail = "$hostConnect/orderDetail.php";
 
 }
