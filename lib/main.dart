@@ -16,7 +16,7 @@ import 'model/order.dart';
 
 import 'initial_setting_screen.dart';
 import 'order_list.dart';
-
+import 'package:naver_map_plugin/naver_map_plugin.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
