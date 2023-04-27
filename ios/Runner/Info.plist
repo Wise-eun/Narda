@@ -22,16 +22,59 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.770424883655-dvreapchogp20f9e6bd7rjdafflhh0kc</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-	    <string>tmap</string>
-	    <string>https</string>
-	    <string>http</string>
+		<string>tmap</string>
+		<string>https</string>
+		<string>http</string>
 	</array>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Music!</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>bluetooth</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>bluetooth</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Calendars</string>
+	<key>NSCameraUsageDescription</key>
+	<string>camera</string>
+	<key>NSContactsUsageDescription</key>
+	<string>contacts</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Always and when in use!</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Can I have location always?</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Older devices need location.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Need location when in use</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>microphone</string>
+	<key>NSMotionUsageDescription</key>
+	<string>motion</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>photos</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>reminders</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>speech</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>appTrackingTransparency</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -53,6 +96,8 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>kTCCServiceMediaLibrary</key>
+	<string>media</string>
 	<!-- Permission options for the `location` group -->
         <key>NSLocationWhenInUseUsageDescription</key>
         <string>Need location when in use</string>
