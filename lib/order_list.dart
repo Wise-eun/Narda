@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'api/api.dart';
+import 'menu_bottom.dart';
 import 'model/order.dart';
 import 'order_detail.dart';
 
@@ -13,8 +14,8 @@ List<Order> orders = [];
 
 class ListviewPage extends StatefulWidget {
   // const ListviewPage({Key? key, required this.orders}) : super(key: key);
-  const ListviewPage({Key? key}) : super(key: key);
-
+  const ListviewPage({Key? key, required this.userId}) : super(key: key);
+  final String userId;
   @override
   _ListviewPageState createState() => _ListviewPageState();
 }
@@ -112,6 +113,7 @@ class _ListviewPageState extends State<ListviewPage> {
     return CupertinoPageScaffold(
       navigationBar: _navigationBar,
       child: Scaffold(
+        bottomNavigationBar: MenuBottom(userId: widget.userId),
         body: Column(children: <Widget>[
           const SizedBox(
             height: 10,

@@ -42,7 +42,6 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue
       ),
       //home: InitialSettingScreen(),
-      //home:MainScreen(userId: 'speelow',),
       home:Loginscreen(),
     );
   }
@@ -80,7 +79,7 @@ class _LoginscreenState extends State<Loginscreen> {
           RiderUser userInfo = RiderUser.fromJson(responseBody['userData']);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MainScreen(userId: _idController.text)),
+            MaterialPageRoute(builder: (context) => TestPage(userId: _idController.text)),
     );
 
         }
@@ -345,7 +344,7 @@ class _LoginscreenState extends State<Loginscreen> {
                         print('val: $val');
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) =>  ListviewPage()),
+                          MaterialPageRoute(builder: (context) =>  ListviewPage(userId:  _idController.text)),
 
                           // MaterialPageRoute(builder: (context) =>  ListviewPage(orders: val)),
                         );

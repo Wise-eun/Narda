@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //import 'package:naver_map_plugin/naver_map_plugin.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:speelow/menu_bottom.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -71,6 +72,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return  Scaffold(
         backgroundColor: Colors.blue[200],
+        bottomNavigationBar: MenuBottom(userId: widget.userId),
         body:Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -79,19 +81,7 @@ class _MainScreenState extends State<MainScreen> {
               SizedBox(
                 height: 10,
               ),
-              TextButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.white)
-                  ),
-                  onPressed: (){
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const TestPage()));
 
-
-                  },
-                  child: Text("지도"))
             ],
           ),
         )
@@ -103,8 +93,8 @@ class _MainScreenState extends State<MainScreen> {
 
 
 class TestPage extends StatefulWidget {
-  const TestPage({Key? key}) : super(key: key);
-
+  const TestPage({Key? key, required this.userId}) : super(key: key);
+  final String userId;
   @override
   State<TestPage> createState() => TestPageState();
 }
@@ -201,6 +191,7 @@ NLatLng target = new NLatLng(latitude,longitude);
 
     return Scaffold(
       backgroundColor: const Color(0xFF343945),
+      bottomNavigationBar: MenuBottom(userId: widget.userId),
       body:
       Center(
           child:
@@ -233,10 +224,7 @@ _mapController = controller;
                       )
 
                   ),
-                  TextButton(
-                    child: Text("Locate Me"),
-                    onPressed: () => getCurrentLocation(),
-                  )
+
 
                 ],
               )
