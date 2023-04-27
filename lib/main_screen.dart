@@ -121,7 +121,7 @@ class TestPageState extends State<TestPage> {
 
 
    getCurrentLocation() async {
-     await NaverMapSdk.instance.initialize(clientId: "41fe7y8m8r");
+
     try {
       var status_position = await Permission.location.status;
       var requestStatus = await Permission.location.request();
@@ -146,6 +146,7 @@ NLatLng target = new NLatLng(latitude,longitude);
 
 
 //.scrollAndZoomTo(target, 10)
+    if(_mapController != null)
     _mapController.updateCamera(nCameraUpdate);
   });
 }

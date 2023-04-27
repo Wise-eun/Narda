@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:speelow/find_id_screen.dart';
 import 'package:speelow/main_screen.dart';
 import 'package:speelow/signup_screen.dart';
@@ -19,6 +20,7 @@ import 'order_list.dart';
 import 'package:naver_map_plugin/naver_map_plugin.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await NaverMapSdk.instance.initialize(clientId: '41fe7y8m8r');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   ); //얘때문에 main에 async 넣음
