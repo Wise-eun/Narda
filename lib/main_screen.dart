@@ -127,13 +127,12 @@ await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then
 
     latitude = position.latitude;
     longitude = position.longitude;
+
 NLatLng target = new NLatLng(latitude,longitude);
     NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
       target: NLatLng(latitude,longitude),
       zoom: 20,
-
     );
-
 
 //.scrollAndZoomTo(target, 10)
     if(_mapController != null)
