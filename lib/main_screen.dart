@@ -127,11 +127,17 @@ await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then
 
     latitude = position.latitude;
     longitude = position.longitude;
-
+    final marker = NMarker(id: '1', position: NLatLng(latitude ,longitude));
+    _mapController.addOverlay(marker);
+    final overlay = NCircleOverlay(id: "test", center: NLatLng(latitude ,longitude),
+      radius:2000,
+      color:Colors.white60,
+    );
+    _mapController.addOverlay(overlay);
 NLatLng target = new NLatLng(latitude,longitude);
     NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
       target: NLatLng(latitude,longitude),
-      zoom: 20,
+      zoom: 13,
     );
 
 //.scrollAndZoomTo(target, 10)
@@ -204,7 +210,7 @@ NLatLng target = new NLatLng(latitude,longitude);
                   )*/
                   SizedBox(
                       width: mapSize.width,
-                      height: mapSize.height,
+                      height: mapSize.height-18, //하단바때문에 오버픽셀 부분 뺌
                       // color: Colors.greenAccent,
                       child:
 
