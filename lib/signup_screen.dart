@@ -659,7 +659,7 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
 
       textInputAction: textInputAction,
-      keyboardType: TextInputType.number,
+     // keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly,],
       focusNode:focusNode,
       controller: controller,

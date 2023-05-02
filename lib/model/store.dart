@@ -1,3 +1,4 @@
+
 class Store{
   String storeId;
   String storePhoneNum;
