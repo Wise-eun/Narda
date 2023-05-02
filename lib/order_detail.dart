@@ -22,6 +22,7 @@ class OrderDetailScreen extends StatefulWidget {
 }
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
+  bool callOk=false;
 
   @override
   void initState() {
@@ -43,6 +44,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       if(response.statusCode == 200){
         var responseBody = jsonDecode(response.body);
         if(responseBody['success'] == true){
+          callOk=true;
           print("오더 디테일 불러오기 성공");
           print(responseBody['userData']);
           order = OrderDetail.fromJson(responseBody['userData']);
@@ -73,9 +75,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 const SizedBox(
                   height: 100,
                 ),
-                Text("주문일시 ${order?.orderTime}  경과시간 ${duration?.inMinutes}분"),
-                Text(order!.storeName),
-                Text(order!.storeLocation),
+                callOk?Text("주문일시 ${order?.orderTime}  경과시간 ${duration?.inMinutes}분"):Text('주문일시 및 경과시간'),
+                callOk?Text(order!.storeName):Text('가게 이름'),
+                callOk?Text(order!.storeLocation):Text('가게 주소'),
                 TextButton(
                     style: ButtonStyle(
                       backgroundColor:  MaterialStateProperty.all(Colors.grey[350]),
@@ -84,24 +86,22 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
                     },
                     child: Text('픽업')),
-                Text(order!.deliveryDistance.toString()),
-                Text(order!.deliveryLocation),
+                callOk?Text(order!.deliveryDistance.toString()):Text('Km'),
+                callOk?Text(order!.deliveryLocation):Text('고객 주소'),
                 Text("지도 ><"),
-                Text("배달비 ${order!.deliveryFee}원"),
-                Text("주문 번호 ${order!.orderId}"),
-                Text("결제 수단 ${order!.payment}"),
-                Text("가게 번호 ${order!.storePhoneNum}"),
+                callOk?Text("배달비 ${order!.deliveryFee}원"):Text('배달비 원'),
+                callOk?Text("주문 번호 ${order!.orderId}"):Text('주문 번호'),
+                callOk?Text("결제 수단 ${order!.payment}"):Text('결제 수단'),
+                callOk?Text("가게 번호 ${order!.storePhoneNum}"):Text('가게 전화번호'),
                 const SizedBox(
                   height: 100,
                 ),
                 Text("주문 정보"),
-                Text(order!.orderInfo),
+                callOk?Text(order!.orderInfo):Text('메뉴'),
                 Text("----------------"),
-                Text("고객 요청사항 ${order!.deliveryRequest}"),
-                Text("라이더 요청사항 ${order!.deliveryRequest}"),
-                Text("고객 번호 ${order!.customerNum}"),
-
-
+                callOk?Text("고객 요청사항 ${order!.deliveryRequest}"):Text('고객 요청사항'),
+                callOk?Text("라이더 요청사항 ${order!.deliveryRequest}"):Text('라이더 요청사항'),
+                callOk?Text("고객 번호 ${order!.customerNum}"):Text('고객 전화번호'),
               ],
             )
         )

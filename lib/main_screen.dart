@@ -148,7 +148,8 @@ await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then
     final overlay = NCircleOverlay(id: "test", center: NLatLng(latitude ,longitude),
       radius:2000,
       color:Colors.white60,
-    );
+
+          );
     _mapController.addOverlay(overlay);
 
     //경계 추가 (미완성)
@@ -242,6 +243,7 @@ options:  NaverMapViewOptions(
                         onMapReady:(controller) {
 _mapController = controller;
                         },
+
 
 //onCameraChange: onChanged(LatLng(latitude, longitude), CameraChangeReason.location, true),
 
