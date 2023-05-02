@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //import 'package:naver_map_plugin/naver_map_plugin.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+//import 'package:naver_map_plugin/naver_map_plugin.dart';
 import 'package:speelow/menu_bottom.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
@@ -127,30 +128,44 @@ await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then
 
     latitude = position.latitude;
     longitude = position.longitude;
+
+    //마커 추가
     final marker = NMarker(id: '1', position: NLatLng(latitude ,longitude));
     _mapController.addOverlay(marker);
     final marker2 = NMarker(id:'2', position:NLatLng(latitude-0.001, longitude-0.002));
     marker2.setIconTintColor(Colors.blueAccent);
     _mapController.addOverlay(marker2);
+
+    //경로 추가
+    NPathOverlay path = NPathOverlay(id: 'route', coords: [
+      NLatLng(latitude, longitude),
+      NLatLng(latitude-0.001, longitude-0.002),
+    ]);
+    path.setColor(Colors.blue);
+    _mapController.addOverlay(path);
+
+    //영역 추가
     final overlay = NCircleOverlay(id: "test", center: NLatLng(latitude ,longitude),
       radius:2000,
       color:Colors.white60,
     );
     _mapController.addOverlay(overlay);
 
-NLatLng target = new NLatLng(latitude,longitude);
+    //경계 추가 (미완성)
+    var bounds = NLatLngBounds(southWest: NLatLng(latitude-0.002, longitude+0.002),
+        northEast: NLatLng(latitude+0.002, longitude+0.002));
+
+    NLatLng target = NLatLng(latitude,longitude);
     NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
       target: NLatLng(latitude,longitude),
       zoom: 13,
     );
-
-//.scrollAndZoomTo(target, 10)
+    //.scrollAndZoomTo(target, 10)
     if(_mapController != null)
     _mapController.updateCamera(nCameraUpdate);
-  });
-}
+    });
+  }
 );
-
       } else {
         // 1-3. 권한이 없는 경우
         print("위치 권한이 필요합니다.");
