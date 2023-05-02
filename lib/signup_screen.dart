@@ -168,12 +168,16 @@ class _SignupScreenState extends State<SignupScreen> {
                     children: [
                       Expanded(
                           flex: 1,
-                          child: Text("이름")),
+                          child: Text("이름 *")),
+                      ],
+                  ),
+                  SizedBox(height:5,),
+                  Row(
+                    children: [
                       Expanded(
                         flex: 3,
                         child: Container(
                           child: TextFormField(
-
                             style: TextStyle(
                               fontSize: 12,
                             ),
@@ -204,12 +208,17 @@ class _SignupScreenState extends State<SignupScreen> {
                     children: [
                       Expanded(
                           flex: 1,
-                          child: Text("아이디")),
+                          child: Text("아이디 *")),
+                      ],
+                  ),
+                  SizedBox(height: 5,),
+                  Row(
+                    children:[
                       Expanded(
                         flex: 3,
                         child: Container(
                           child: TextFormField(
-
+                            enabled: idcheckOk?false:true,
                             style: TextStyle(
                               fontSize: 12,
                             ),
@@ -218,7 +227,6 @@ class _SignupScreenState extends State<SignupScreen> {
                               isDense: true,
                               hintText: "아이디 입력",
                               enabledBorder: OutlineInputBorder(
-
                                 borderSide: BorderSide(color: Colors.grey),
                               ),
                               focusedBorder: OutlineInputBorder(
@@ -237,21 +245,24 @@ class _SignupScreenState extends State<SignupScreen> {
                       ElevatedButton(
                           onPressed: ()async {
                             validateId(_idController.text);
-                          }, child: Text("중복검사"),
+                          }, child: Text("중복확인"),
                       )
                     ],
                   ),
                   SizedBox(height: 10,),
                   Row(
-
                     children: [
                       Expanded(
                           flex: 1,
-                          child: Text("비밀번호")),
+                          child: Text("비밀번호 *")),
+                      ],
+                  ),
+                  SizedBox(height: 5,),
+                  Row(
+                    children: [
                       Expanded(
                         flex: 3,
                         child: Container(
-
                           child: TextFormField(
                             style: TextStyle(
                               fontSize: 12,
@@ -259,7 +270,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             decoration: InputDecoration(
                               contentPadding: new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
                               isDense: true,
-                              hintText: "비밀번호 입력",
+                              hintText: "비밀번호 (8자 이상의 영문자+숫자)",
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.grey),
                               ),
@@ -287,10 +298,15 @@ class _SignupScreenState extends State<SignupScreen> {
                       Expanded(
                           flex: 1,
                           child: Text("")),
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                          child: TextFormField(
+                      ],
+                  ),
+                  SizedBox(height:2,),
+                      Row(
+                        children: [
+                          Expanded(
+                          flex: 3,
+                          child: Container(
+                            child: TextFormField(
                             style: TextStyle(
                               fontSize: 12,
                             ),
@@ -319,11 +335,15 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   SizedBox(height: 10,),
                   Row(
-
                     children: [
                       Expanded(
                           flex: 1,
-                          child: Text("휴대폰")),
+                          child: Text("전화번호 *")),
+                      ],
+                  ),
+                    SizedBox(height: 5,),
+                      Row(
+                        children: [
                       Expanded(
                         flex: 3,
                         child: Row(
@@ -366,7 +386,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                         controller: _phoneNumberController2,
                                         textInputAction: TextInputAction.done,
                                         maxLegnth: 4, widgetFunction: null,
-
                                       ),
                                     ),
                                   ],
@@ -552,7 +571,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     },
                     style: ElevatedButton.styleFrom(
                         primary: Colors.black,
-                        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                         minimumSize: Size(double.infinity,0),
 
 
@@ -561,7 +580,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                             fontWeight: FontWeight.bold)),
                   ),
-                  SizedBox(height: 50,),
+                  SizedBox(height: 30,),
                 ],
               ),
             ),
