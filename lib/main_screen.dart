@@ -129,11 +129,15 @@ await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then
     longitude = position.longitude;
     final marker = NMarker(id: '1', position: NLatLng(latitude ,longitude));
     _mapController.addOverlay(marker);
+    final marker2 = NMarker(id:'2', position:NLatLng(latitude-0.001, longitude-0.002));
+    marker2.setIconTintColor(Colors.blueAccent);
+    _mapController.addOverlay(marker2);
     final overlay = NCircleOverlay(id: "test", center: NLatLng(latitude ,longitude),
       radius:2000,
       color:Colors.white60,
     );
     _mapController.addOverlay(overlay);
+
 NLatLng target = new NLatLng(latitude,longitude);
     NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
       target: NLatLng(latitude,longitude),
