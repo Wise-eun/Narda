@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:kakao_flutter_sdk_navi/kakao_flutter_sdk_navi.dart';
 import 'package:speelow/find_id_screen.dart';
 import 'package:speelow/main_screen.dart';
 import 'package:speelow/signup_screen.dart';
@@ -19,6 +20,7 @@ import 'initial_setting_screen.dart';
 import 'order_list.dart';
 import 'package:naver_map_plugin/naver_map_plugin.dart';
 void main() async {
+  KakaoSdk.init(nativeAppKey: '3e8531d2fdf84a885535fc7c4ac309ca');
   WidgetsFlutterBinding.ensureInitialized();
   await NaverMapSdk.instance.initialize(clientId: '41fe7y8m8r');
   await Firebase.initializeApp(

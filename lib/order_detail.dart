@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
 import 'api/api.dart';
+import 'kakao_map.dart';
 import 'model/store.dart';
 import 'model/orderDetail.dart';
 
@@ -88,7 +89,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     child: Text('픽업')),
                 callOk?Text(order!.deliveryDistance.toString()):Text('Km'),
                 callOk?Text(order!.deliveryLocation):Text('고객 주소'),
-                Text("지도 ><"),
+                TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.red),
+                  ),
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => KakaoMapTest()),
+                    );
+                  },
+                  child: Text('map')
+                ),
                 callOk?Text("배달비 ${order!.deliveryFee}원"):Text('배달비 원'),
                 callOk?Text("주문 번호 ${order!.orderId}"):Text('주문 번호'),
                 callOk?Text("결제 수단 ${order!.payment}"):Text('결제 수단'),

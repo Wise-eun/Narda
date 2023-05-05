@@ -230,7 +230,7 @@ await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then
                   )*/
                   SizedBox(
                       width: mapSize.width,
-                      height: mapSize.height-18, //하단바때문에 오버픽셀 부분 뺌
+                      height: (mapSize.height-18), //하단바때문에 오버픽셀 부분 뺌
                       // color: Colors.greenAccent,
                       child:
 

@@ -36,8 +36,8 @@
                  to determine the Window background behind the Flutter UI. -->
             <meta-data
 
-                android:name="com.naver.maps.map.CLIENT_ID"
-                android:value="41fe7y8m8r"
+                android:name="com.kakao.sdk.AppKey"
+                android:value="2jmj7l5rSw0yVb/vlWAYkK/YBwk="
                 />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
