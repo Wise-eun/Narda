@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoding/geocoding.dart' as geo;
 import 'package:geolocator/geolocator.dart';
 import 'package:kakao_flutter_sdk_navi/kakao_flutter_sdk_navi.dart';
 import 'package:kakaomap_webview/kakaomap_webview.dart';
@@ -32,36 +33,47 @@ class _KakaoMapTestState extends State<KakaoMapTest> {
 
         await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high).then((position) {
-              setState(() {
+              setState(() async {
                 print("latitude : " + latitude.toString() + ", "
                     + "longitude : " + longitude.toString());
             latitude = position.latitude;
             longitude = position.longitude;
+
+            List<geo.Location> locations = await geo.locationFromAddress("대구 동구 화랑로100길 17");
+            setState(() {
+              latitude = locations[0].latitude.toDouble();
+              longitude = locations[0].longitude.toDouble();
+              print(latitude.toDouble());
+              print(longitude.toDouble());
+            });
           });
         });
       }
     } catch(e) {
       print(e);
     }
-    /*
+    kakaonavi();
+  }
+
+  void kakaonavi() async {
     //x(longitude경도), y(latitude위도)
     if(await NaviApi.instance.isKakaoNaviInstalled()) {
       var navioption = NaviOption(
-        startX: '$longitude',
-        startY: '$latitude',
+      coordType: CoordType.wgs84,
+      //vehicleType: VehicleType.twoWheel,
+      rpOption: RpOption.recommended,
       );
       print('카카오내비 설치됨 : $latitude, $longitude');
       await NaviApi.instance.navigate(
         destination :
-          Location(name: 'ex1', x: '127.111', y: '37.39'),
-        option:
-          navioption,
+          Location(name: 'ex1', x: '$longitude', y: '$latitude'),
+        viaList : [],
+        option: navioption,
       );
     } else {
-      print('카카오내비 미설치');
-      launchBrowserTab(Uri.parse(NaviApi.webNaviInstall));
-    }
-    */
+        print('카카오내비 미설치');
+        launchBrowserTab(Uri.parse(NaviApi.webNaviInstall));
+      }
   }
 
   @override
