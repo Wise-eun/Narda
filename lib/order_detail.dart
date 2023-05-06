@@ -24,6 +24,7 @@ class OrderDetailScreen extends StatefulWidget {
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
   bool callOk=false;
+  bool clicked=false;
 
   @override
   void initState() {
@@ -79,14 +80,23 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 callOk?Text("주문일시 ${order?.orderTime}  경과시간 ${duration?.inMinutes}분"):Text('주문일시 및 경과시간'),
                 callOk?Text(order!.storeName):Text('가게 이름'),
                 callOk?Text(order!.storeLocation):Text('가게 주소'),
-                TextButton(
+                clicked?ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor:  MaterialStateProperty.all(Colors.grey[350]),
+                      backgroundColor:  MaterialStateProperty.all(Colors.black),
                     ),
                     onPressed: () async {
-
                     },
-                    child: Text('픽업')),
+                    child: Text('완료')):
+                    ElevatedButton(
+                      onPressed: () async{
+                        setState(() {
+                          clicked=true;
+                        });
+                      },
+                      child: Text('픽업'),
+                    ),
+
+
                 callOk?Text(order!.deliveryDistance.toString()):Text('Km'),
                 callOk?Text(order!.deliveryLocation):Text('고객 주소'),
                 TextButton(
