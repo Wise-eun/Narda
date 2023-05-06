@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //import 'package:naver_map_plugin/naver_map_plugin.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-//import 'package:naver_map_plugin/naver_map_plugin.dart';
 import 'package:speelow/menu_bottom.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:geocoding/geocoding.dart';
+
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key, required this.userId}) : super(key: key);
@@ -18,6 +19,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   static const MethodChannel _methodChannel = MethodChannel('mobile/parameters');
+
 
   Future<void> _initTmapAPI() async{
     try{
@@ -104,69 +106,73 @@ class TestPageState extends State<TestPage> {
   late NaverMapController _mapController;
   Completer<NaverMapController> mapControllerCompleter = Completer();
 
- double latitude = 37.58886;
- double longitude = 26.3546;
+  double latitude=37.588;
+  double longitude=26.356;
+
   bool _serviceEnabled = false;
  // late PermissionStatus _permissionGranted;
 
-
+   addressToPM() async {
+     List<Location> locations = await locationFromAddress("대구 동구 화랑로100길 17");
+     setState(() {
+       latitude = locations[0].latitude.toDouble();
+       longitude = locations[0].longitude.toDouble();
+       print(latitude.toDouble());
+       print("붸");
+       print(longitude.toDouble());
+     });
+   }
 
    getCurrentLocation() async {
-
-    try {
+     try {
       var status_position = await Permission.location.status;
       var requestStatus = await Permission.location.request();
       if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
       //if (status_position.isGranted) {
         // 1-2. 권한이 있는 경우 위치정보를 받아와서 변수에 저장합니다.
      //   Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((position)
-{
+        await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((position) {
+          setState(() {
+            print("latitude : " + latitude.toString()  + ", " + "longitude : " + longitude.toString());
+            latitude = position.latitude;
+            longitude = position.longitude;
 
-  setState(() {
-    print("latitude : " + latitude.toString()  + ", " + "longitude : " + longitude.toString());
+            //마커 추가
+            final marker = NMarker(id: '1', position: NLatLng(latitude ,longitude));
+            _mapController.addOverlay(marker);
+            final marker2 = NMarker(id:'2', position:NLatLng(latitude-0.001, longitude-0.002));
+            marker2.setIconTintColor(Colors.blueAccent);
+            _mapController.addOverlay(marker2);
 
-    latitude = position.latitude;
-    longitude = position.longitude;
+            //경로 추가
+            NPathOverlay path = NPathOverlay(id: 'route', coords: [
+              NLatLng(latitude, longitude),
+              NLatLng(latitude-0.001, longitude-0.002),
+            ]);
+            path.setColor(Colors.blue);
+            _mapController.addOverlay(path);
 
-    //마커 추가
-    final marker = NMarker(id: '1', position: NLatLng(latitude ,longitude));
-    _mapController.addOverlay(marker);
-    final marker2 = NMarker(id:'2', position:NLatLng(latitude-0.001, longitude-0.002));
-    marker2.setIconTintColor(Colors.blueAccent);
-    _mapController.addOverlay(marker2);
+            //영역 추가
+            final overlay = NCircleOverlay(id: "test", center: NLatLng(latitude ,longitude),
+              radius:2000,
+              color:Colors.white60,
+            );
+            _mapController.addOverlay(overlay);
 
-    //경로 추가
-    NPathOverlay path = NPathOverlay(id: 'route', coords: [
-      NLatLng(latitude, longitude),
-      NLatLng(latitude-0.001, longitude-0.002),
-    ]);
-    path.setColor(Colors.blue);
-    _mapController.addOverlay(path);
+            //경계 추가 (미완성)
+            var bounds = NLatLngBounds(southWest: NLatLng(latitude-0.002, longitude+0.002),
+                northEast: NLatLng(latitude+0.002, longitude+0.002));
 
-    //영역 추가
-    final overlay = NCircleOverlay(id: "test", center: NLatLng(latitude ,longitude),
-      radius:2000,
-      color:Colors.white60,
-
-          );
-    _mapController.addOverlay(overlay);
-
-    //경계 추가 (미완성)
-    var bounds = NLatLngBounds(southWest: NLatLng(latitude-0.002, longitude+0.002),
-        northEast: NLatLng(latitude+0.002, longitude+0.002));
-
-    NLatLng target = NLatLng(latitude,longitude);
-    NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
-      target: NLatLng(latitude,longitude),
-      zoom: 13,
-    );
-    //.scrollAndZoomTo(target, 10)
-    if(_mapController != null)
-    _mapController.updateCamera(nCameraUpdate);
-    });
-  }
-);
+            NLatLng target = NLatLng(latitude,longitude);
+            NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
+            target: NLatLng(latitude,longitude),
+            zoom: 13,
+            );
+            //.scrollAndZoomTo(target, 10)
+            if(_mapController != null)
+            _mapController.updateCamera(nCameraUpdate);
+            });
+            });
       } else {
         // 1-3. 권한이 없는 경우
         print("위치 권한이 필요합니다.");
@@ -199,20 +205,22 @@ await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then
   @override
   void initState() {
     // TODO: implement initState
-    getCurrentLocation();
+    addressToPM();
+    //getCurrentLocation();
+
   }
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final pixelRatio = mediaQuery.devicePixelRatio;
-    final mapSize =
-    Size(mediaQuery.size.width - 32, mediaQuery.size.height - 72);
-    final physicalSize =
-    Size(mapSize.width * pixelRatio, mapSize.height * pixelRatio);
+    final mapSize = Size(mediaQuery.size.width - 32, mediaQuery.size.height - 72);
+    final physicalSize = Size(mapSize.width * pixelRatio, mapSize.height * pixelRatio);
 
-    double lon = this.longitude;
-    double lat = this.latitude;
     print("physicalSize: $physicalSize");
+   
+    print(latitude.toDouble());
+    print("붜");
+    print(longitude.toDouble());
 
     return Scaffold(
       backgroundColor: const Color(0xFF343945),
@@ -233,15 +241,11 @@ await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then
                       height: (mapSize.height-18), //하단바때문에 오버픽셀 부분 뺌
                       // color: Colors.greenAccent,
                       child:
-
                       NaverMap(
-
-options:  NaverMapViewOptions(
-  initialCameraPosition: NCameraPosition(target:
-  NLatLng(latitude, longitude), zoom: 10, bearing: 0, tilt: 0)
-),
+                        options:  NaverMapViewOptions(
+                            initialCameraPosition: NCameraPosition(target: NLatLng(latitude, longitude), zoom: 10, bearing: 0, tilt: 0)),
                         onMapReady:(controller) {
-_mapController = controller;
+                          _mapController = controller;
                         },
 
 

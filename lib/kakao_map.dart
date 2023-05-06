@@ -29,6 +29,7 @@ class _KakaoMapTestState extends State<KakaoMapTest> {
       var status_position = await Permission.location.status;
       var requestStatus = await Permission.location.request();
       if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
+
         await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high).then((position) {
               setState(() {
