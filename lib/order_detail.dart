@@ -40,7 +40,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   double to_longitude = 27.356;
 
   addressToPM() async {
-    String address='경북 경산시 대학로 280';
+    String address = '경북 경산시 대학로 280';
     print('address : $address');
     List<Location> locations = await locationFromAddress(address);
     setState(() {
@@ -63,16 +63,20 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             .then((position) {
           setState(() {
             print("latitude : " +
-                from_latitude.toString() + ", " +
-                "longitude : " + from_longitude.toString());
+                from_latitude.toString() +
+                ", " +
+                "longitude : " +
+                from_longitude.toString());
             from_latitude = position.latitude;
             from_longitude = position.longitude;
             Size size = new Size(15, 17);
 
-            final marker = NMarker(id: '출발지', position: NLatLng(from_latitude ,from_longitude));
+            final marker = NMarker(
+                id: '출발지', position: NLatLng(from_latitude, from_longitude));
             marker.setSize(size);
             _mapController.addOverlay(marker);
-            final marker2 = NMarker(id: '목적지', position: NLatLng(to_latitude, to_longitude));
+            final marker2 = NMarker(
+                id: '목적지', position: NLatLng(to_latitude, to_longitude));
             //marker2.setIcon(Colors.black as NOverlayImage?);
             marker2.setIconTintColor(Colors.blue);
             marker2.setSize(size);
@@ -86,10 +90,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             _mapController.addOverlay(path);
 
             NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
-              target: NLatLng((from_latitude+to_latitude)/2,
-                  (from_longitude+to_longitude)/2),
-              zoom: 11
-            );
+                target: NLatLng((from_latitude + to_latitude) / 2,
+                    (from_longitude + to_longitude) / 2),
+                zoom: 11);
 
             if (_mapController != null)
               _mapController.updateCamera(nCameraUpdate);
@@ -159,7 +162,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             isAlwaysShown: true,
             thickness: 10,
             child: ListView(controller: _scrollController, children: [
-              Expanded(
+              Container(
                   child: Column(
                 children: [
                   const SizedBox(
@@ -197,11 +200,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       height: 400,
                       child: NaverMap(
                         options: NaverMapViewOptions(
-                            initialCameraPosition: NCameraPosition(
-                                target: NLatLng(from_latitude, from_longitude),
-                                zoom: 11,
-                                bearing: 0,
-                                tilt: 0),
+                          initialCameraPosition: NCameraPosition(
+                              target: NLatLng(from_latitude, from_longitude),
+                              zoom: 11,
+                              bearing: 0,
+                              tilt: 0),
                           scrollGesturesEnable: true,
                         ),
                         onMapReady: (controller) {
