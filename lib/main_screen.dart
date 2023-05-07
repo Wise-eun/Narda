@@ -117,9 +117,7 @@ class TestPageState extends State<TestPage> {
      setState(() {
        latitude = locations[0].latitude.toDouble();
        longitude = locations[0].longitude.toDouble();
-       print(latitude.toDouble());
-       print("붸");
-       print(longitude.toDouble());
+       print('예지언니네3 : $latitude, $longitude');
      });
    }
 
@@ -130,16 +128,18 @@ class TestPageState extends State<TestPage> {
       if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
       //if (status_position.isGranted) {
         // 1-2. 권한이 있는 경우 위치정보를 받아와서 변수에 저장합니다.
-     //   Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        // Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
         await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((position) {
           setState(() {
             print("latitude : " + latitude.toString()  + ", " + "longitude : " + longitude.toString());
             latitude = position.latitude;
             longitude = position.longitude;
 
-            //마커 추가
-            final marker = NMarker(id: '1', position: NLatLng(latitude ,longitude));
+            final marker = NMarker(id: 'current', position: NLatLng(latitude ,longitude));
             _mapController.addOverlay(marker);
+
+            /*
+            //다중 마커 추가
             final marker2 = NMarker(id:'2', position:NLatLng(latitude-0.001, longitude-0.002));
             marker2.setIconTintColor(Colors.blueAccent);
             _mapController.addOverlay(marker2);
@@ -162,51 +162,44 @@ class TestPageState extends State<TestPage> {
             //경계 추가 (미완성)
             var bounds = NLatLngBounds(southWest: NLatLng(latitude-0.002, longitude+0.002),
                 northEast: NLatLng(latitude+0.002, longitude+0.002));
-
+             */
             NLatLng target = NLatLng(latitude,longitude);
             NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
-            target: NLatLng(latitude,longitude),
-            zoom: 13,
+              target: NLatLng(latitude,longitude),
+              zoom: 13,
             );
             //.scrollAndZoomTo(target, 10)
             if(_mapController != null)
-            _mapController.updateCamera(nCameraUpdate);
+              _mapController.updateCamera(nCameraUpdate);
             });
-            });
+        });
       } else {
         // 1-3. 권한이 없는 경우
         print("위치 권한이 필요합니다.");
       }
-
       /*
-      if(!_serviceEnabled)
-{
-  _serviceEnabled = await location.requestService();
-  if(!_serviceEnabled)
-    {
-      return;
-    }
-}
+      if(!_serviceEnabled) {
+        _serviceEnabled = await location.requestService();
+        if(!_serviceEnabled)
+          {return;
+        }
+      }
 
       _locationData = await location.getLocation();
-
       // Geolocator API로 위도, 경도 호출
-
       this.latitude = _locationData.latitude!;
       this.longitude = _locationData.longitude!;
-*/
+      */
     } catch (e) {
       print(e);
     }
   }
 
-
-
   @override
   void initState() {
     // TODO: implement initState
-    addressToPM();
-    //getCurrentLocation();
+    //addressToPM();
+    getCurrentLocation();
 
   }
   @override
@@ -217,10 +210,7 @@ class TestPageState extends State<TestPage> {
     final physicalSize = Size(mapSize.width * pixelRatio, mapSize.height * pixelRatio);
 
     print("physicalSize: $physicalSize");
-   
-    print(latitude.toDouble());
-    print("붜");
-    print(longitude.toDouble());
+    print('build : $latitude, $longitude');
 
     return Scaffold(
       backgroundColor: const Color(0xFF343945),
@@ -243,19 +233,14 @@ class TestPageState extends State<TestPage> {
                       child:
                       NaverMap(
                         options:  NaverMapViewOptions(
-                            initialCameraPosition: NCameraPosition(target: NLatLng(latitude, longitude), zoom: 10, bearing: 0, tilt: 0)),
+                            initialCameraPosition: NCameraPosition(target: NLatLng(latitude, longitude), zoom: 10, bearing: 0, tilt: 0)
+                        ),
                         onMapReady:(controller) {
                           _mapController = controller;
                         },
-
-
-//onCameraChange: onChanged(LatLng(latitude, longitude), CameraChangeReason.location, true),
-
+                        //onCameraChange: onChanged(LatLng(latitude, longitude), CameraChangeReason.location, true),
                       )
-
                   ),
-
-
                 ],
               )
 
@@ -269,23 +254,18 @@ class TestPageState extends State<TestPage> {
                 initialCameraPosition:CameraPosition(
                   target: LatLng(latitude,longitude),
                   zoom: 17,
-
                 ),
-
               )
-
           )
-*/      ),
+          */
+      ),
     );
   }
-
-
 
   void onMapCreated(NaverMapController controller) {
     if (mapControllerCompleter.isCompleted) mapControllerCompleter = Completer();
     mapControllerCompleter.complete(controller);
   }
-
 }
 
 

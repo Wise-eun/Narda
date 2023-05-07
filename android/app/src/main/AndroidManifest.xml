@@ -38,7 +38,7 @@
             <meta-data
 
                 android:name="com.kakao.sdk.AppKey"
-                android:value="2jmj7l5rSw0yVb/vlWAYkK/YBwk="
+                android:value="3e8531d2fdf84a885535fc7c4ac309ca"
                 />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

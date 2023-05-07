@@ -30,50 +30,42 @@ class _KakaoMapTestState extends State<KakaoMapTest> {
       var status_position = await Permission.location.status;
       var requestStatus = await Permission.location.request();
       if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
-
         await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high).then((position) {
-              setState(() async {
-                print("latitude : " + latitude.toString() + ", "
-                    + "longitude : " + longitude.toString());
-            latitude = position.latitude;
-            longitude = position.longitude;
-
-            List<geo.Location> locations = await geo.locationFromAddress("대구 동구 화랑로100길 17");
             setState(() {
-              latitude = locations[0].latitude.toDouble();
-              longitude = locations[0].longitude.toDouble();
-              print(latitude.toDouble());
-              print(longitude.toDouble());
+              print("current latitude : " + latitude.toString() + ", "
+                + "longitude : " + longitude.toString());
+              latitude = position.latitude;
+              longitude = position.longitude;
             });
           });
-        });
       }
-    } catch(e) {
-      print(e);
-    }
-    kakaonavi();
-  }
+      List<geo.Location> locations = await geo.locationFromAddress("대구 동구 화랑로100길 17");
+      setState(() {
+        latitude = locations[0].latitude.toDouble();
+        longitude = locations[0].longitude.toDouble();
+        print('예지언니네1 : $latitude, $longitude');
+      });
 
-  void kakaonavi() async {
-    //x(longitude경도), y(latitude위도)
-    if(await NaviApi.instance.isKakaoNaviInstalled()) {
-      var navioption = NaviOption(
-      coordType: CoordType.wgs84,
-      //vehicleType: VehicleType.twoWheel,
-      rpOption: RpOption.recommended,
-      );
-      print('카카오내비 설치됨 : $latitude, $longitude');
-      await NaviApi.instance.navigate(
-        destination :
-          Location(name: 'ex1', x: '$longitude', y: '$latitude'),
-        viaList : [],
-        option: navioption,
-      );
-    } else {
+      if(await NaviApi.instance.isKakaoNaviInstalled()) {
+        var navioption = NaviOption(
+          coordType: CoordType.wgs84,
+          //vehicleType: VehicleType.twoWheel,
+          rpOption: RpOption.recommended,
+        );
+        print('카카오내비 설치됨 : $latitude, $longitude');
+        await NaviApi.instance.navigate(
+          destination :
+          Location(name: 'example', x: '$longitude', y: '$latitude'),
+          viaList : [],
+          option: navioption,
+        );
+      } else {
         print('카카오내비 미설치');
         launchBrowserTab(Uri.parse(NaviApi.webNaviInstall));
       }
+
+    } catch(e) {print(e);}
   }
 
   @override
@@ -98,7 +90,6 @@ class _KakaoMapTestState extends State<KakaoMapTest> {
             showMapTypeControl: true,
             showZoomControl: true,
           ),
-
           TextButton(
             onPressed: () async {
               print('kakao map 버튼 클릭');
