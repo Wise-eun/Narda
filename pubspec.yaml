@@ -45,6 +45,8 @@ dependencies:
   flutter_naver_map: ^1.0.0
   kakaomap_webview: ^0.3.0
   kakao_flutter_sdk_navi: ^1.4.1
+  table_calendar: ^3.0.6
+  intl: ^0.17.0
   cupertino_icons: ^1.0.5
   firebase_core: ^2.9.0
   firebase_auth: ^4.4.0

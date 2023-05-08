@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speelow/main_screen.dart';
+import 'mypage_screen.dart';
 import 'order_list.dart';
 
 class MenuBottom extends StatelessWidget {
@@ -26,7 +27,7 @@ class MenuBottom extends StatelessWidget {
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  ListviewPage(userId: userId)),
+                MaterialPageRoute(builder: (context) =>  MyPageScreen(userId: userId)),
               );
               break;
           }
