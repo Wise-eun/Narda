@@ -1,10 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:http/http.dart' as http;
+import 'api/api.dart';
+import 'model/user.dart';
+
+RiderUser? rideruser;
 
 class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({Key? key}) : super(key: key);
+  const CalendarScreen({Key? key, required this.riderId}) : super(key: key);
+  final String riderId;
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -13,6 +21,7 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   CalendarFormat format = CalendarFormat.month;
   late final ValueNotifier<List<Event>> _selectedEvents;
+  bool callOk = false;
   DateTime selectedDay = DateTime(
     DateTime.now().year,
     DateTime.now().month,
@@ -36,6 +45,30 @@ class _CalendarScreenState extends State<CalendarScreen> {
     _selectedEvents = ValueNotifier(_getEventsForDay(selectedDay!));
   }
 
+  riderDetail() async {
+    try {
+      var response = await http.post(Uri.parse(API.orderDetail), body: {
+        'riderId': widget.riderId.toString(),
+      });
+      if (response.statusCode == 200) {
+        var responseBody = jsonDecode(response.body);
+        if (responseBody['success'] == true) {
+          callOk = true;
+          print("불러오기 성공");
+          print(responseBody['userData']);
+          rideruser = RiderUser.fromJson(responseBody['userData']);
+        } else {
+          print("불러오기 실패");
+        }
+      } else {
+        print("불러오기 실패2");
+      }
+      setState(() {});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -46,6 +79,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
       body: Column(
         children: [
+          SizedBox(
+            width: mediaQuery.size.width,
+            height: 100,
+            child: Text('이번달 수입'),
+          ),
+          SizedBox(
+            width: mediaQuery.size.width,
+            height: 250,
+            child: Column(
+              children: [
+                Text('월 평균 수입 '),
+                Text('총 배달 거리 '),
+                Text('하루 평균 건수'),
+              ],
+            ),
+          ),
           TableCalendar(
           //shouldFillViewport: true,
           //locale: 'ko-KR',
