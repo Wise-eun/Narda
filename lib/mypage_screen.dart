@@ -109,7 +109,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => CalendarScreen()),
+                                        builder: (context) => CalendarScreen(riderId: userInfo.userId,)),
                                   );
                                 },
                                 child: Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey,
