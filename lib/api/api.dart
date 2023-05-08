@@ -10,6 +10,7 @@ class API{
   static const orderList = "$hostConnect/orderList.php";
   static const orderDetail = "$hostConnect/orderDetail.php";
   static const findPw = "$hostConnect/findPw.php";
+  static const riderUser = "$hostConnect/riderUser.php";
 
 
 }
