@@ -57,7 +57,7 @@ class _LoginscreenState extends State<Loginscreen> {
   final db = FirebaseFirestore.instance;
 
   final TextEditingController _idController =
-      TextEditingController(); //입력되는 값을 제어
+  TextEditingController(); //입력되는 값을 제어
   final TextEditingController _pwController = TextEditingController();
 
   login() async {
@@ -108,7 +108,7 @@ class _LoginscreenState extends State<Loginscreen> {
   singUp() async {
     try {
       var response =
-          await http.post(Uri.parse(API.signup), body: <String, String>{
+      await http.post(Uri.parse(API.signup), body: <String, String>{
         //오른쪽에 signup할 정보 입력
         'userId': 'user4',
         'userPw': 'user4!',
@@ -244,93 +244,93 @@ class _LoginscreenState extends State<Loginscreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         body: Center(
-          child: Container(
-              margin: EdgeInsets.only(left: 45, right: 45),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Spacer(),
-                  Image(
-                    image: AssetImage('asset/images/logo.png'),
-                    width: 150,
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  _userIdWidget(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  _passwordWidget(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    // width: 250,
-                    width: MediaQuery.of(context).size.width,
-                    height: 40,
-                    child: TextButton(
-                        style: TextButton.styleFrom(
-                            backgroundColor: Color(0xfff9d94b),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10)))),
-                        onPressed: () async {
-                          login();
-                        },
-                        child: Text('로그인', style: TextStyle(color: Colors.black))),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => FindIdScreen()),
-                            );
+            child: Container(
+                margin: EdgeInsets.only(left: 45, right: 45),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Spacer(),
+                    Image(
+                      image: AssetImage('asset/images/logo.png'),
+                      width: 150,
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    _userIdWidget(),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    _passwordWidget(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      // width: 250,
+                      width: MediaQuery.of(context).size.width,
+                      height: 40,
+                      child: TextButton(
+                          style: TextButton.styleFrom(
+                              backgroundColor: Color(0xfff9d94b),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(10)))),
+                          onPressed: () async {
+                            login();
                           },
-                          child: Text(
-                            '아이디 찾기',
-                            style: TextStyle(fontSize: 13, color: Colors.black),
-                          )),
-                      const SizedBox(
-                        width: 3,
-                        height: 20,
-                        child: const DecoratedBox(
-                          decoration: BoxDecoration(color: Color(0xfff1f2f3)),
+                          child: Text('로그인', style: TextStyle(color: Colors.black))),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => FindIdScreen()),
+                              );
+                            },
+                            child: Text(
+                              '아이디 찾기',
+                              style: TextStyle(fontSize: 13, color: Colors.black),
+                            )),
+                        const SizedBox(
+                          width: 3,
+                          height: 20,
+                          child: const DecoratedBox(
+                            decoration: BoxDecoration(color: Color(0xfff1f2f3)),
+                          ),
                         ),
-                      ),
-                      TextButton(
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => FindPwScreen()),
+                              );
+                            },
+                            child: Text('비밀번호 찾기',
+                                style: TextStyle(fontSize: 13, color: Colors.black))),
+                      ],
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 40,
+                      child: TextButton(
+                          style: TextButton.styleFrom(
+                              backgroundColor: Color(0xfff1f2f3),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(10)))),
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => FindPwScreen()),
+                              MaterialPageRoute(builder: (context) => SignupScreen()),
                             );
                           },
-                          child: Text('비밀번호 찾기',
-                              style: TextStyle(fontSize: 13, color: Colors.black))),
-                    ],
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: 40,
-                    child: TextButton(
-                        style: TextButton.styleFrom(
-                            backgroundColor: Color(0xfff1f2f3),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10)))),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => SignupScreen()),
-                          );
-                        },
-                        child: Text('회원가입', style: TextStyle(color: Colors.black))),
-                  ),
-                  Spacer(),
-                ],
-              )
-          )
-          ));
+                          child: Text('회원가입', style: TextStyle(color: Colors.black))),
+                    ),
+                    Spacer(),
+                  ],
+                )
+            )
+        ));
   }
 }
