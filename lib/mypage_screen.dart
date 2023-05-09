@@ -264,7 +264,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                               onChanged: (value) {
                                 print(value);
                                 setState(() {
-                                  isSwitched_helmet = value;
+                                  isSwitched_safety = value;
                                 });
                               },
                             ),
