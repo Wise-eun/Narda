@@ -36,17 +36,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   bool clicked = false;
   double from_latitude = 37.588;
   double from_longitude = 26.356;
-  double to_latitude = 38.588;
-  double to_longitude = 27.356;
+  double to_latitude = 30;
+  double to_longitude = 20;
 
-  addressToPM() async {
-    String address = '경북 경산시 대학로 280';
-    print('address : $address');
+  addressToPM(String address) async {
+    //String address = '경북 경산시 대학로 280';
+    print('topm 주소 : $address');
     List<Location> locations = await locationFromAddress(address);
     setState(() {
       to_latitude = locations[0].latitude.toDouble();
       to_longitude = locations[0].longitude.toDouble();
       print('우리집 : $to_latitude, $to_longitude');
+      getCurrentLocation();
     });
   }
 
@@ -62,15 +63,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 desiredAccuracy: LocationAccuracy.high)
             .then((position) {
           setState(() {
-            print("latitude : " +
-                from_latitude.toString() +
-                ", " +
-                "longitude : " +
-                from_longitude.toString());
             from_latitude = position.latitude;
             from_longitude = position.longitude;
+            print('현재위치 받아옴');
             Size size = new Size(15, 17);
-
             final marker = NMarker(
                 id: '출발지', position: NLatLng(from_latitude, from_longitude));
             marker.setSize(size);
@@ -82,6 +78,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             marker2.setSize(size);
             _mapController.addOverlay(marker2);
 
+            print('출발지!!! : $from_latitude, $from_longitude');
+            print('목적지!!! : $to_latitude, $from_longitude');
+
             NPathOverlay path = NPathOverlay(id: 'route', coords: [
               NLatLng(from_latitude, from_longitude),
               NLatLng(to_latitude, to_longitude),
@@ -92,7 +91,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
                 target: NLatLng((from_latitude + to_latitude) / 2,
                     (from_longitude + to_longitude) / 2),
-                zoom: 11);
+                zoom: );
 
             if (_mapController != null)
               _mapController.updateCamera(nCameraUpdate);
@@ -110,10 +109,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    addressToPM();
-    getCurrentLocation();
     orderDetail();
-    super.initState();
+    //getCurrentLocation();
+    //addressToPM();
+    //super.initState();
   }
 
   orderDetail() async {
@@ -131,16 +130,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           order = OrderDetail.fromJson(responseBody['userData']);
           DateTime orderTime = DateTime.parse(order!.orderTime);
           DateTime current = DateTime.now();
-
           duration = current.difference(orderTime);
           print("duration : $duration");
+          //address=order!.deliveryLocation;
+          addressToPM(order!.deliveryLocation);
         } else {
           print("오더 디테일 불러오기 실패");
         }
       } else {
         print("오더 디테일 불러오기 실패2");
       }
-      setState(() {});
     } catch (e) {
       print(e.toString());
     }
@@ -152,9 +151,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final mediaQuery = MediaQuery.of(context);
     final mapSize =
         Size(mediaQuery.size.width - 32, mediaQuery.size.height - 72);
-
-    print('build : $from_latitude, $from_longitude');
-
     return Scaffold(
         bottomNavigationBar: MenuBottom(userId: (widget.orderId).toString()),
         body: Scrollbar(
