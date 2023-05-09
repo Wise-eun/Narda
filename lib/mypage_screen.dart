@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:speelow/reset_pw.dart';
-import 'package:speelow/edit_personalInfo.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'api/api.dart';
@@ -325,26 +324,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
                         Text("내 정보 관리", style: TextStyle(fontSize: 18)),
                         SizedBox(
                           height: 10,
-                        ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            minimumSize: Size.zero,
-                            padding: EdgeInsets.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: Text("개인정보 수정",
-                              style:
-                                  TextStyle(fontSize: 17, color: Colors.black)),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditPersonalInfoScreen(user: userInfo,)),
-                            );
-                          },
-                        ),
-                        SizedBox(
-                          height: 7,
                         ),
                         TextButton(
                           style: TextButton.styleFrom(
