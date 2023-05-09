@@ -91,7 +91,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
                 target: NLatLng((from_latitude + to_latitude) / 2,
                     (from_longitude + to_longitude) / 2),
-                zoom: );
+                zoom: 11);
 
             if (_mapController != null)
               _mapController.updateCamera(nCameraUpdate);
