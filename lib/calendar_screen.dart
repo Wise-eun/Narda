@@ -193,6 +193,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
         ),
           //캘린더 이벤트를 리스트 형식으로 출력
+          /*
           const SizedBox(height: 8),
           Expanded(
             child: ValueListenableBuilder<List<Event>>(
@@ -219,7 +220,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 );
               },
             )
-          )
+          )*/
       ],
       ),
     );
