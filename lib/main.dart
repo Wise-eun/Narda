@@ -69,6 +69,7 @@ class _LoginscreenState extends State<Loginscreen> {
       if (response.statusCode == 200) {
         var responseBody = jsonDecode(response.body);
         if (responseBody['success'] == true) {
+          showToastMessage("로그인 성공");
           print("로그인 성공");
           RiderUser userInfo = RiderUser.fromJson(responseBody['userData']);
           Navigator.push(
@@ -77,110 +78,22 @@ class _LoginscreenState extends State<Loginscreen> {
                 builder: (context) => TestPage(userId: _idController.text)),
           );
         } else {
+          showToastMessage("로그인 실패");
           print("로그인 실패");
         }
       }
     } catch (e) {
+      showToastMessage("로그인 실패");
       print(e.toString());
     }
   }
 
-  validateId() async {
-    try {
-      var response = await http.post(Uri.parse(API.validateId), body: {
-        'userId': "user" //오른쪽에 validate 확인할 id 입력
-      });
-      if (response.statusCode == 200) {
-        var responseBody = jsonDecode(response.body);
-        if (responseBody['exist'] == true) {
-          //이미 존재하는 아이디
-          print("이미 존재하는 아이디");
-        } else {
-          //존재하지 않는 아이디 (사용가능한)
-          print("존재하지 않는 아이디 ");
-        }
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  singUp() async {
-    try {
-      var response =
-      await http.post(Uri.parse(API.signup), body: <String, String>{
-        //오른쪽에 signup할 정보 입력
-        'userId': 'user4',
-        'userPw': 'user4!',
-        'userPhoneNum': '01044444444',
-        'userName': '이애사'
-      });
-      if (response.statusCode == 200) {
-        var responseBody = jsonDecode(response.body);
-        if (responseBody['success'] == true) {
-          print("회원가입 성공");
-        } else {
-          print("회원가입 실패");
-        }
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  identification() async {
-    try {
-      var response = await http.post(Uri.parse(API.identification),
-          body: {'userId': "user4", 'userPhoneNum': "01044444444"});
-      if (response.statusCode == 200) {
-        var responseBody = jsonDecode(response.body);
-        if (responseBody['success'] == true) {
-          print("본인확인 완료");
-          RiderUser userInfo = RiderUser.fromJson(responseBody['userData']);
-          print("아이디 : ${userInfo.userId}");
-        } else {
-          print("본인확인 실패");
-        }
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  orderList() async {
-    try {
-      List<Order> orders = [];
-
-      var response = await http.post(Uri.parse(API.orderList), body: {
-        'sort': "deliveryFee",
-      });
-      if (response.statusCode == 200) {
-        var responseBody = jsonDecode(response.body);
-        if (responseBody['success'] == true) {
-          print("오더 리스트 불러오기 성공");
-
-          List<dynamic> responseList = responseBody['userData'];
-          for (int i = 0; i < responseList.length; i++) {
-            print(Order.fromJson(responseList[i]));
-            orders.add(Order.fromJson(responseList[i]));
-          }
-        } else {
-          print("오더 리스트 불러오기 실패");
-        }
-        print(orders.runtimeType);
-        return orders;
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  void ShowToastMessage(String msg) {
+  void showToastMessage(String msg) {
     Fluttertoast.showToast(
         msg: msg,
         gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        fontSize: 20,
+        backgroundColor: Colors.grey,
+        fontSize: 15,
         textColor: Colors.white,
         toastLength: Toast.LENGTH_SHORT);
   }
@@ -202,13 +115,6 @@ class _LoginscreenState extends State<Loginscreen> {
             filled: true,
             fillColor: Color(0xfff1f2f3),
           ),
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (String? value) {
-            if (value!.isEmpty) {
-              return '아이디를 입력해주세요.';
-            }
-            return null;
-          },
         ));
   }
 
@@ -229,13 +135,6 @@ class _LoginscreenState extends State<Loginscreen> {
             filled: true,
             fillColor: Color(0xfff1f2f3),
           ),
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (String? value) {
-            if (value!.isEmpty) {
-              return '비밀번호를 입력해주세요.';
-            }
-            return null;
-          },
         ));
   }
 
