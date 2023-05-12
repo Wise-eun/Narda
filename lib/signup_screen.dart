@@ -155,474 +155,528 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('회원가입'),),
-        body: Stack(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50.0),
+          child: AppBar(
+            shape: Border(
+                bottom: BorderSide(
+                  color: Color(0xfff1f2f3),
+                  width: 2,
+                )),
+            title: Text('회원가입',
+                style: TextStyle(color: Colors.black, fontSize: 18)),
+            automaticallyImplyLeading: false,
+            centerTitle: true,
+            backgroundColor: Colors.white,
+            elevation: 0,
+          ),
+        ),  backgroundColor: Colors.white,
+        body:
+            SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Stack(
 
-          children: [
-            Container(
-
-              child: Column(
                 children: [
-                  SizedBox(height: 10,),
-                  Row(
-                    children: [
-                      Expanded(
-                          flex: 1,
-                          child: Text("이름 *")),
-                      ],
-                  ),
-                  SizedBox(height:5,),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                          child: TextFormField(
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
-                            decoration: InputDecoration(
-                              contentPadding: new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                              isDense: true,
-                              hintText: "이름 입력",
-                              enabledBorder: OutlineInputBorder(
-
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                            ),
-                            textInputAction: TextInputAction.next,
-                            onEditingComplete: () => FocusScope.of(context).requestFocus(idFocusNode),
-                            keyboardType: TextInputType.name,
-                            controller: _nameController,
-
-                          ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 50,
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  Row(
-                    children: [
-                      Expanded(
-                          flex: 1,
-                          child: Text("아이디 *")),
-                      ],
-                  ),
-                  SizedBox(height: 5,),
-                  Row(
-                    children:[
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                          child: TextFormField(
-                            enabled: idcheckOk?false:true,
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
-                            decoration: InputDecoration(
-                              contentPadding: new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                              isDense: true,
-                              hintText: "아이디 입력",
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                            ),
-                            textInputAction: TextInputAction.next,
-                            onEditingComplete: () => FocusScope.of(context).requestFocus(passwordFocusNode),
-                            //keyboardType: TextInputType.,
-                            controller: _idController,
-
-                          ),
+                        Image(
+                          image: AssetImage('asset/images/logo.png'),
+                          width: 150,
                         ),
-                      ),
-                      SizedBox(width: 5,),
-                      ElevatedButton(
-                          onPressed: ()async {
-                            validateId(_idController.text);
-                          }, child: Text("중복확인"),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  Row(
-                    children: [
-                      Expanded(
-                          flex: 1,
-                          child: Text("비밀번호 *")),
-                      ],
-                  ),
-                  SizedBox(height: 5,),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                          child: TextFormField(
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
-                            decoration: InputDecoration(
-                              contentPadding: new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                              isDense: true,
-                              hintText: "비밀번호 (8자 이상의 영문자+숫자)",
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                            ),
-                            textInputAction: TextInputAction.done,
-                            keyboardType: TextInputType.visiblePassword,
-                            onEditingComplete: () => FocusScope.of(context).requestFocus(verifyPasswordFocusNode),
-                            focusNode:passwordFocusNode,
-                            obscureText: passwordHide,
-                            controller: _passwordController,
-
-                          ),
+                        const SizedBox(
+                          height: 30,
                         ),
-                      ),
 
-                    ],
-                  ),
-                  SizedBox(height: 5,),
-                  Row(
-
-                    children: [
-                      Expanded(
-                          flex: 1,
-                          child: Text("")),
-                      ],
-                  ),
-                  SizedBox(height:2,),
-                      Row(
-                        children: [
-                          Expanded(
-                          flex: 3,
-                          child: Container(
-                            child: TextFormField(
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
-                            decoration: InputDecoration(
-                              contentPadding: new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                              isDense: true,
-                              hintText: "비밀번호 확인",
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                            ),
-                            textInputAction: TextInputAction.done,
-                            keyboardType: TextInputType.visiblePassword,
-                            focusNode:verifyPasswordFocusNode,
-                            obscureText: passwordHide,
-                            controller: _verifyPasswordController,
-
-                          ),
-                        ),
-                      ),
-
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  Row(
-                    children: [
-                      Expanded(
-                          flex: 1,
-                          child: Text("전화번호 *")),
-                      ],
-                  ),
-                    SizedBox(height: 5,),
-                      Row(
-                        children: [
-                      Expanded(
-                        flex: 3,
-                        child: Row(
+                        SizedBox(height: 10,),
+                        Row(
                           children: [
                             Expanded(
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        flex: 1,
-                                        child:
-                                        numberInsert(
-                                          editAble: false,
-                                          hintText: "010", maxLegnth: 3,
-
-                                        )),
-                                    SizedBox(width: 5,),
-                                    Expanded(
-                                      flex: 1,
-                                      child: numberInsert(
-                                        editAble: authOk?false:true,
-                                        hintText: "0000",
-                                        focusNode: phoneNumberFocusNode1,
-                                        controller: _phoneNumberController1,
-                                        textInputAction: TextInputAction.next,
-                                        maxLegnth: 4,
-                                        widgetFunction: (){
-                                          FocusScope.of(context).requestFocus(phoneNumberFocusNode2);
-                                        },
-
-                                      ),
-                                    ),
-
-                                    SizedBox(width: 5,),
-                                    Expanded(
-                                      flex: 1,
-                                      child: numberInsert(
-                                        editAble: authOk?false:true,
-                                        hintText: "0000",
-                                        focusNode: phoneNumberFocusNode2,
-                                        controller: _phoneNumberController2,
-                                        textInputAction: TextInputAction.done,
-                                        maxLegnth: 4, widgetFunction: null,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                            ),
-                            SizedBox(width: 5,),
-                            authOk?ElevatedButton(
-                                onPressed:null,
-                                child:Text("인증완료")):
-                            _phoneNumberController1.text.length==4&&_phoneNumberController2.text.length==4
-                                ?
-                            ElevatedButton(
-                                onPressed: ()async{
-                                  setState(() {
-                                    showLoading = true;
-                                  });
-                                  await _auth.verifyPhoneNumber(
-                                    timeout: const Duration(seconds: 60),
-                                    codeAutoRetrievalTimeout: (String verificationId) {
-                                      // Auto-resolution timed out...
-                                    },
-                                    phoneNumber: "+8210"+_phoneNumberController1.text.trim()+_phoneNumberController2.text.trim(),
-                                    verificationCompleted: (phoneAuthCredential) async {
-                                      print("otp 문자옴");
-                                    },
-                                    verificationFailed: (verificationFailed) async {
-                                      print(verificationFailed.code);
-
-                                      print("코드발송실패");
-                                      setState(() {
-                                        showLoading = false;
-                                      });
-                                    },
-                                    codeSent: (verificationId, resendingToken) async {
-                                      print("코드보냄");
-                                      Fluttertoast.showToast(
-                                          msg: "010-${_phoneNumberController1.text}-${_phoneNumberController2.text} 로 인증코드를 발송하였습니다. 문자가 올때까지 잠시만 기다려 주세요.",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.green,
-                                          fontSize: 12.0
-                                      );
-                                      setState(() {
-                                        requestedAuth=true;
-                                        FocusScope.of(context).requestFocus(otpFocusNode);
-                                        showLoading = false;
-                                        this.verificationId = verificationId;
-                                      });
-                                    },
-                                  );
-
-                                },
-                                child:Text("인증요청"))
-                                :ElevatedButton(
-                                onPressed: (){},
-                                child:Text("인증요청")),
+                                flex: 1,
+                                child: Text("이름 *")),
                           ],
                         ),
-                      ),
-
-
-                    ],
-                  ),
-                  SizedBox(height: 5,),
-                  authOk?SizedBox():Visibility(
-                    visible: requestedAuth,
-                    child: Row(
-
-                      children: [
-                        Expanded(
-                            flex: 1,
-                            child: Text("")),
-                        Expanded(
-                          flex: 3,
-                          child:Row(
-
-                            children: [
-                              Expanded(
-                                child:
-                                numberInsert(
-                                  editAble: true,
-                                  hintText: "6자리 입력",
-                                  focusNode: otpFocusNode,
-                                  controller: _otpController,
-                                  textInputAction: TextInputAction.done,
-                                  maxLegnth: 6, widgetFunction: null,
+                        SizedBox(height:5,),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Container(
+                                child: TextFormField(
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                  ),
+                                  decoration: const InputDecoration(
+                                      labelText: '이름 입력',
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      filled: true,
+                                      fillColor: Color(0xfff1f2f3),
+                                      contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5)
+                                  ),
+                                  textInputAction: TextInputAction.next,
+                                  onEditingComplete: () => FocusScope.of(context).requestFocus(idFocusNode),
+                                  keyboardType: TextInputType.name,
+                                  controller: _nameController,
 
                                 ),
                               ),
-                              SizedBox(width: 5,),
-                              ElevatedButton(
-                                  onPressed: (){
-                                    PhoneAuthCredential phoneAuthCredential =
-                                    PhoneAuthProvider.credential(
-                                        verificationId: verificationId, smsCode: _otpController.text);
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10,),
+                        Row(
+                          children: [
+                            Expanded(
+                                flex: 1,
+                                child: Text("아이디 *")),
+                          ],
+                        ),
+                        SizedBox(height: 5,),
+                        Container(
+                          color: Color(0xfff1f2f3),
+                          child:  Row(
+                            children:[
+                              Expanded(
+                                flex: 3,
+                                child: Container(
+                                  child: TextFormField(
+                                    enabled: idcheckOk?false:true,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                    decoration: const InputDecoration(
+                                        labelText: '아이디 입력',
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        filled: true,
+                                        fillColor: Color(0xfff1f2f3),
+                                        contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5)
+                                    ),
+                                    textInputAction: TextInputAction.next,
+                                    onEditingComplete: () => FocusScope.of(context).requestFocus(passwordFocusNode),
+                                    //keyboardType: TextInputType.,
+                                    controller: _idController,
 
-                                    signInWithPhoneAuthCredential(phoneAuthCredential);
-                                  },
-                                  child: Text("확인")),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 5,),
+                              TextButton(
+                                onPressed: ()async {
+                                  validateId(_idController.text);
+                                }, child: Text("중복확인"),
+                              )
                             ],
                           ),
                         ),
 
+                        SizedBox(height: 10,),
+                        Row(
+                          children: [
+                            Expanded(
+                                flex: 1,
+                                child: Text("비밀번호 *")),
+                          ],
+                        ),
+                        SizedBox(height: 5,),
+                        Container(
+                          color: Color(0xfff1f2f3),
+                          child:
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Container(
+                                  child: TextFormField(
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                    decoration: const InputDecoration(
+                                        labelText: '비밀번호 (8자 이상의 영문자+숫자)',
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        filled: true,
+                                        fillColor: Color(0xfff1f2f3),
+                                        contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5)
+                                    ),
+                                    textInputAction: TextInputAction.done,
+                                    keyboardType: TextInputType.visiblePassword,
+                                    onEditingComplete: () => FocusScope.of(context).requestFocus(verifyPasswordFocusNode),
+                                    focusNode:passwordFocusNode,
+                                    obscureText: passwordHide,
+                                    controller: _passwordController,
+
+                                  ),
+
+
+
+
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        ),
+                        Divider(thickness: 1,height: 1,color: Colors.white,),
+                        Container(
+                            color: Color(0xfff1f2f3),
+                            child:
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    child: TextFormField(
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      ),
+                                      decoration: const InputDecoration(
+                                          labelText: '비밀번호 확인',
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          filled: true,
+                                          fillColor: Color(0xfff1f2f3),
+                                          contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5)
+                                      ),
+                                      textInputAction: TextInputAction.done,
+                                      keyboardType: TextInputType.visiblePassword,
+                                      focusNode:verifyPasswordFocusNode,
+                                      obscureText: passwordHide,
+                                      controller: _verifyPasswordController,
+
+                                    ),
+                                  ),
+                                ),
+
+                              ],
+                            )),
+                        SizedBox(height: 10,),
+                        Row(
+                          children: [
+                            Expanded(
+                                flex: 1,
+                                child: Text("전화번호 *")),
+                          ],
+                        ),
+                        SizedBox(height: 5,),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child:
+
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child:   Container(
+                                          color: Color(0xfff1f2f3),
+                                          child:
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                  flex: 1,
+                                                  child:
+                                                  numberInsert(
+                                                    editAble: false,
+                                                    hintText: "010", maxLegnth: 3,
+
+                                                  )),
+                                              SizedBox(width: 5,),
+                                              Text('-',style: TextStyle(fontSize: 15),),
+                                              SizedBox(width: 5,),
+                                              Expanded(
+                                                flex: 1,
+                                                child: numberInsert(
+                                                  editAble: authOk?false:true,
+                                                  hintText: "0000",
+                                                  focusNode: phoneNumberFocusNode1,
+                                                  controller: _phoneNumberController1,
+                                                  textInputAction: TextInputAction.next,
+                                                  maxLegnth: 4,
+                                                  widgetFunction: (){
+                                                    FocusScope.of(context).requestFocus(phoneNumberFocusNode2);
+                                                  },
+
+                                                ),
+                                              ),
+                                              SizedBox(width: 5,),
+                                              Text('-',style: TextStyle(fontSize: 15),),
+                                              SizedBox(width: 5,),
+                                              Expanded(
+                                                flex: 1,
+                                                child: numberInsert(
+                                                  editAble: authOk?false:true,
+                                                  hintText: "0000",
+                                                  focusNode: phoneNumberFocusNode2,
+                                                  controller: _phoneNumberController2,
+                                                  textInputAction: TextInputAction.done,
+                                                  maxLegnth: 4, widgetFunction: null,
+                                                ),
+                                              ),
+                                            ],
+                                          ))
+                                  ),
+                                  SizedBox(width: 20,),
+                                  authOk?TextButton(
+
+                                      onPressed:null,
+                                      child:Text("인증완료")):
+                                  _phoneNumberController1.text.length==4&&_phoneNumberController2.text.length==4
+                                      ?
+                                  ElevatedButton(
+                                      onPressed: ()async{
+                                        setState(() {
+                                          showLoading = true;
+                                        });
+                                        await _auth.verifyPhoneNumber(
+                                          timeout: const Duration(seconds: 60),
+                                          codeAutoRetrievalTimeout: (String verificationId) {
+                                            // Auto-resolution timed out...
+                                          },
+                                          phoneNumber: "+8210"+_phoneNumberController1.text.trim()+_phoneNumberController2.text.trim(),
+                                          verificationCompleted: (phoneAuthCredential) async {
+                                            print("otp 문자옴");
+                                          },
+                                          verificationFailed: (verificationFailed) async {
+                                            print(verificationFailed.code);
+
+                                            print("코드발송실패");
+                                            setState(() {
+                                              showLoading = false;
+                                            });
+                                          },
+                                          codeSent: (verificationId, resendingToken) async {
+                                            print("코드보냄");
+                                            Fluttertoast.showToast(
+                                                msg: "010-${_phoneNumberController1.text}-${_phoneNumberController2.text} 로 인증코드를 발송하였습니다. 문자가 올때까지 잠시만 기다려 주세요.",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Colors.green,
+                                                fontSize: 12.0
+                                            );
+                                            setState(() {
+                                              requestedAuth=true;
+                                              FocusScope.of(context).requestFocus(otpFocusNode);
+                                              showLoading = false;
+                                              this.verificationId = verificationId;
+                                            });
+                                          },
+                                        );
+
+                                      },
+                                      child:Text("인증요청"))
+                                      :TextButton(
+                                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xfff1f2f3))),
+                                      onPressed: (){},
+                                      child:Text("인증요청")),
+                                ],
+                              ),
+                            ),
+
+
+                          ],
+                        ),
+                        SizedBox(height: 5,),
+                        authOk?SizedBox():Visibility(
+                          visible: requestedAuth,
+                          child: Row(
+
+                            children: [
+                              Expanded(
+                                  flex: 1,
+                                  child: Text("")),
+                              Expanded(
+                                flex: 3,
+                                child:Row(
+
+                                  children: [
+                                    Expanded(
+                                      child:
+                                      numberInsert(
+                                        editAble: true,
+                                        hintText: "6자리 입력",
+                                        focusNode: otpFocusNode,
+                                        controller: _otpController,
+                                        textInputAction: TextInputAction.done,
+                                        maxLegnth: 6, widgetFunction: null,
+
+                                      ),
+                                    ),
+                                    SizedBox(width: 5,),
+                                    ElevatedButton(
+                                        onPressed: (){
+                                          PhoneAuthCredential phoneAuthCredential =
+                                          PhoneAuthProvider.credential(
+                                              verificationId: verificationId, smsCode: _otpController.text);
+
+                                          signInWithPhoneAuthCredential(phoneAuthCredential);
+                                        },
+                                        child: Text("확인")),
+                                  ],
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        ),    Row(
+                          children: [
+                            Expanded(
+                                flex: 1,
+                                child: Text("*는 필수입력사항입니다.")),
+                          ],
+                        ),
+                        SizedBox(height: 50),
+                        SizedBox(
+                            width: 200,
+                            height: 40,
+                            child: ElevatedButton(
+                              child: Text('회원가입', style: TextStyle(color: Colors.black)),
+                              onPressed: ()async {
+                                if (_nameController.text.length > 0) {
+                                  if (_idController.text.length > 0 &&
+                                      _passwordController.text.length > 0 &&
+                                      _verifyPasswordController.text.length > 0) {
+                                    if (_passwordController.text ==
+                                        _verifyPasswordController.text) {
+                                      if(idcheckOk) {
+                                        if (authOk) {
+                                          setState(() {
+                                            showLoading = true;
+                                          });
+                                          signUp(_nameController.text, _idController.text,
+                                              _passwordController.text,"010${_phoneNumberController1
+                                                  .text}${_phoneNumberController2.text}");
+
+                                          //await signUpUserCredential(id:idController.text ,password:passwordController.text );
+
+                                          setState(() {
+                                            showLoading = false;
+                                            Navigator.push(context, MaterialPageRoute(
+                                                builder: (context) => MainScreen(userId: _idController.text)),);
+                                          });
+                                        }
+                                        else {
+                                          Fluttertoast.showToast(
+                                              msg: "휴대폰 인증을 완료해주세요.",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: Colors.red,
+                                              fontSize: 16.0
+                                          );
+                                        }
+                                      }
+                                      else{
+                                        Fluttertoast.showToast(
+                                            msg: "아이디 중복확인을 해주세요.",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.red,
+                                            fontSize: 16.0
+                                        );
+                                      }
+                                    }
+                                    else {
+                                      Fluttertoast.showToast(
+                                          msg: "비밀번호를 확인해주세요.",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.red,
+                                          fontSize: 16.0
+                                      );
+                                    }
+                                  }
+                                  else {
+                                    Fluttertoast.showToast(
+                                        msg: "아이디 및 비밀번호를 확인해주세요.",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.red,
+                                        fontSize: 16.0
+                                    );
+                                  }
+                                }
+                                else {
+                                  Fluttertoast.showToast(
+                                      msg: "이름을 입력해주세요.",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      fontSize: 16.0
+                                  );
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xfff9d94b),
+                                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                                  minimumSize: Size(double.infinity,0),
+                                  elevation: 0,
+
+
+
+                                  textStyle: TextStyle(
+
+                                      fontWeight: FontWeight.bold)),
+                            )
+                        )
+                        ,
+                        SizedBox(height: 30,),
                       ],
                     ),
                   ),
-                  SizedBox(height: 10,),
-                  ElevatedButton(
-                    child: Text('가입하기'),
-                    onPressed: ()async {
-                      if (_nameController.text.length > 0) {
-                        if (_idController.text.length > 0 &&
-                            _passwordController.text.length > 0 &&
-                            _verifyPasswordController.text.length > 0) {
-                          if (_passwordController.text ==
-                              _verifyPasswordController.text) {
-                            if(idcheckOk) {
-                              if (authOk) {
-                                setState(() {
-                                  showLoading = true;
-                                });
-                                signUp(_nameController.text, _idController.text,
-                                    _passwordController.text,"010${_phoneNumberController1
-                                        .text}${_phoneNumberController2.text}");
 
-                                //await signUpUserCredential(id:idController.text ,password:passwordController.text );
+                  Positioned.fill(
+                    child: Visibility(
+                        visible: showLoading,
+                        child: Container(
+                            width: double.infinity,
+                            height: double.infinity,
 
-                                setState(() {
-                                  showLoading = false;
-                                  Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) => MainScreen(userId: _idController.text)),);
-                                });
-                              }
-                              else {
-                                Fluttertoast.showToast(
-                                    msg: "휴대폰 인증을 완료해주세요.",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    fontSize: 16.0
-                                );
-                              }
-                            }
-                            else{
-                              Fluttertoast.showToast(
-                                  msg: "아이디 중복확인을 해주세요.",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.red,
-                                  fontSize: 16.0
-                              );
-                            }
-                          }
-                          else {
-                            Fluttertoast.showToast(
-                                msg: "비밀번호를 확인해주세요.",
-                                toastLength: Toast.LENGTH_SHORT,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.red,
-                                fontSize: 16.0
-                            );
-                          }
-                        }
-                        else {
-                          Fluttertoast.showToast(
-                              msg: "아이디 및 비밀번호를 확인해주세요.",
-                              toastLength: Toast.LENGTH_SHORT,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.red,
-                              fontSize: 16.0
-                          );
-                        }
-                      }
-                      else {
-                        Fluttertoast.showToast(
-                            msg: "이름을 입력해주세요.",
-                            toastLength: Toast.LENGTH_SHORT,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
-                            fontSize: 16.0
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.black,
-                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                        minimumSize: Size(double.infinity,0),
+                            child: Center(child: Container(
+                                width: MediaQuery.of(context).size.width*0.9,
+                                height: 80,
+                                color: Colors.white,
+                                child: Center(child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator()),
+                                    SizedBox(width: 20,),
+                                    Text("잠시만 기다려 주세요"),
+                                    SizedBox(width: 20,),
+                                    Opacity(
+                                      opacity: 0,
+                                      child: SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator()),
+                                    ),
 
 
+                                  ],
+                                ))))
 
-                        textStyle: TextStyle(
-
-                            fontWeight: FontWeight.bold)),
-                  ),
-                  SizedBox(height: 30,),
+                        )
+                    ),
+                  )
                 ],
               ),
-            ),
-
-            Positioned.fill(
-              child: Visibility(
-                  visible: showLoading,
-                  child: Container(
-                      width: double.infinity,
-                      height: double.infinity,
-
-                      child: Center(child: Container(
-                          width: MediaQuery.of(context).size.width*0.9,
-                          height: 80,
-                          color: Colors.white,
-                          child: Center(child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator()),
-                              SizedBox(width: 20,),
-                              Text("잠시만 기다려 주세요"),
-                              SizedBox(width: 20,),
-                              Opacity(
-                                opacity: 0,
-                                child: SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator()),
-                              ),
-
-
-                            ],
-                          ))))
-
-                  )
-              ),
             )
-          ],
-        )
+
     );
   }
   Widget numberInsert(
@@ -639,8 +693,10 @@ class _SignupScreenState extends State<SignupScreen> {
       }){
     return TextFormField(
       enabled: editAble,
+      textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 12,
+
       ),
       decoration: InputDecoration(
         contentPadding: new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
@@ -648,13 +704,13 @@ class _SignupScreenState extends State<SignupScreen> {
         counterText: "",
         hintText: hintText,
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: BorderSide(color: Color(0xfff1f2f3)),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.red),
         ),
         disabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: BorderSide(color: Color(0xfff1f2f3)),
         ),
       ),
 
