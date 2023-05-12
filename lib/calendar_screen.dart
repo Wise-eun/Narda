@@ -77,123 +77,122 @@ class _CalendarScreenState extends State<CalendarScreen> {
         title: Text('정산'),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            width: mediaQuery.size.width,
-            height: 100,
-            child: Text('이번달 수입'),
-          ),
-          SizedBox(
-            width: mediaQuery.size.width,
-            height: 250,
-            child: Column(
-              children: [
-                Text('월 평균 수입 '),
-                Text('총 배달 거리 '),
-                Text('하루 평균 건수'),
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              width: mediaQuery.size.width,
+              child: Text('이번달 수입'),
             ),
-          ),
-          TableCalendar(
-          //shouldFillViewport: true,
-          //locale: 'ko-KR',
-          firstDay: DateTime.utc(2022, 10, 4),
-          lastDay: DateTime.utc(2030, 10, 4),
-          focusedDay: focusedDay,
-          onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
-            setState(() {
-              this.selectedDay = selectedDay;
-              this.focusedDay = focusedDay;
-            });
-            print(events[selectedDay].toString());
-            _selectedEvents.value = _getEventsForDay(selectedDay);
-            print(_selectedEvents.value);
-          },
-          selectedDayPredicate: (DateTime day) {
-            return isSameDay(selectedDay, day);
-          },
+            SizedBox(
+              width: mediaQuery.size.width,
+              child: Column(
+                children: [
+                  Text('월 평균 수입 '),
+                  Text('총 배달 거리 '),
+                  Text('하루 평균 건수'),
+                ],
+              ),
+            ),
+            TableCalendar(
+              //shouldFillViewport: true,
+              //locale: 'ko-KR',
+              firstDay: DateTime.utc(2022, 10, 4),
+              lastDay: DateTime.utc(2030, 10, 4),
+              focusedDay: focusedDay,
+              onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
+                setState(() {
+                  this.selectedDay = selectedDay;
+                  this.focusedDay = focusedDay;
+                });
+                print(events[selectedDay].toString());
+                _selectedEvents.value = _getEventsForDay(selectedDay);
+                print(_selectedEvents.value);
+              },
+              selectedDayPredicate: (DateTime day) {
+                return isSameDay(selectedDay, day);
+              },
 
-          eventLoader: _getEventsForDay,
-          onFormatChanged: (CalendarFormat _format) {
-            setState(() {
-              format = _format;
-            });
-          },
+              eventLoader: _getEventsForDay,
+              onFormatChanged: (CalendarFormat _format) {
+                setState(() {
+                  format = _format;
+                });
+              },
 
-          headerStyle: HeaderStyle(
-            titleCentered: true,
-            titleTextFormatter: (date, locale) =>
-                DateFormat.yMMMMd(locale).format(date),
-            formatButtonVisible: false,
-            titleTextStyle: const TextStyle(
-              fontSize: 20,
-              color: Colors.blue,
-            ),
-            headerPadding: const EdgeInsets.symmetric(vertical: 4),
-            leftChevronIcon: const Icon(
-              Icons.arrow_left,
-              size: 40,
-            ),
-            rightChevronIcon: const Icon(
-              Icons.arrow_right,
-              size: 40,
-            ),
-          ),
+              headerStyle: HeaderStyle(
+                titleCentered: true,
+                titleTextFormatter: (date, locale) =>
+                    DateFormat.yMMMMd(locale).format(date),
+                formatButtonVisible: false,
+                titleTextStyle: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.blue,
+                ),
+                headerPadding: const EdgeInsets.symmetric(vertical: 4),
+                leftChevronIcon: const Icon(
+                  Icons.arrow_left,
+                  size: 40,
+                ),
+                rightChevronIcon: const Icon(
+                  Icons.arrow_right,
+                  size: 40,
+                ),
+              ),
 
-          calendarStyle: const CalendarStyle(
-            canMarkersOverflow: false, //셀 영역 벗어남 여부
-            markersAutoAligned: true, //자동정렬
-            markerSize: 10, //마커 크기
-            markerSizeScale: 10, //마커 크기 비율
-            markerMargin: EdgeInsets.symmetric(horizontal: 3), //마진 조절
-            markersAlignment: Alignment.bottomCenter, //마커 위치
-            markersMaxCount: 2, //한줄에 마커 수
-            markersOffset: PositionedOffset(),
-            markerDecoration: BoxDecoration(//마커 모양
-              color: Colors.black,
-              shape: BoxShape.circle,
-            ),
+              calendarStyle: const CalendarStyle(
+                canMarkersOverflow: false, //셀 영역 벗어남 여부
+                markersAutoAligned: true, //자동정렬
+                markerSize: 10, //마커 크기
+                markerSizeScale: 10, //마커 크기 비율
+                markerMargin: EdgeInsets.symmetric(horizontal: 3), //마진 조절
+                markersAlignment: Alignment.bottomCenter, //마커 위치
+                markersMaxCount: 2, //한줄에 마커 수
+                markersOffset: PositionedOffset(),
+                markerDecoration: BoxDecoration(//마커 모양
+                  color: Colors.black,
+                  shape: BoxShape.circle,
+                ),
 
-            isTodayHighlighted: true, //오늘 표시 여부
-            todayTextStyle: const TextStyle(//글자 조정
-              color: const Color(0xFFFAFAFA),
-              fontSize: 16,
-            ),
-            todayDecoration: const BoxDecoration(//모양 조정
-              color: const Color(0xFF9FA8DA),
-              shape: BoxShape.circle,
-            ),
+                isTodayHighlighted: true, //오늘 표시 여부
+                todayTextStyle: const TextStyle(//글자 조정
+                  color: const Color(0xFFFAFAFA),
+                  fontSize: 16,
+                ),
+                todayDecoration: const BoxDecoration(//모양 조정
+                  color: const Color(0xFF9FA8DA),
+                  shape: BoxShape.circle,
+                ),
 
-            selectedTextStyle: const TextStyle(//선택한 날 글자
-              color: const Color(0xFFFAFAFA),
-              fontSize: 16,
-            ),
-            selectedDecoration: const BoxDecoration(//선택한 날 모양
-              color: const Color(0xFF5C6BC0),
-              shape: BoxShape.circle,
-            ),
+                selectedTextStyle: const TextStyle(//선택한 날 글자
+                  color: const Color(0xFFFAFAFA),
+                  fontSize: 16,
+                ),
+                selectedDecoration: const BoxDecoration(//선택한 날 모양
+                  color: const Color(0xFF5C6BC0),
+                  shape: BoxShape.circle,
+                ),
 
-            outsideDaysVisible: true, //다른 달 날짜 노출
-            outsideTextStyle: const TextStyle(color: const Color(0xFFAEAEAE)),
-            outsideDecoration: const BoxDecoration(
-              shape: BoxShape.circle,
-            ),
+                outsideDaysVisible: true, //다른 달 날짜 노출
+                outsideTextStyle: const TextStyle(color: const Color(0xFFAEAEAE)),
+                outsideDecoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
 
-            weekendTextStyle: const TextStyle(
-              color: Colors.red,
-            ),
-            weekendDecoration: const BoxDecoration(
-              shape: BoxShape.circle,
-            ),
+                weekendTextStyle: const TextStyle(
+                  color: Colors.red,
+                ),
+                weekendDecoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
 
-            cellMargin: const EdgeInsets.all(6),
-            cellPadding: const EdgeInsets.all(0),
-            cellAlignment: Alignment.center,
-          ),
-        ),
-          //캘린더 이벤트를 리스트 형식으로 출력
-          /*
+                cellMargin: const EdgeInsets.all(6),
+                cellPadding: const EdgeInsets.all(0),
+                cellAlignment: Alignment.center,
+              ),
+            ),
+            //캘린더 이벤트를 리스트 형식으로 출력
+            /*
           const SizedBox(height: 8),
           Expanded(
             child: ValueListenableBuilder<List<Event>>(
@@ -221,8 +220,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
               },
             )
           )*/
-      ],
-      ),
+          ],
+        ),
+      )
     );
   }
 }
