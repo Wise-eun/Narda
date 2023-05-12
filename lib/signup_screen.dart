@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:speelow/initial_setting_screen.dart';
 import 'package:speelow/main_screen.dart';
 import 'package:http/http.dart' as http;
 import 'api/api.dart';
@@ -565,7 +566,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                           setState(() {
                                             showLoading = false;
                                             Navigator.push(context, MaterialPageRoute(
-                                                builder: (context) => MainScreen(userId: _idController.text)),);
+                                                builder: (context) => InitialSettingScreen()),);
                                           });
                                         }
                                         else {

@@ -36,7 +36,7 @@ class MenuBottom extends StatelessWidget {
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  TestPage(userId: userId,)),
+                MaterialPageRoute(builder: (context) =>  MainScreen(userId: userId,)),
               );
               break;
             case 2:

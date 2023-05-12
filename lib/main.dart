@@ -75,7 +75,7 @@ class _LoginscreenState extends State<Loginscreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => TestPage(userId: _idController.text)),
+                builder: (context) => MainScreen(userId: _idController.text)),
           );
         } else {
           showToastMessage("로그인 실패");
