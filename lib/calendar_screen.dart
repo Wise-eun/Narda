@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'api/api.dart';
+import 'menu_bottom.dart';
 import 'model/user.dart';
 
 RiderUser? rideruser;
@@ -33,6 +34,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
     DateTime.utc(2023, 5, 4): [Event('45,000원')],
     DateTime.utc(2023, 5, 20): [Event('120,000원')],
     DateTime.utc(2023, 5, 23): [Event('78,000원')],
+  };
+
+  Map<DateTime, String> money = {
+    DateTime.utc(2023, 5, 4): '45,000원',
+    DateTime.utc(2023, 5, 20): '120,000원',
+    DateTime.utc(2023, 5, 23): '78,000원',
   };
 
   List<Event> _getEventsForDay(DateTime day) {
@@ -73,6 +80,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
+        bottomNavigationBar: MenuBottom(userId: widget.riderId),
       appBar: AppBar(
         title: Text('정산'),
         centerTitle: true,
@@ -82,21 +90,33 @@ class _CalendarScreenState extends State<CalendarScreen> {
           children: [
             SizedBox(
               width: mediaQuery.size.width,
-              child: Text('이번달 수입'),
+              height: 15,
             ),
             SizedBox(
               width: mediaQuery.size.width,
+              child: Text(
+                  '이번달 수입',
+                textAlign: TextAlign.center,
+                style : TextStyle(fontSize: 18),
+              ),
+            ),
+            Container(
+              width: mediaQuery.size.width,
+              margin: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(5),
+              color: Colors.grey[350],
               child: Column(
                 children: [
-                  Text('월 평균 수입 '),
-                  Text('총 배달 거리 '),
-                  Text('하루 평균 건수'),
+                  Text('월 평균 수입 : '),
+                  Text('총 배달 거리 : '),
+                  Text('하루 평균 건수: '),
                 ],
               ),
             ),
             TableCalendar(
               //shouldFillViewport: true,
-              //locale: 'ko-KR',
+              locale: 'ko-KR',
+              rowHeight: 65,
               firstDay: DateTime.utc(2022, 10, 4),
               lastDay: DateTime.utc(2030, 10, 4),
               focusedDay: focusedDay,
@@ -120,6 +140,30 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 });
               },
 
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (BuildContext context, date, events) {
+                  if(events.isEmpty) return SizedBox();
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: events.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.only(top:20),
+                        padding: const EdgeInsets.all(1),
+                        child: Text(
+                          '\n\n${money[date]}',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 13,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+              ),
+
               headerStyle: HeaderStyle(
                 titleCentered: true,
                 titleTextFormatter: (date, locale) =>
@@ -141,7 +185,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
 
               calendarStyle: const CalendarStyle(
-                canMarkersOverflow: false, //셀 영역 벗어남 여부
+                canMarkersOverflow: true, //셀 영역 벗어남 여부
                 markersAutoAligned: true, //자동정렬
                 markerSize: 10, //마커 크기
                 markerSizeScale: 10, //마커 크기 비율
@@ -191,8 +235,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 cellAlignment: Alignment.center,
               ),
             ),
+/*
             //캘린더 이벤트를 리스트 형식으로 출력
-            /*
           const SizedBox(height: 8),
           Expanded(
             child: ValueListenableBuilder<List<Event>>(
@@ -219,7 +263,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 );
               },
             )
-          )*/
+          )
+*/
           ],
         ),
       )

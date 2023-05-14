@@ -17,10 +17,11 @@ import 'model/order.dart';
 import 'initial_setting_screen.dart';
 import 'order_list.dart';
 import 'package:naver_map_plugin/naver_map_plugin.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   KakaoSdk.init(nativeAppKey: '3e8531d2fdf84a885535fc7c4ac309ca');
-  //await local.initializeDateFormatting();
+  await initializeDateFormatting();
   WidgetsFlutterBinding.ensureInitialized();
   await NaverMapSdk.instance.initialize(clientId: '41fe7y8m8r');
   await Firebase.initializeApp(
