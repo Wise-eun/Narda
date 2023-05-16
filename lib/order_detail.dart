@@ -176,7 +176,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.black),
                           ),
-                          onPressed: () async {},
+                          onPressed: () async {
+
+                          },
                           child: Text('완료'))
                       : ElevatedButton(
                           onPressed: () async {
