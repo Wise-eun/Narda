@@ -181,7 +181,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                         ),
                         Container(
                           margin: EdgeInsets.only(left: 10, right: 10),
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("느리게"),
@@ -230,7 +230,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                         Container(
                           margin:
                               EdgeInsets.only(left: 10, right: 10, bottom: 20),
-                          child:  Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("작게"),
@@ -296,7 +296,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                         Container(
                           margin:
                               EdgeInsets.only(left: 10, right: 10, bottom: 15),
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("1km"),
