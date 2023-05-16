@@ -214,7 +214,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   decoration: const InputDecoration(
                                       labelText: '이름 입력',
                                       border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                        borderRadius: BorderRadius.all(Radius.circular(0)),
                                         borderSide: BorderSide.none,
                                       ),
                                       filled: true,

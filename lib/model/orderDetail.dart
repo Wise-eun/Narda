@@ -2,6 +2,7 @@ class OrderDetail{
   int orderId;
   int state;
   String orderTime;
+  int predictTime;
   String? pickupTime;
   String? deliveryTime;
   double deliveryDistance;
@@ -18,7 +19,7 @@ class OrderDetail{
   String storeLocation;
   //storeId 중복으로 출력 -> 중복 제거 필요
 
-  OrderDetail(this.orderId, this.state, this.orderTime, this.pickupTime, this.deliveryTime,
+  OrderDetail(this.orderId, this.state, this.orderTime, this.predictTime,this.pickupTime, this.deliveryTime,
       this.deliveryDistance, this.deliveryFee, this.deliveryLocation, this.deliveryRequest,
       this.riderId, this.storeId, this.payment, this.orderInfo, this.customerNum, this.storeName, this.storePhoneNum, this.storeLocation);
 
@@ -26,6 +27,7 @@ class OrderDetail{
     int.parse(json['orderId']),
     int.parse(json['state']),
     json['orderTime'] as String,
+    int.parse(json['predictTime']),
     json['pickupTime'] as String?,
     json['deliveryTime'] as String?,
     double.parse(json['deliveryDistance']),
@@ -47,6 +49,7 @@ class OrderDetail{
     'orderId' : orderId.toString(),
     'state' : state.toString(),
     'orderTime' : orderTime,
+    'predictTime' : predictTime.toString(),
     'pickupTime' : pickupTime,
     'deliveryTime' : deliveryTime,
     'deliveryDistance' : deliveryDistance.toString(),

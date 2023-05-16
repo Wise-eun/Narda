@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //import 'package:naver_map_plugin/naver_map_plugin.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:speelow/DirectionProviders.dart';
+//import 'package:speelow/DirectionProviders.dart';
 import 'package:speelow/menu_bottom.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:speelow/DirectionProviders.dart';
-import 'model/directions.dart';
+//import 'package:speelow/DirectionProviders.dart';
+//import 'model/directions.dart';
 
 
 
@@ -114,8 +114,8 @@ class MainScreenState extends State<MainScreen> {
     }
   }
 
-  late List<Routes> directions = [];
-  DirectionProvider directionProvider = DirectionProvider();
+  //late List<Routes> directions = [];
+  //DirectionProvider directionProvider = DirectionProvider();
   @override
   void initState() {
     // TODO: implement initState
@@ -125,10 +125,10 @@ class MainScreenState extends State<MainScreen> {
   }
 
   Future PrintDestination() async{
-    directions = await directionProvider.getDestination();
-    print("DESTINATION!!!!");
-    print(directions.toString());
-    print(directions.length);
+    // directions = await directionProvider.getDestination();
+    // print("DESTINATION!!!!");
+    // print(directions.toString());
+    // print(directions.length);
   }
 
   @override
