@@ -152,7 +152,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final mapSize =
         Size(mediaQuery.size.width - 32, mediaQuery.size.height - 72);
     return Scaffold(
-        bottomNavigationBar: MenuBottom(userId: (widget.orderId).toString()),
+
         body: Scrollbar(
             controller: _scrollController,
             isAlwaysShown: true,

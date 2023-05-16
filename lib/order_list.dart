@@ -113,7 +113,7 @@ class _ListviewPageState extends State<ListviewPage> {
     return CupertinoPageScaffold(
       navigationBar: _navigationBar,
       child: Scaffold(
-        bottomNavigationBar: MenuBottom(userId: widget.userId),
+        bottomNavigationBar: MenuBottom(userId: widget.userId, tabItem: TabItem.list ),
         body: Column(children: <Widget>[
           const SizedBox(
             height: 10,

@@ -1,53 +1,108 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:speelow/main_screen.dart';
 import 'mypage_screen.dart';
 import 'order_list.dart';
 
-int _selectedIndex = 1;
+enum TabItem {home,list,mypage}
+const Map<TabItem, int> tabIdx = {
+  TabItem.home: 0,
+  TabItem.list: 1,
+  TabItem.mypage: 2,
+};
 
-class MenuBottom extends StatelessWidget {
-  const MenuBottom({Key? key, required this.userId}) : super(key: key);
+List<BottomNavigationBarItem> navbarItems = [
+  BottomNavigationBarItem(
+    icon: Icon(Icons.home),
+    label: 'Home',
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(Icons.list),
+    label: 'List',
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(Icons.account_circle_rounded),
+    label: 'MyPage',
+  ),
+
+];
+
+class MenuBottom extends StatefulWidget {
+  const MenuBottom({Key? key, required this.userId, required this.tabItem}) : super(key: key);
   final String userId;
+final TabItem tabItem;
+  @override
+  _MenuBottomState createState() => _MenuBottomState();
+}
+
+class _MenuBottomState extends State<MenuBottom> {
+
+  int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
 
   void _onItemTapped(int idx){
-    setState(){
+    setState((){
       _selectedIndex = idx;
-    }
+    });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
+    _selectedIndex = widget.tabItem.index;
     return BottomNavigationBar(
-        items: const[
-          BottomNavigationBarItem(icon: Icon(Icons.list), label:'List'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label:'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle_rounded), label:'MyPage')
-        ],
-        currentIndex: _selectedIndex,
-        onTap: (int index)
-        {
-          switch(index){
-            case 0:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) =>  ListviewPage(userId: userId)),
-              );
-              break;
-            case 1:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) =>  MainScreen(userId: userId,)),
-              );
-              break;
-            case 2:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) =>  MyPageScreen(userId: userId)),
-              );
-              break;
-          };
-          _onItemTapped(index);
+      items: [
+        _buildItem(TabItem.home),
+        _buildItem(TabItem.list),
+        _buildItem(TabItem.mypage)
+      ],
+      currentIndex: _selectedIndex,
+      onTap: (int index)
+      {
+        TabItem.values[index];
+        _onItemTapped(index);
+        switch(index){
+          case 0:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>  MainScreen(userId: widget.userId,)),
+            );
+            break;
+          case 1:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>  ListviewPage(userId: widget.userId)),
+            );
+            break;
+          case 2:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>  MyPageScreen(userId: widget.userId)),
+            );
+            break;
+        };
 
-        },);
+
+
+      },);
   }
+
+BottomNavigationBarItem _buildItem(TabItem tabItem){
+    return navbarItems[tabIdx[tabItem]!];
+
 }
+
+}
+
+
+
+
+
