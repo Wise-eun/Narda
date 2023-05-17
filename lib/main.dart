@@ -231,9 +231,9 @@ class _LoginscreenState extends State<Loginscreen> {
                     TextButton(onPressed: (){
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => AfterOrderListScreen(userId: 'user1')),
+                        MaterialPageRoute(builder: (context) => OrderListScreen()),
                       );
-                    }, child: Text("진행중/완료 오더 리스트")),
+                    }, child: Text("신규 오더 리스트")),
                     Spacer(),
                   ],
                 )

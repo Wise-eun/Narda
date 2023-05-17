@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:speelow/main_screen.dart';
+import 'after_order_list.dart';
 import 'mypage_screen.dart';
 import 'order_list.dart';
 
@@ -79,7 +80,7 @@ class _MenuBottomState extends State<MenuBottom> {
           case 1:
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) =>  ListviewPage(userId: widget.userId)),
+              MaterialPageRoute(builder: (context) =>  AfterOrderListScreen(userId: widget.userId)),
             );
             break;
           case 2:

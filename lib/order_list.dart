@@ -11,15 +11,14 @@ import 'order_detail.dart';
 
 List<OrderDetail> orders = [];
 
-class ListviewPage extends StatefulWidget {
-  const ListviewPage({Key? key, required this.userId}) : super(key: key);
-  final String userId;
+class OrderListScreen extends StatefulWidget {
+  const OrderListScreen({Key? key}) : super(key: key);
 
   @override
-  _ListviewPageState createState() => _ListviewPageState();
+  _OrderListScreenState createState() => _OrderListScreenState();
 }
 
-class _ListviewPageState extends State<ListviewPage> {
+class _OrderListScreenState extends State<OrderListScreen> {
   late ScrollController scrollController;
   SlidingUpPanelController panelController = SlidingUpPanelController();
 
