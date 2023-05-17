@@ -2,6 +2,7 @@ class Order{
   int orderId;
   int state;
   String orderTime;
+  int predictTime;
   String? pickupTime;
   String? deliveryTime;
   double deliveryDistance;
@@ -14,14 +15,15 @@ class Order{
   String orderInfo;
   String customerNum;
 
-  Order(this.orderId, this.state, this.orderTime, this.pickupTime, this.deliveryTime,
-  this.deliveryDistance, this.deliveryFee, this.deliveryLocation, this.deliveryRequest,
-  this.riderId, this.storeId, this.payment, this.orderInfo, this.customerNum);
+  Order(this.orderId, this.state, this.orderTime, this.predictTime,this.pickupTime, this.deliveryTime,
+      this.deliveryDistance, this.deliveryFee, this.deliveryLocation, this.deliveryRequest,
+      this.riderId, this.storeId, this.payment, this.orderInfo, this.customerNum);
 
   factory Order.fromJson(Map<String,dynamic> json) => Order(
     int.parse(json['orderId']),
     int.parse(json['state']),
     json['orderTime'] as String,
+    int.parse(json['predictTime']),
     json['pickupTime'] as String?,
     json['deliveryTime'] as String?,
     double.parse(json['deliveryDistance']),
@@ -40,6 +42,7 @@ class Order{
     'orderId' : orderId.toString(),
     'state' : state.toString(),
     'orderTime' : orderTime,
+    'predictTime' : predictTime.toString(),
     'pickupTime' : pickupTime,
     'deliveryTime' : deliveryTime,
     'deliveryDistance' : deliveryDistance.toString(),

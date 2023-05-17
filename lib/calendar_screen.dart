@@ -115,7 +115,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     print('빌드하는 곳!!!!');
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
-        bottomNavigationBar: MenuBottom(userId: widget.userId),
+        //bottomNavigationBar: MenuBottom(userId: widget.userId),
         appBar: AppBar(
           title: Text('정산'),
           centerTitle: true,
@@ -309,5 +309,7 @@ class Event {
   String title;
   Event(this.title);
 }
+
+
 
 

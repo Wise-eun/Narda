@@ -6,6 +6,7 @@ import 'package:speelow/find_id_screen.dart';
 import 'package:speelow/main_screen.dart';
 import 'package:speelow/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart' hide Order;
+import 'after_order_list.dart';
 import 'api/api.dart';
 import 'find_pw_screen.dart';
 import 'firebase_options.dart' hide Order;
@@ -227,6 +228,12 @@ class _LoginscreenState extends State<Loginscreen> {
                           },
                           child: Text('회원가입', style: TextStyle(color: Colors.black))),
                     ),
+                    TextButton(onPressed: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AfterOrderListScreen(userId: 'user1')),
+                      );
+                    }, child: Text("진행중/완료 오더 리스트")),
                     Spacer(),
                   ],
                 )
