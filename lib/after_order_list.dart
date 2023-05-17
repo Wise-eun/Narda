@@ -187,6 +187,7 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
         length: 2,
         child: Scaffold(
           backgroundColor: Colors.white,
+          bottomNavigationBar: MenuBottom(userId: widget.userId, tabItem: TabItem.list),
           appBar: AppBar(
             title: Container(
               child:
