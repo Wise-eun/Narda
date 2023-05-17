@@ -1,61 +1,72 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
 import 'package:http/http.dart' as http;
 
 import 'api/api.dart';
-import 'menu_bottom.dart';
-import 'model/order.dart';
 import 'model/orderDetail.dart';
 import 'order_detail.dart';
 
 List<OrderDetail> orders = [];
 
 class ListviewPage extends StatefulWidget {
-  // const ListviewPage({Key? key, required this.orders}) : super(key: key);
   const ListviewPage({Key? key, required this.userId}) : super(key: key);
   final String userId;
+
   @override
   _ListviewPageState createState() => _ListviewPageState();
 }
 
 class _ListviewPageState extends State<ListviewPage> {
+  late ScrollController scrollController;
+  SlidingUpPanelController panelController = SlidingUpPanelController();
+
   @override
   void initState() {
+    scrollController = ScrollController();
+    scrollController.addListener(() {
+      if (scrollController.offset >=
+              scrollController.position.maxScrollExtent &&
+          !scrollController.position.outOfRange) {
+        panelController.expand();
+      } else if (scrollController.offset <=
+              scrollController.position.minScrollExtent &&
+          !scrollController.position.outOfRange) {
+        panelController.anchor();
+      } else {}
+    });
     // TODO: implement initState
     orderList("deliveryFee");
     super.initState();
   }
 
-  orderList(String sort) async{
-    try{
-      var response = await http.post(
-          Uri.parse(API.orderList),
-          body:{
-            'sort' : sort,
-          }
-      );
-      if(response.statusCode == 200){
+  orderList(String sort) async {
+    try {
+      var response = await http.post(Uri.parse(API.orderList), body: {
+        'sort': sort,
+      });
+      if (response.statusCode == 200) {
         orders = [];
         var responseBody = jsonDecode(response.body);
-        if(responseBody['success'] == true){
+        if (responseBody['success'] == true) {
           print("$sort 오더 리스트 불러오기 성공");
 
           List<dynamic> responseList = responseBody['userData'];
-          for(int i=0; i<responseList.length; i++){
+          for (int i = 0; i < responseList.length; i++) {
             print(OrderDetail.fromJson(responseList[i]));
             orders.add(OrderDetail.fromJson(responseList[i]));
           }
-        }
-        else {
+        } else {
           print("오더 리스트 불러오기 실패");
         }
         setState(() {});
         return orders;
       }
-    }catch(e){print(e.toString());}
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   List<String> list = ["배달비 높은 순", "거리순", "경과시간순"];
@@ -63,13 +74,6 @@ class _ListviewPageState extends State<ListviewPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    var navigationTextStyle =
-        TextStyle(color: CupertinoColors.white, fontFamily: 'GyeonggiMedium');
-
-    var _navigationBar = CupertinoNavigationBar(
-        middle: Text("신규 오더 리스트", style: navigationTextStyle),
-        backgroundColor: CupertinoColors.systemBlue);
 
     var _listView = ListView.separated(
       padding: const EdgeInsets.all(8),
@@ -79,33 +83,25 @@ class _ListviewPageState extends State<ListviewPage> {
         String storeDong = "";
         String deliveryDong = "";
 
-        if(orders[index].payment == 0) payment = "선결제";
-        else if(orders[index].payment == 1) payment = "카드 결제";
-        else payment = "현금 결제";
+        if (orders[index].payment == 0)
+          payment = "선결제";
+        else if (orders[index].payment == 1)
+          payment = "현장결제(카드)";
+        else
+          payment = "현장결제(현금)";
 
         final storeLocationList = orders[index].storeLocation.split(' ');
-        storeDong = storeLocationList[storeLocationList.length-2];
-        // storeLocationList.forEach((element) {
-        //   if(element[element.length-1] == '동'){
-        //     storeDong = element;
-        //   }
-        // });
+        storeDong = storeLocationList[storeLocationList.length - 2];
 
         final deliveryLocationList = orders[index].deliveryLocation.split(' ');
-        deliveryDong = deliveryLocationList[deliveryLocationList.length-2];
-
-        // deliveryLocationList.forEach((element) {
-        //   if(element[element.length-1] == '동'){
-        //     deliveryDong = element;
-        //   }
-        // });
+        deliveryDong = deliveryLocationList[deliveryLocationList.length - 2];
 
         DateTime orderTime = DateTime.parse(orders[index].orderTime);
 
         DateTime current = DateTime.now();
         Duration duration = current.difference(orderTime);
-        double percent = (duration.inMinutes/orders[index].predictTime).toDouble();
-
+        double percent =
+            (duration.inMinutes / orders[index].predictTime).toDouble();
 
         return Card(
           child: ListTile(
@@ -119,35 +115,33 @@ class _ListviewPageState extends State<ListviewPage> {
                     "${orders[index].storeName}",
                     style: TextStyle(fontSize: 20),
                   ),
-                  Text("${storeDong} > ${deliveryDong}"),
+                  Text("${storeDong} > ${deliveryDong}  ${payment}"),
                 ]),
             subtitle: Text(""),
             trailing: Column(children: <Widget>[
-              Text(orders[index].deliveryFee.toString() + "원", style: TextStyle(color: Colors.red),),
+              Text(
+                orders[index].deliveryFee.toString() + "원",
+                style: TextStyle(color: Colors.red),
+              ),
               //Text("${duration.inMinutes}분"),
               CircularProgressIndicator(
                 value: percent,
                 color: Colors.red,
                 backgroundColor: Color(0xffE3E5EA),
-                strokeWidth : 6.0,
+                strokeWidth: 6.0,
               ),
             ]),
-            // leading: Text(orders[index].storeId,
-            //     style: const TextStyle(fontSize: 20)),
-            // title: Text(
-            //     "${orders[index].deliveryDistance.toStringAsFixed(2)}km"),
-            // subtitle: Text(orders[index].deliveryLocation),
-            // trailing: Column(children: <Widget>[
-            //   Text("${orders[index].deliveryFee}원"), // icon-1
-            //   Text(payment),
-            //   Text("${duration.inMinutes}분"),
-            // ]),
             isThreeLine: true,
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  OrderDetailScreen(orderId: orders[index].orderId, storeId: orders[index].storeId,)),
-            );},
+                MaterialPageRoute(
+                    builder: (context) => OrderDetailScreen(
+                          orderId: orders[index].orderId,
+                          storeId: orders[index].storeId,
+                        )),
+              );
+            },
           ),
         );
       },
@@ -156,41 +150,82 @@ class _ListviewPageState extends State<ListviewPage> {
       },
     );
 
-    return CupertinoPageScaffold(
-      navigationBar: _navigationBar,
-      child: Scaffold(
-        bottomNavigationBar: MenuBottom(userId: widget.userId, tabItem: TabItem.list ),
-        body: Column(children: <Widget>[
-          const SizedBox(
-            height: 10,
-          ),
-          DropdownButton(
-            value: dropdownValue,
-            items: list.map(
-              (value) {
-                return DropdownMenuItem(
-                  value: value,
-                  child: Text(value),
-                );
-              },
-            ).toList(),
-            onChanged: (String? value) {
-              dropdownValue = value!;
+    return Stack(
+      children: <Widget>[
+        Scaffold(
+          appBar: AppBar(
 
-              if(dropdownValue == "배달비 높은 순"){
-                orderList("deliveryFee");
-              }
-              else if(dropdownValue == "거리순"){
-                orderList("deliveryDistance");
-              }
-              else{
-                orderList("orderTime");
-              }
-            },
           ),
-          Expanded(child: _listView),
-        ]),
-      ),
+          body: Container(
+            child: Center(
+              child: Text('지도'),
+            ),
+          ),
+        ),
+        SlidingUpPanelWidget(
+          controlHeight: 50.0,
+          anchor: 0.4,
+          panelController: panelController,
+          onTap: () {
+            if (SlidingUpPanelStatus.expanded == panelController.status) {
+              panelController.collapse();
+            } else {
+              panelController.expand();
+            }
+          },
+          enableOnTap: true,
+          child: Container(
+            //margin: EdgeInsets.symmetric(horizontal: 15.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Container(
+                  color: Colors.white,
+                  alignment: Alignment.center,
+
+                  height: 40.0,
+                  child: Icon(
+                    Icons.maximize_rounded,
+                    size: 60,
+                    color: Colors.grey,
+                  ),
+                ),
+                DropdownButton(
+                  value: dropdownValue,
+                  items: list.map(
+                    (value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(value),
+                      );
+                    },
+                  ).toList(),
+                  onChanged: (String? value) {
+                    dropdownValue = value!;
+                    if (dropdownValue == "배달비 높은 순") {
+                      orderList("deliveryFee");
+                    } else if (dropdownValue == "거리순") {
+                      orderList("deliveryDistance");
+                    } else {
+                      orderList("orderTime");
+                    }
+                  },
+                ),
+                Flexible(
+                  child: Container(
+                    child: _listView,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
+
   }
 }
