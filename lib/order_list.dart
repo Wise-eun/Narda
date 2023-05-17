@@ -8,9 +8,10 @@ import 'package:http/http.dart' as http;
 import 'api/api.dart';
 import 'menu_bottom.dart';
 import 'model/order.dart';
+import 'model/orderDetail.dart';
 import 'order_detail.dart';
 
-List<Order> orders = [];
+List<OrderDetail> orders = [];
 
 class ListviewPage extends StatefulWidget {
   // const ListviewPage({Key? key, required this.orders}) : super(key: key);
@@ -44,8 +45,8 @@ class _ListviewPageState extends State<ListviewPage> {
 
           List<dynamic> responseList = responseBody['userData'];
           for(int i=0; i<responseList.length; i++){
-            print(Order.fromJson(responseList[i]));
-            orders.add(Order.fromJson(responseList[i]));
+            print(OrderDetail.fromJson(responseList[i]));
+            orders.add(OrderDetail.fromJson(responseList[i]));
           }
         }
         else {
@@ -75,27 +76,72 @@ class _ListviewPageState extends State<ListviewPage> {
       itemCount: orders.length,
       itemBuilder: (BuildContext context, int index) {
         String payment, elapsedTime;
+        String storeDong = "";
+        String deliveryDong = "";
+
         if(orders[index].payment == 0) payment = "선결제";
         else if(orders[index].payment == 1) payment = "카드 결제";
         else payment = "현금 결제";
 
-        DateTime orderTime = DateTime.parse(orders[index].orderTime);
-        DateTime current  = DateTime.now();
+        final storeLocationList = orders[index].storeLocation.split(' ');
+        storeDong = storeLocationList[storeLocationList.length-2];
+        // storeLocationList.forEach((element) {
+        //   if(element[element.length-1] == '동'){
+        //     storeDong = element;
+        //   }
+        // });
 
+        final deliveryLocationList = orders[index].deliveryLocation.split(' ');
+        deliveryDong = deliveryLocationList[deliveryLocationList.length-2];
+
+        // deliveryLocationList.forEach((element) {
+        //   if(element[element.length-1] == '동'){
+        //     deliveryDong = element;
+        //   }
+        // });
+
+        DateTime orderTime = DateTime.parse(orders[index].orderTime);
+
+        DateTime current = DateTime.now();
         Duration duration = current.difference(orderTime);
+        double percent = (duration.inMinutes/orders[index].predictTime).toDouble();
+
 
         return Card(
           child: ListTile(
-            leading: Text(orders[index].storeId,
-                style: const TextStyle(fontSize: 20)),
-            title: Text(
-                "${orders[index].deliveryDistance.toStringAsFixed(2)}km"),
-            subtitle: Text(orders[index].deliveryLocation),
+            leading: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Text(
+                      "${orders[index].orderTime.substring(10, 16)}  ${orders[index].deliveryDistance.toStringAsFixed(2)}km"),
+                  Text(
+                    "${orders[index].storeName}",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Text("${storeDong} > ${deliveryDong}"),
+                ]),
+            subtitle: Text(""),
             trailing: Column(children: <Widget>[
-              Text("${orders[index].deliveryFee}원"), // icon-1
-              Text(payment),
-              Text("${duration.inMinutes}분"),
+              Text(orders[index].deliveryFee.toString() + "원", style: TextStyle(color: Colors.red),),
+              //Text("${duration.inMinutes}분"),
+              CircularProgressIndicator(
+                value: percent,
+                color: Colors.red,
+                backgroundColor: Color(0xffE3E5EA),
+                strokeWidth : 6.0,
+              ),
             ]),
+            // leading: Text(orders[index].storeId,
+            //     style: const TextStyle(fontSize: 20)),
+            // title: Text(
+            //     "${orders[index].deliveryDistance.toStringAsFixed(2)}km"),
+            // subtitle: Text(orders[index].deliveryLocation),
+            // trailing: Column(children: <Widget>[
+            //   Text("${orders[index].deliveryFee}원"), // icon-1
+            //   Text(payment),
+            //   Text("${duration.inMinutes}분"),
+            // ]),
             isThreeLine: true,
             onTap: () {
               Navigator.push(
