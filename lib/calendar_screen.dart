@@ -23,6 +23,8 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   double totalDistance=0.0;
   int totalFee=0;
+  int monthlyFee=0;
+  int delivercount=0;
   CalendarFormat format = CalendarFormat.month;
   late final ValueNotifier<List<Event>> _selectedEvents;
   bool callOk = false;
@@ -47,6 +49,24 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return events?[day] ?? [];
   }
 
+  void account() {
+    delivercount=0;
+    totalDistance=0;
+    monthlyFee=0;
+    print('order length ${order.length}');
+    for(int i=0;i<order.length;i++) {
+      if(selectedDay.year.toString() == order[i].orderTime.substring(0, 4)
+          && selectedDay.toString().substring(5, 7) == order[i].orderTime.substring(5, 7)) {
+        print('조건문 체크2222');
+        print(selectedDay);
+        delivercount=delivercount+1;
+        totalDistance = (totalDistance + order[i].deliveryDistance);
+        print('total distance ${totalDistance}');
+        monthlyFee = (monthlyFee + order[i].deliveryFee);
+      }
+    }
+  }
+
   @override
   void initState() {
     riderDetail();
@@ -67,20 +87,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
           print("불러오기 성공");
           print(responseBody['userData']);
           List<dynamic> responseList = responseBody['userData'];
-          print('000000 ${responseList.length}');
+          print('라이더가 완료한 주문 수 : ${responseList.length}');
+          totalFee=0;
+          monthlyFee=0;
+          delivercount=0;
           for(int i=0;i<responseList.length;i++) {
-            order!.add(calendar.fromJson(responseList[i]));
-            totalFee = (totalFee + order[i].deliveryFee);
-            totalDistance = (totalDistance + order[i].deliveryDistance);
+            order.add(calendar.fromJson(responseList[i]));
             print('orderDay : ${order[i].orderTime}');
             int year = int.parse(order[i].orderTime.substring(0, 4));
             int month = int.parse(order[i].orderTime.substring(5, 7));
             int day = int.parse(order[i].orderTime.substring(8, 10));
-            print('day : $day');
             DateTime orderDay = DateTime.parse(order[i].orderTime.substring(0, 10));
             DateTime orderDay2 = DateTime.utc(year, month, day);
-            print('parse : $orderDay, utc : $orderDay2');
-            //String temp = order[i].deliveryFee.toString();
+            print('money_parse : $orderDay, event_utc : $orderDay2');
+            String temp = order[i].deliveryFee.toString();
             if(money.containsKey(orderDay)) {
               String temp = (int.parse(money[orderDay]!)+order[i].deliveryFee).toString();
               events?[orderDay2] = [Event(temp)];
@@ -92,7 +112,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
               events?[orderDay2] = [Event(temp)];
               money[orderDay] = temp;
             }
+            totalFee = (totalFee + order[i].deliveryFee);
+            if((DateTime.now().year.toString() == order[i].orderTime.substring(0, 4)
+                && DateTime.now().toString().substring(5, 7) == order[i].orderTime.substring(5, 7))) {
+              print('조건문 체크');
+              delivercount=delivercount+1;
+              totalDistance = (totalDistance + order[i].deliveryDistance);
+              monthlyFee = (monthlyFee + order[i].deliveryFee);
+            }
           }
+
         } else {
           print("불러오기 실패");
         }
@@ -110,10 +139,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(events);
+    print('event : $events');
     print('money : $money');
     print('빌드하는 곳!!!!');
+    bool average = false;
     final mediaQuery = MediaQuery.of(context);
+
     return Scaffold(
         //bottomNavigationBar: MenuBottom(userId: widget.userId),
         appBar: AppBar(
@@ -130,20 +161,64 @@ class _CalendarScreenState extends State<CalendarScreen> {
               SizedBox(
                 width: mediaQuery.size.width,
                 child: Text(
-                  '이번달 수입 : $totalFee원',
+                  '이번 달 수입 $monthlyFee원',
                   textAlign: TextAlign.center,
-                  style : TextStyle(fontSize: 18),
+                  style : TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               Container(
                 width: mediaQuery.size.width,
                 margin: const EdgeInsets.all(10),
-                padding: const EdgeInsets.all(5),
-                color: Colors.grey[350],
-                child: Column(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Color(0xff475DFE),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('월 평균 수입 : ${(totalFee/30).toStringAsFixed(2)}원'),
-                    Text('총 배달 거리 : $totalDistance km'),
+                    Text('월 평균 수입 \n총 배달 거리 \n하루 평균 건수 ',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        //fontWeight: FontWeight.w900,
+                      )
+                    ),
+                    Text('${(totalFee/30).toStringAsFixed(2)}원\n'
+                        '$totalDistance km\n'
+                        '${(delivercount/30).toStringAsFixed(2)}건',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        )
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: mediaQuery.size.width-40,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('일일 평균 수입 ${(monthlyFee/30).toStringAsFixed(2)}원',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                        )
+                    ),
+                    Text('                                    평균이하',
+                        style: TextStyle(
+                          color: Colors.blue[400],
+                        )
+                    ),
+                    Text('     평균이상',
+                      style: TextStyle(
+                        color:Colors.red[200],
+                      )
+                    ),
                   ],
                 ),
               ),
@@ -175,25 +250,52 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
                 calendarBuilders: CalendarBuilders(
                     markerBuilder: (BuildContext context, date, events) {
-                      //if(events.isEmpty) return SizedBox();
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: events.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.only(top:20),
-                            padding: const EdgeInsets.all(1),
-                            child: Text(
-                              '\n\n${money?[DateTime.parse(date.toString().substring(0,10))]}',
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 13,
-                              ),
+                      if(events.isEmpty) return SizedBox();
+                      print(int.parse(money[DateTime.parse(date.toString().substring(0,10))]!));
+                      if(int.parse(money[DateTime.parse(date.toString().substring(0,10))]!)
+                          > (monthlyFee/delivercount)) {
+                        average = true;
+                        print('bool chandged');
+                      }
+                      if(average) {
+                        print('true');
+                        return Container(
+                          //margin: const EdgeInsets.only(top:20),
+                          padding: const EdgeInsets.all(1),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            backgroundBlendMode: BlendMode.darken,
+                            color: Colors.red[200],
+                          ),
+                          child: Text(
+                            '\n\n\n\n${money?[DateTime.parse(date.toString().substring(0,10))]}원',
+                            style: TextStyle(
+                              color: Colors.red[200],
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
                             ),
-                          );
-                        },
-                      );
+                          ),
+                        );
+                      }
+                      else {
+                        return Container(
+                          //margin: const EdgeInsets.only(top:20),
+                          padding: const EdgeInsets.all(1),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            backgroundBlendMode: BlendMode.darken,
+                            color: Colors.blue[200],
+                          ),
+                          child: Text(
+                            '\n\n\n\n${money?[DateTime.parse(date.toString().substring(0,10))]}원',
+                            style: TextStyle(
+                              color: Colors.blue[200],
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                            ),
+                          ),
+                        );
+                      }
                     }
                 ),
 
@@ -226,10 +328,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   markersAlignment: Alignment.bottomCenter, //마커 위치
                   markersMaxCount: 2, //한줄에 마커 수
                   markersOffset: PositionedOffset(),
-                  markerDecoration: BoxDecoration(//마커 모양
+                  /*markerDecoration: BoxDecoration(//마커 모양
                     color: Colors.black,
                     shape: BoxShape.circle,
-                  ),
+                  ),*/
 
                   isTodayHighlighted: true, //오늘 표시 여부
                   todayTextStyle: const TextStyle(//글자 조정
@@ -240,7 +342,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     color: const Color(0xFF9FA8DA),
                     shape: BoxShape.circle,
                   ),
-
                   selectedTextStyle: const TextStyle(//선택한 날 글자
                     color: const Color(0xFFFAFAFA),
                     fontSize: 16,

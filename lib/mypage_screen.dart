@@ -64,7 +64,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
-        bottomNavigationBar: MenuBottom(userId: widget.userId, tabItem: TabItem.mypage),
+        bottomNavigationBar: MenuBottom(userId: widget.userId, tabItem: TabItem.mypage,),
         appBar: AppBar(
           title: Text('마이페이지'),
           centerTitle: true,

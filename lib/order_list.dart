@@ -27,11 +27,11 @@ class _OrderListScreenState extends State<OrderListScreen> {
     scrollController = ScrollController();
     scrollController.addListener(() {
       if (scrollController.offset >=
-              scrollController.position.maxScrollExtent &&
+          scrollController.position.maxScrollExtent &&
           !scrollController.position.outOfRange) {
         panelController.expand();
       } else if (scrollController.offset <=
-              scrollController.position.minScrollExtent &&
+          scrollController.position.minScrollExtent &&
           !scrollController.position.outOfRange) {
         panelController.anchor();
       } else {}
@@ -100,7 +100,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
         DateTime current = DateTime.now();
         Duration duration = current.difference(orderTime);
         double percent =
-            (duration.inMinutes / orders[index].predictTime).toDouble();
+        (duration.inMinutes / orders[index].predictTime).toDouble();
 
         return Card(
           child: ListTile(
@@ -136,9 +136,9 @@ class _OrderListScreenState extends State<OrderListScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => OrderDetailScreen(
-                          orderId: orders[index].orderId,
-                          storeId: orders[index].storeId,
-                        )),
+                      orderId: orders[index].orderId,
+                      storeId: orders[index].storeId,
+                    )),
               );
             },
           ),
@@ -195,7 +195,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
                 DropdownButton(
                   value: dropdownValue,
                   items: list.map(
-                    (value) {
+                        (value) {
                       return DropdownMenuItem(
                         value: value,
                         child: Text(value),

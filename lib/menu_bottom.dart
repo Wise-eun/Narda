@@ -32,7 +32,7 @@ List<BottomNavigationBarItem> navbarItems = [
 class MenuBottom extends StatefulWidget {
   const MenuBottom({Key? key, required this.userId, required this.tabItem}) : super(key: key);
   final String userId;
-final TabItem tabItem;
+  final TabItem tabItem;
   @override
   _MenuBottomState createState() => _MenuBottomState();
 }
@@ -96,14 +96,11 @@ class _MenuBottomState extends State<MenuBottom> {
       },);
   }
 
-BottomNavigationBarItem _buildItem(TabItem tabItem){
+  BottomNavigationBarItem _buildItem(TabItem tabItem){
     return navbarItems[tabIdx[tabItem]!];
 
-}
+  }
 
 }
-
-
-
 
 

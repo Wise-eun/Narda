@@ -121,16 +121,16 @@ class MainScreenState extends State<MainScreen> {
     // TODO: implement initState
     //addressToPM();
     getCurrentLocation();
-    PrintDestination();
+    //PrintDestination();
   }
-
+/*
   Future PrintDestination() async{
     // directions = await directionProvider.getDestination();
     // print("DESTINATION!!!!");
     // print(directions.toString());
     // print(directions.length);
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -143,7 +143,7 @@ class MainScreenState extends State<MainScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF343945),
-      bottomNavigationBar: MenuBottom(userId: widget.userId, tabItem: TabItem.home),
+      bottomNavigationBar: MenuBottom(userId: widget.userId, tabItem: TabItem.home,),
       body:
       Center(
           child:

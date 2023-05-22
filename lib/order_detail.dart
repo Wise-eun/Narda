@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:geocoding/geocoding.dart';
+import 'package:geocoding/geocoding.dart' as geo;
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -45,11 +44,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   addressToPM(String address) async {
     //String address = '경북 경산시 대학로 280';
     print('topm 주소 : $address');
-    List<Location> locations = await locationFromAddress(address);
+    List<geo.Location> locations_Destination = await geo.locationFromAddress(address);
+    to_latitude = locations_Destination[0].latitude.toDouble();
+    to_longitude = locations_Destination[0].longitude.toDouble();
+    print('$to_latitude, $to_longitude');
     setState(() {
-      to_latitude = locations[0].latitude.toDouble();
-      to_longitude = locations[0].longitude.toDouble();
-      print('우리집 : $to_latitude, $to_longitude');
+
       getCurrentLocation();
     });
   }
@@ -69,35 +69,46 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             from_latitude = position.latitude;
             from_longitude = position.longitude;
             print('현재위치 받아옴');
-            Size size = new Size(15, 17);
+            Size size = new Size(16, 20);
             final marker = NMarker(
                 id: '출발지', position: NLatLng(from_latitude, from_longitude));
+            //marker.setIconTintColor(Color(0xFF311B92));
+            marker.setIcon(const NOverlayImage.fromAssetImage('asset/images/from.png'));
             marker.setSize(size);
             _mapController.addOverlay(marker);
+
             final marker2 = NMarker(
                 id: '목적지', position: NLatLng(to_latitude, to_longitude));
-            //marker2.setIcon(Colors.black as NOverlayImage?);
-            marker2.setIconTintColor(Colors.blue);
+            marker2.setIcon(const NOverlayImage.fromAssetImage('asset/images/to.png'));
             marker2.setSize(size);
             _mapController.addOverlay(marker2);
 
             print('출발지!!! : $from_latitude, $from_longitude');
-            print('목적지!!! : $to_latitude, $from_longitude');
+            print('목적지!!! : $to_latitude, $to_longitude');
 
             NPathOverlay path = NPathOverlay(id: 'route', coords: [
               NLatLng(from_latitude, from_longitude),
               NLatLng(to_latitude, to_longitude),
             ]);
-            path.setColor(Colors.blue);
-            _mapController.addOverlay(path);
+            path.setPatternImage(
+                NOverlayImage.fromAssetImage('asset/images/testing.png')
+            );
+            path.setPatternInterval(9);
 
-            NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
-                target: NLatLng((from_latitude + to_latitude) / 2,
-                    (from_longitude + to_longitude) / 2),
-                zoom: 11);
+              path.setWidth(10);
+              path.setColor(Colors.blue);
+              _mapController.addOverlay(path);
 
-            if (_mapController != null)
-              _mapController.updateCamera(nCameraUpdate);
+              double centerlat = (from_latitude + to_latitude);
+              double centerlon = (from_longitude + to_longitude);
+              NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
+                  target: NLatLng(centerlat/2, centerlon/2),
+                  zoom: 13.5
+              );
+
+              if (_mapController != null)
+                _mapController.updateCamera(nCameraUpdate);
+
           });
         });
       } else {
@@ -183,15 +194,18 @@ String ReturnStatusString()
           DateTime orderTime = DateTime.parse(order!.orderTime);
           DateTime current = DateTime.now();
           duration = current.difference(orderTime);
-          print("duration : $duration");
-          //address=order!.deliveryLocation;
-          addressToPM(order!.deliveryLocation);
+          String address = order!.deliveryLocation;
+          print('address : $address');
+          addressToPM(address);
+          print('addresstopm passing');
         } else {
           print("오더 디테일 불러오기 실패");
         }
       } else {
         print("오더 디테일 불러오기 실패2");
       }
+      setState(() {
+      });
     } catch (e) {
       print(e.toString());
     }
