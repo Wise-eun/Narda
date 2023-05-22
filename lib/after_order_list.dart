@@ -186,7 +186,8 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
         //print(current.toString() + " " + orderTime.toString());
         //print("percent : " + _percent.toString());
 
-        return Container(
+        return GestureDetector(
+            child:Container(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -249,7 +250,15 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                       )),
                 ],
               )
-            ]));
+            ])),
+        onTap: (){Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => OrderDetailScreen(
+                orderId: completeOrders[index].orderId,
+                storeId: completeOrders[index].storeId,
+              )),
+        );},);
       },
       separatorBuilder: (BuildContext context, int index) {
         return Divider();
@@ -303,7 +312,8 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
             (duration.inMinutes / completeOrders[index].predictTime).toDouble();
         if (_percent >= 1) _percent = 1;
 
-        return Container(
+        return GestureDetector(
+            child:Container(
             margin: EdgeInsets.all(15),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -345,7 +355,19 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                     alignment: Alignment.centerRight,
                     child: Text("총 ${duration.inMinutes}분 소요"),
                   )
-                ]));
+                ])
+        ),
+          onTap: (){
+            Navigator.push(
+               context,
+             MaterialPageRoute(
+                 builder: (context) => OrderDetailScreen(
+                   orderId: completeOrders[index].orderId,
+                   storeId: completeOrders[index].storeId,
+                 )),
+             );
+          },
+        );
       },
       separatorBuilder: (BuildContext context, int index) {
         return Divider();

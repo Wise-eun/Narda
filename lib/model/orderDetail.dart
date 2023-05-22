@@ -44,7 +44,7 @@ class OrderDetail{
     json['storeName'] as String,
     json['storePhoneNum'] as String,
     json['storeLocation'] as String,
-      int.parse(json['orderValue']),
+    int.parse(json['orderValue']),
     json['deliveryLocationDetail'] as String
   );
 
