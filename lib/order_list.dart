@@ -21,6 +21,9 @@ class OrderListScreen extends StatefulWidget {
 class _OrderListScreenState extends State<OrderListScreen> {
   late ScrollController scrollController;
   SlidingUpPanelController panelController = SlidingUpPanelController();
+  int state = 0;
+  TextStyle clicked = TextStyle(color: Colors.white);
+  TextStyle unclicked = TextStyle(color: Colors.black);
 
   @override
   void initState() {
@@ -82,13 +85,6 @@ class _OrderListScreenState extends State<OrderListScreen> {
         String storeDong = "";
         String deliveryDong = "";
 
-        if (orders[index].payment == 0)
-          payment = "선결제";
-        else if (orders[index].payment == 1)
-          payment = "현장결제(카드)";
-        else
-          payment = "현장결제(현금)";
-
         final storeLocationList = orders[index].storeLocation.split(' ');
         storeDong = storeLocationList[storeLocationList.length - 2];
 
@@ -102,47 +98,75 @@ class _OrderListScreenState extends State<OrderListScreen> {
         double percent =
         (duration.inMinutes / orders[index].predictTime).toDouble();
 
-        return Card(
-          child: ListTile(
-            leading: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Text(
-                      "${orders[index].orderTime.substring(10, 16)}  ${orders[index].deliveryDistance.toStringAsFixed(2)}km"),
-                  Text(
-                    "${orders[index].storeName}",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text("${storeDong} > ${deliveryDong}  ${payment}"),
-                ]),
-            subtitle: Text(""),
-            trailing: Column(children: <Widget>[
-              Text(
-                orders[index].deliveryFee.toString() + "원",
-                style: TextStyle(color: Colors.red),
-              ),
-              //Text("${duration.inMinutes}분"),
-              CircularProgressIndicator(
-                value: percent,
-                color: Colors.red,
-                backgroundColor: Color(0xffE3E5EA),
-                strokeWidth: 6.0,
-              ),
-            ]),
-            isThreeLine: true,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => OrderDetailScreen(
-                      orderId: orders[index].orderId,
-                      storeId: orders[index].storeId,
-                    )),
-              );
-            },
-          ),
-        );
+        return GestureDetector(
+          child:Container(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                  decoration: BoxDecoration(
+                                      color: Color(0xfff1f2f3),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Container(
+                                    padding: EdgeInsets.all(5),
+                                    child: Text(
+                                      "${storeDong} > ${deliveryDong}  |  ${orders[index].deliveryDistance.toStringAsFixed(2)}km",
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                  )),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                "${orders[index].storeName}",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                            ],
+                          ),
+                          Text(
+                            "${orders[index].deliveryFee}원",
+                            style: TextStyle(color: Colors.red, fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Stack(
+                      children: [
+                        LinearProgressIndicator(
+                          backgroundColor: Color(0xfff1f2f3),
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                          value: 0.2,
+                          minHeight: 20,
+                        ),
+                        Container(
+                            alignment: Alignment.centerRight,
+                            margin: EdgeInsets.only(right: 10),
+                            child: Text(
+                              "${duration.inMinutes}분",
+                              style: TextStyle(color: Colors.black),
+                            )),
+                      ],
+                    )
+                  ])),
+          onTap: (){Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => OrderDetailScreen(
+                  orderId: orders[index].orderId,
+                  storeId: orders[index].storeId,
+                )),
+          );},);
       },
       separatorBuilder: (BuildContext context, int index) {
         return Divider();
@@ -184,34 +208,29 @@ class _OrderListScreenState extends State<OrderListScreen> {
                 Container(
                   color: Colors.white,
                   alignment: Alignment.center,
-
-                  height: 40.0,
+                  height: 30,
                   child: Icon(
                     Icons.maximize_rounded,
                     size: 60,
                     color: Colors.grey,
                   ),
                 ),
-                DropdownButton(
-                  value: dropdownValue,
-                  items: list.map(
-                        (value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(value),
-                      );
-                    },
-                  ).toList(),
-                  onChanged: (String? value) {
-                    dropdownValue = value!;
-                    if (dropdownValue == "배달비 높은 순") {
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FilledButton(onPressed: (){
+                      state = 0;
                       orderList("deliveryFee");
-                    } else if (dropdownValue == "거리순") {
+                    }, child: Text("배달비 높은", )),
+                    FilledButton(onPressed: (){
+                      state = 1;
                       orderList("deliveryDistance");
-                    } else {
+                    }, child: Text("가까운")),
+                    FilledButton(onPressed: (){
+                      state = 2;
                       orderList("orderTime");
-                    }
-                  },
+                    }, child: Text("남은 시간")),
+                  ],
                 ),
                 Flexible(
                   child: Container(
