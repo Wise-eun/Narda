@@ -17,11 +17,13 @@ class OrderDetail{
   String storeName;
   String storePhoneNum;
   String storeLocation;
+  int orderValue;
+  String deliveryLocationDetail;
   //storeId 중복으로 출력 -> 중복 제거 필요
 
   OrderDetail(this.orderId, this.state, this.orderTime, this.predictTime, this.pickupTime, this.deliveryTime,
       this.deliveryDistance, this.deliveryFee, this.deliveryLocation, this.deliveryRequest,
-      this.riderId, this.storeId, this.payment, this.orderInfo, this.customerNum, this.storeName, this.storePhoneNum, this.storeLocation);
+      this.riderId, this.storeId, this.payment, this.orderInfo, this.customerNum, this.storeName, this.storePhoneNum, this.storeLocation, this.orderValue, this.deliveryLocationDetail);
 
   factory OrderDetail.fromJson(Map<String,dynamic> json) => OrderDetail(
     int.parse(json['orderId']),
@@ -42,6 +44,8 @@ class OrderDetail{
     json['storeName'] as String,
     json['storePhoneNum'] as String,
     json['storeLocation'] as String,
+      int.parse(json['orderValue']),
+    json['deliveryLocationDetail'] as String
   );
 
 
@@ -64,5 +68,7 @@ class OrderDetail{
     'storeName' : storeName,
     'storePhoneNum' : storePhoneNum,
     'storeLocation' : storeLocation,
+    'orderValue' : orderValue,
+    'deliveryLocationDetail' : deliveryLocationDetail
   };
 }
