@@ -12,7 +12,7 @@ import 'model/user.dart';
 
 RiderUser userInfo = RiderUser("", "", "", "");
 List<calendar> order = [];
-
+List<dynamic>? responseList2;
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({Key? key, required this.userId}) : super(key: key);
   final String userId;
@@ -53,8 +53,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
     delivercount=0;
     totalDistance=0;
     monthlyFee=0;
-    print('order length ${order.length}');
-    for(int i=0;i<order.length;i++) {
+    print('order length ${responseList2!.length}');
+    for(int i=0;i<responseList2!.length;i++) {
       if(selectedDay.year.toString() == order[i].orderTime.substring(0, 4)
           && selectedDay.toString().substring(5, 7) == order[i].orderTime.substring(5, 7)) {
         print('조건문 체크2222');
@@ -87,6 +87,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           print("불러오기 성공");
           print(responseBody['userData']);
           List<dynamic> responseList = responseBody['userData'];
+          responseList2 = responseBody['userData'];
           print('라이더가 완료한 주문 수 : ${responseList.length}');
           totalFee=0;
           monthlyFee=0;
@@ -187,7 +188,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         //fontWeight: FontWeight.w900,
                       )
                     ),
-                    Text('${(totalFee/30).toStringAsFixed(2)}원\n'
+                    Text('${(totalFee/30).toStringAsFixed(0)}원\n'
                         '$totalDistance km\n'
                         '${(delivercount/30).toStringAsFixed(2)}건',
                         style: TextStyle(
@@ -204,7 +205,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('일일 평균 수입 ${(monthlyFee/30).toStringAsFixed(2)}원',
+                    Text('일일 평균 수입 ${(monthlyFee/30).toStringAsFixed(0)}원',
                         style: TextStyle(
                           color: Colors.grey[700],
                         )
@@ -233,6 +234,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   setState(() {
                     this.selectedDay = selectedDay;
                     this.focusedDay = focusedDay;
+                    account();
                   });
                   print(events?[selectedDay].toString());
                   _selectedEvents.value = _getEventsForDay(selectedDay);
