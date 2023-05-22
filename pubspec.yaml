@@ -57,6 +57,7 @@ dependencies:
   geocoding: ^2.1.0
   syncfusion_flutter_sliders: ^21.2.3
   flutter_sliding_up_panel: ^2.0.1
+  percent_indicator: ^4.2.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
