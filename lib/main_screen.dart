@@ -160,6 +160,9 @@ class MainScreenState extends State<MainScreen> {
         color: Color(0xB35a4dfd),
       );
       //overlay.setOnTapListener((overlay) => )
+      overlay.setOnTapListener((overlay) {
+        panelController.expand();
+      });
       _mapController.addOverlay(overlay);
       print("오버레이 추가 완");
     }
@@ -230,7 +233,7 @@ class MainScreenState extends State<MainScreen> {
     final mediaQuery = MediaQuery.of(context);
     final pixelRatio = mediaQuery.devicePixelRatio;
     final mapSize =
-        Size(mediaQuery.size.width - 32, mediaQuery.size.height - 72);
+        Size(mediaQuery.size.width, mediaQuery.size.height - 50);
     final physicalSize =
         Size(mapSize.width * pixelRatio, mapSize.height * pixelRatio);
 
@@ -376,7 +379,7 @@ class MainScreenState extends State<MainScreen> {
               )),
             ),
             SlidingUpPanelWidget(
-              controlHeight: 50.0,
+              controlHeight: 0.0,
               anchor: 0.4,
               panelController: panelController,
               onTap: () {
