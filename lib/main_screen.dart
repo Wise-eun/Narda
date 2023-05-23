@@ -337,7 +337,15 @@ class MainScreenState extends State<MainScreen> {
       },
     );
 
-    return Stack(
+    return Scaffold(
+        backgroundColor: const Color(0xFF343945),
+    bottomNavigationBar: MenuBottom(
+    userId: widget.userId,
+    tabItem: TabItem.mypage,
+    ),
+    body:
+
+      Stack(
       children: <Widget>[
         Scaffold(
           backgroundColor: const Color(0xFF343945),
@@ -490,6 +498,6 @@ class MainScreenState extends State<MainScreen> {
           ),
         ),
       ],
-    );
+    ));
   }
 }
