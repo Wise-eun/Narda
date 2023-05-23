@@ -12,8 +12,10 @@ import 'calendar_screen.dart';
 import 'menu_bottom.dart';
 import 'package:speelow/model/user.dart';
 
-RiderUser userInfo = RiderUser("", "", "", "");
+import 'model/calendar.dart';
 
+RiderUser userInfo = RiderUser("", "", "", "");
+List<calendar> order = [];
 class MyPageScreen extends StatefulWidget {
   const MyPageScreen({Key? key, required this.userId}) : super(key: key);
   final String userId;
@@ -29,14 +31,48 @@ class _MyPageScreenState extends State<MyPageScreen> {
   double _voiceSpeedValue = 3;
   double _voiceVolumeValue = 3;
   double _deliveryRadius = 3;
-
-
+  double todayIncome=0;
 
   @override
   void initState() {
     // TODO: implement initState
     getRider();
+    getIncome();
     super.initState();
+  }
+
+  getIncome() async{
+    try {
+      var response = await http.post(Uri.parse(API.calendar), body: {
+        'userId': widget.userId.toString(),
+      });
+      if (response.statusCode == 200) {
+        callOk = true;
+        var responseBody = jsonDecode(response.body);
+        todayIncome=0;
+        if (responseBody['success'] == true) {
+          callOk = true;
+          print("수입 내역 가져오기");
+          print(responseBody['userData']);
+          List<dynamic> responseList = responseBody['userData'];
+          responseList2 = responseBody['userData'];
+          order.clear();
+          for(int i=0;i<responseList.length;i++) {
+            order.add(calendar.fromJson(responseList[i]));
+          }
+        } else {
+          print("불러오기 실패");
+        }
+      } else {
+        print("불러오기 실패2");
+      }
+      setState(() {
+
+      });
+
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   getRider() async{
@@ -67,6 +103,14 @@ class _MyPageScreenState extends State<MyPageScreen> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    todayIncome=0;
+    for(int i=0;i<order.length;i++) {
+      if((DateTime.now().toString().substring(0, 10) == order[i].orderTime.substring(0, 10))) {
+        todayIncome=todayIncome+order[i].deliveryFee;
+        print(order[i].orderTime);
+      }
+    }
+
     return Scaffold(
         bottomNavigationBar: MenuBottom(userId: widget.userId, tabItem: TabItem.mypage,),
         appBar: AppBar(
@@ -135,7 +179,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                           ],
                         ),
                         //수입 가져오는 로직 필요
-                        Text("오늘의 수입은 127,000원 입니다.",
+                        Text("오늘의 수입은 $todayIncome원 입니다.",
                             textAlign: TextAlign.start,
                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
                         SizedBox(
