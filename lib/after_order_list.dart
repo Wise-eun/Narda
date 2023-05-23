@@ -392,41 +392,59 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                   style: TextStyle(color: Colors.black),
                 ),
               ),
-              shape: Border(
-                  bottom: BorderSide(
-                color: Color(0xfff1f2f3),
-                width: 2,
-              )),
+
               automaticallyImplyLeading: false,
               centerTitle: true,
-              backgroundColor: Color(0xfff1f2f3),
+              backgroundColor: Colors.white,
               elevation: 0,
-              bottom: TabBar(
-                controller: _tabController,
-                indicator: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8.0),
-                        topRight: Radius.circular(8.0)),
-                    color: Colors.white),
-                labelColor: Colors.black,
-                unselectedLabelColor: Colors.black,
-                tabs: _tabs,
-                onTap: (int i) {
-                  if (i == 0) {
-                    tabValue = "진행 중";
-                    order_state = true;
-                    proceedingOrderList();
-                  } else {
-                    tabValue = "완료";
-                    order_state = false;
-                    completeOrderList();
-                  }
-                },
-              ),
+
             ),
             //body: TabBarView(children: [_listView],
             body: Column(
             children: [
+              Container(
+                height: 53,
+                child:
+                Container(
+                    height: 0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20.0),
+                          topRight: Radius.circular(20.0)
+                      ),
+                      color:  Color(0xfff1f2f3),
+                    ),
+                    child:
+                    Column(
+                      children: [
+                        SizedBox(height:5),
+                        TabBar(
+                          controller: _tabController,
+                          indicator: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20.0),
+                                  topRight: Radius.circular(20.0)),
+                              color: Colors.white),
+                          labelColor: Colors.black,
+                          unselectedLabelColor: Colors.black,
+                          tabs: _tabs,
+                          onTap: (int i) {
+                            if (i == 0) {
+                              tabValue = "진행 중";
+                              order_state = true;
+                              proceedingOrderList();
+                            } else {
+                              tabValue = "완료";
+                              order_state = false;
+                              completeOrderList();
+                            }
+                          },
+                        ),
+                      ],
+                    )
+                ),
+              )
+              ,
               Expanded(child: TabBarView(children: [_listView]),),
               if(!order_state && !previous)SizedBox(
 
