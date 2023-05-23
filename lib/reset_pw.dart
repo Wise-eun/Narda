@@ -42,15 +42,132 @@ class _ResetPwScreenState extends State<ResetPwScreen> {
       }catch(e){print(e.toString());}
   }
 
+  Widget _currentPwWidget() {
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        height: 40,
+        child: TextFormField(
+          controller: _currentPwController,
+          keyboardType: TextInputType.text,
+          style: TextStyle(fontSize: 14),
+          decoration: const InputDecoration(
+            labelText: '현재 비밀번호',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderSide: BorderSide.none,
+            ),
+            filled: true,
+            fillColor: Color(0xfff1f2f3),
+          ),
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+        ));
+  }
+
+  Widget _newPwWidget() {
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        height: 40,
+        child: TextFormField(
+          controller: _newPwController,
+          keyboardType: TextInputType.text,
+          style: TextStyle(fontSize: 14),
+          decoration: const InputDecoration(
+            labelText: '새 비밀번호',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderSide: BorderSide.none,
+            ),
+            filled: true,
+            fillColor: Color(0xfff1f2f3),
+          ),
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+        ));
+  }
+
+  Widget _newPwCheckWidget() {
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        height: 40,
+        child: TextFormField(
+          controller: _newPwCheckController,
+          keyboardType: TextInputType.text,
+          style: TextStyle(fontSize: 14),
+          decoration: const InputDecoration(
+            labelText: '새 비밀번호 확인',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderSide: BorderSide.none,
+            ),
+            filled: true,
+            fillColor: Color(0xfff1f2f3),
+          ),
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+        ));
+  }
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('마이페이지'),
-          centerTitle: true,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50.0),
+          child: AppBar(
+            shape: Border(
+                bottom: BorderSide(
+                  color: Color(0xfff1f2f3),
+                  width: 2,
+                )),
+            title: Text('비밀번호 변경',
+                style: TextStyle(color: Colors.black, fontSize: 18)),
+            automaticallyImplyLeading: false,
+            centerTitle: true,
+            backgroundColor: Colors.white,
+            elevation: 0,
+          ),
         ),
-        body: SingleChildScrollView(
+        backgroundColor: Colors.white,
+
+        body: Center(
             child: Container(
+                margin: const EdgeInsets.only(left: 45, right: 45),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      //Text("새 비밀번호", style: TextStyle(fontSize: 18),),
+                      _currentPwWidget(),
+                      const SizedBox(height: 10),
+                      _newPwWidget(),
+                      const SizedBox(height: 10),
+                      _newPwCheckWidget(),
+                      const SizedBox(height: 20),
+                      TextButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor: Color(0xfff9d94b),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10))),
+                          ),
+                          onPressed: () {
+                        if(widget.user.userPw == _currentPwController.text.trim()){
+                          if(_newPwController.text.trim() == _newPwCheckController.text.trim()){
+                            resetPw(widget.user.userId ,_newPwController.text.trim());
+                          }
+                          else{
+                            print("새로운 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+                          }
+                        }
+                        else{
+                          //팝업 띄워야됨
+                          print("현재 비밀번호가 틀렸습니다.");
+                        }
+                      }, child: Text("비밀번호 변경", style: TextStyle(color: Colors.black),)),
+
+                    ]))
+
+
+            /*child: Container(
                 padding: EdgeInsets.all(15),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,20 +223,9 @@ class _ResetPwScreenState extends State<ResetPwScreen> {
                           return null;
                         },
                       )),
-                      TextButton(onPressed: () {
-                        if(widget.user.userPw == _currentPwController.text.trim()){
-                          if(_newPwController.text.trim() == _newPwCheckController.text.trim()){
-                            resetPw(widget.user.userId ,_newPwController.text.trim());
-                          }
-                          else{
-                            print("새로운 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-                          }
-                        }
-                        else{
-                          //팝업 띄워야됨
-                          print("현재 비밀번호가 틀렸습니다.");
-                        }
-                      }, child: Text("비밀번호 변경")),
-                    ]))));
+
+                    ]))*/
+
+    ));
   }
 }

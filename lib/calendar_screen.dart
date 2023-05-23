@@ -251,7 +251,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   lastDay: DateTime.utc(2030, 10, 4),
                   focusedDay: focusedDay,
 
-                  onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
+/*                  onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
                     setState(() {
                       this.selectedDay = selectedDay;
                       this.focusedDay = focusedDay;
@@ -263,7 +263,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   },
                   selectedDayPredicate: (DateTime day) {
                     return isSameDay(selectedDay, day);
-                  },
+                  },*/
                   eventLoader: _getEventsForDay,
                   onFormatChanged: (CalendarFormat _format) {
                     setState(() {
@@ -285,26 +285,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         if(average) {
                           print('true');
                           return Container(
-                            child:Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                              Container(
-                              height: 35,
-                              width: 35,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                backgroundBlendMode: BlendMode.darken,
-                                color: Colors.red[200],
-                              ),),
-                                Text(
-                                  '${money?[DateTime.parse(date.toString().substring(0,10))]}',
-                                  style: TextStyle(
-                                    color: Colors.red[200],
-                                    fontSize: 12,
+                              child:Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    height: 35,
+                                    width: 35,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      shape: BoxShape.rectangle,
+                                      backgroundBlendMode: BlendMode.darken,
+                                      color: Colors.red[200],
+                                    ),),
+                                  Text(
+                                    '${money?[DateTime.parse(date.toString().substring(0,10))]}',
+                                    style: TextStyle(
+                                      color: Colors.red[200],
+                                      fontSize: 12,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )
+                                ],
+                              )
                           );
                         }
                         else {
@@ -316,7 +317,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     height: 35,
                                     width: 35,
                                     decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      shape: BoxShape.rectangle,
                                       backgroundBlendMode: BlendMode.darken,
                                       color: Colors.blue[200],
                                     ),),
@@ -353,9 +355,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                   ),
 
-                  calendarStyle: const CalendarStyle(
+                  calendarStyle: CalendarStyle(
 
-                    canMarkersOverflow : false,
+/*                    canMarkersOverflow : false,
                     markersAutoAligned : true,
                     markerSize : 8.0,
                     markerSizeScale : 8.0,
@@ -363,25 +365,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     markerMargin : const EdgeInsets.symmetric(horizontal: 0.3),
                     markersAlignment : Alignment.bottomCenter,
                     markersMaxCount : 4,
-                    markersOffset : const PositionedOffset(),
+                    markersOffset : const PositionedOffset(),*/
 
                     isTodayHighlighted: true, //오늘 표시 여부
-                    todayTextStyle: const TextStyle(//글자 조정
-                      color: const Color(0xFFFAFAFA),
-                      fontSize: 16,
-                    ),
-                    todayDecoration: const BoxDecoration(//모양 조정
-                      color: const Color(0xFF9FA8DA),
+                    todayDecoration:  BoxDecoration(
                       shape: BoxShape.circle,
+                      border : Border.all(
+                        color: Colors.black
+                      )
                     ),
-/*                    selectedTextStyle: const TextStyle(//선택한 날 글자
-                      color: const Color(0xFFFAFAFA),
-                      fontSize: 16,
-                    ),
-                    selectedDecoration: const BoxDecoration(//선택한 날 모양
-                      color: const Color(0xFF5C6BC0),
-                      shape: BoxShape.circle,
-                    ),*/
+                    todayTextStyle: TextStyle(color: Colors.red),
 
                     outsideDaysVisible: true, //다른 달 날짜 노출
                     outsideTextStyle: const TextStyle(color: const Color(0xFFAEAEAE)),
