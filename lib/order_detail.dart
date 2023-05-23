@@ -258,17 +258,14 @@ appBar: AppBar(
                   const SizedBox(
                     height: 20,
                   ),
-                  callOk?Container(child:
+                  callOk?Container(
+                    margin: EdgeInsets.fromLTRB(30,0,30,0),
+                    child:
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(
-                        width: 50,
-                      ),
+
                     Text(ReturnStatusString(),style: TextStyle(fontSize: 25, color: Color(0xffFF3055)),),
-                    SizedBox(
-                      width: 130,
-                    ),
                     Container(
                       child:Column(
 crossAxisAlignment: CrossAxisAlignment.start,
@@ -484,7 +481,7 @@ callOk? Column(
                       SizedBox(width: 30,),
                   callOk ?
                       Container(
-                          margin: EdgeInsets.fromLTRB(50,0,50,50),
+                          margin: EdgeInsets.fromLTRB(30,0,50,50),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
