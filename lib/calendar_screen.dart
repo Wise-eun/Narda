@@ -149,260 +149,254 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Scaffold(
         //bottomNavigationBar: MenuBottom(userId: widget.userId),
         appBar: AppBar(
-          title: Text('정산'),
+          title: Text(
+            "정산",
+            style: TextStyle(color: Colors.black),
+          ),
           centerTitle: true,
+          backgroundColor: Color(0xfff1f2f3),
+          elevation: 0,
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                width: mediaQuery.size.width,
-                height: 15,
-              ),
-              SizedBox(
-                width: mediaQuery.size.width,
-                child: Text(
-                  '이번 달 수입 $monthlyFee원',
-                  textAlign: TextAlign.center,
-                  style : TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              Container(
-                width: mediaQuery.size.width,
-                margin: const EdgeInsets.all(10),
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Color(0xff475DFE),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('월 평균 수입 \n총 배달 거리 \n하루 평균 건수 ',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        //fontWeight: FontWeight.w900,
-                      )
-                    ),
-                    Text('${(totalFee/30).toStringAsFixed(0)}원\n'
-                        '$totalDistance km\n'
-                        '${(delivercount/30).toStringAsFixed(2)}건',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                        )
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: mediaQuery.size.width-40,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('일일 평균 수입 ${(monthlyFee/30).toStringAsFixed(0)}원',
-                        style: TextStyle(
-                          color: Colors.grey[700],
-                        )
-                    ),
-                    Text('                                    평균이하',
-                        style: TextStyle(
-                          color: Colors.blue[400],
-                        )
-                    ),
-                    Text('     평균이상',
-                      style: TextStyle(
-                        color:Colors.red[200],
-                      )
-                    ),
-                  ],
-                ),
-              ),
-              TableCalendar(
-                //shouldFillViewport: true,
-                locale: 'ko-KR',
-                rowHeight: 65,
-                firstDay: DateTime.utc(2022, 10, 4),
-                lastDay: DateTime.utc(2030, 10, 4),
-                focusedDay: focusedDay,
-                onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
-                  setState(() {
-                    this.selectedDay = selectedDay;
-                    this.focusedDay = focusedDay;
-                    account();
-                  });
-                  print(events?[selectedDay].toString());
-                  _selectedEvents.value = _getEventsForDay(selectedDay);
-                  print(_selectedEvents.value);
-                },
-                selectedDayPredicate: (DateTime day) {
-                  return isSameDay(selectedDay, day);
-                },
-                eventLoader: _getEventsForDay,
-                onFormatChanged: (CalendarFormat _format) {
-                  setState(() {
-                    format = _format;
-                  });
-                },
-
-                calendarBuilders: CalendarBuilders(
-                    markerBuilder: (BuildContext context, date, events) {
-                      if(events.isEmpty) return SizedBox();
-                      print(int.parse(money[DateTime.parse(date.toString().substring(0,10))]!));
-                      if(int.parse(money[DateTime.parse(date.toString().substring(0,10))]!)
-                          > (monthlyFee/delivercount)) {
-                        average = true;
-                        print('bool chandged');
-                      }
-                      if(average) {
-                        print('true');
-                        return Container(
-                          //margin: const EdgeInsets.only(top:20),
-                          padding: const EdgeInsets.all(1),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            backgroundBlendMode: BlendMode.darken,
-                            color: Colors.red[200],
+          child:
+          Container(
+            margin: EdgeInsets.only(left: 15, right: 15),
+            child: Column(
+              children: [
+                SizedBox(height: 15),
+                SizedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '이번 달 수입 ',
+                          style : TextStyle(
+                            fontSize: 18,
                           ),
-                          child: Text(
-                            '\n\n\n\n${money?[DateTime.parse(date.toString().substring(0,10))]}원',
-                            style: TextStyle(
-                              color: Colors.red[200],
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13,
-                            ),
+                        ),
+                        Text('$monthlyFee원',
+                          style : TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color : Color(0xff475DFE),
                           ),
-                        );
-                      }
-                      else {
-                        return Container(
-                          //margin: const EdgeInsets.only(top:20),
-                          padding: const EdgeInsets.all(1),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            backgroundBlendMode: BlendMode.darken,
-                            color: Colors.blue[200],
-                          ),
-                          child: Text(
-                            '\n\n\n\n${money?[DateTime.parse(date.toString().substring(0,10))]}원',
-                            style: TextStyle(
-                              color: Colors.blue[200],
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13,
-                            ),
-                          ),
-                        );
-                      }
-                    }
+                        ),
+                      ],
+                    )
                 ),
-
-                headerStyle: HeaderStyle(
-                  titleCentered: true,
-                  titleTextFormatter: (date, locale) =>
-                      DateFormat.yMMMMd(locale).format(date),
-                  formatButtonVisible: false,
-                  titleTextStyle: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.blue,
+                SizedBox(height: 15),
+                Container(
+                  width: mediaQuery.size.width,
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Color(0xff475DFE),
                   ),
-                  headerPadding: const EdgeInsets.symmetric(vertical: 4),
-                  leftChevronIcon: const Icon(
-                    Icons.arrow_left,
-                    size: 40,
-                  ),
-                  rightChevronIcon: const Icon(
-                    Icons.arrow_right,
-                    size: 40,
-                  ),
-                ),
-
-                calendarStyle: const CalendarStyle(
-                  canMarkersOverflow: true, //셀 영역 벗어남 여부
-                  markersAutoAligned: true, //자동정렬
-                  markerSize: 10, //마커 크기
-                  markerSizeScale: 10, //마커 크기 비율
-                  markerMargin: EdgeInsets.symmetric(horizontal: 3), //마진 조절
-                  markersAlignment: Alignment.bottomCenter, //마커 위치
-                  markersMaxCount: 2, //한줄에 마커 수
-                  markersOffset: PositionedOffset(),
-                  /*markerDecoration: BoxDecoration(//마커 모양
-                    color: Colors.black,
-                    shape: BoxShape.circle,
-                  ),*/
-
-                  isTodayHighlighted: true, //오늘 표시 여부
-                  todayTextStyle: const TextStyle(//글자 조정
-                    color: const Color(0xFFFAFAFA),
-                    fontSize: 16,
-                  ),
-                  todayDecoration: const BoxDecoration(//모양 조정
-                    color: const Color(0xFF9FA8DA),
-                    shape: BoxShape.circle,
-                  ),
-                  selectedTextStyle: const TextStyle(//선택한 날 글자
-                    color: const Color(0xFFFAFAFA),
-                    fontSize: 16,
-                  ),
-                  selectedDecoration: const BoxDecoration(//선택한 날 모양
-                    color: const Color(0xFF5C6BC0),
-                    shape: BoxShape.circle,
-                  ),
-
-                  outsideDaysVisible: true, //다른 달 날짜 노출
-                  outsideTextStyle: const TextStyle(color: const Color(0xFFAEAEAE)),
-                  outsideDecoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-
-                  weekendTextStyle: const TextStyle(
-                    color: Colors.red,
-                  ),
-                  weekendDecoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-
-                  cellMargin: const EdgeInsets.all(6),
-                  cellPadding: const EdgeInsets.all(0),
-                  cellAlignment: Alignment.center,
-                ),
-              ),
-/*
-            //캘린더 이벤트를 리스트 형식으로 출력
-          const SizedBox(height: 8),
-          Expanded(
-            child: ValueListenableBuilder<List<Event>>(
-              valueListenable: _selectedEvents,
-              builder: (context, value, _) {
-                return ListView.builder(
-                  itemCount: value.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 4,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('월 평균 수입 \n총 배달 거리 \n하루 평균 건수 ',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          )
                       ),
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(12),
+                      Text('${(totalFee/30).toStringAsFixed(0)}원\n'
+                          '$totalDistance km\n'
+                          '${(delivercount/30).toStringAsFixed(2)}건',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                          )
                       ),
-                      child: ListTile(
-                        onTap: ()=> print('${value[index].title} clicked'),
-                        title: Text('${value[index].title}'),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('일일 평균 수입 : ${(monthlyFee/30).toStringAsFixed(0)}원',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                          )
+                      ),
+                      Row(
+                        children: [
+                          Text('평균이하',
+                              style: TextStyle(
+                                color: Colors.blue[400],
+                              )
+                          ),
+                          SizedBox(width: 10,),
+                          Text('평균이상',
+                              style: TextStyle(
+                                color:Colors.red[200],
+                              )
+                          ),
+                        ],
                       )
-                    );
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10,),
+                TableCalendar(
+                  //shouldFillViewport: true,
+                  locale: 'ko-KR',
+                  rowHeight: 65,
+                  firstDay: DateTime.utc(2022, 10, 4),
+                  lastDay: DateTime.utc(2030, 10, 4),
+                  focusedDay: focusedDay,
+
+                  onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
+                    setState(() {
+                      this.selectedDay = selectedDay;
+                      this.focusedDay = focusedDay;
+                      account();
+                    });
+                    print(events?[selectedDay].toString());
+                    _selectedEvents.value = _getEventsForDay(selectedDay);
+                    print(_selectedEvents.value);
                   },
-                );
-              },
-            )
+                  selectedDayPredicate: (DateTime day) {
+                    return isSameDay(selectedDay, day);
+                  },
+                  eventLoader: _getEventsForDay,
+                  onFormatChanged: (CalendarFormat _format) {
+                    setState(() {
+                      format = _format;
+                    });
+                  },
+
+                  calendarBuilders: CalendarBuilders(
+
+                      markerBuilder: (BuildContext context, date, events) {
+
+                        if(events.isEmpty) return SizedBox();
+                        print(int.parse(money[DateTime.parse(date.toString().substring(0,10))]!));
+                        if(int.parse(money[DateTime.parse(date.toString().substring(0,10))]!)
+                            > (monthlyFee/delivercount)) {
+                          average = true;
+                          print('bool chandged');
+                        }
+                        if(average) {
+                          print('true');
+                          return Container(
+                            child:Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                              Container(
+                              height: 35,
+                              width: 35,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                backgroundBlendMode: BlendMode.darken,
+                                color: Colors.red[200],
+                              ),),
+                                Text(
+                                  '${money?[DateTime.parse(date.toString().substring(0,10))]}',
+                                  style: TextStyle(
+                                    color: Colors.red[200],
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            )
+                          );
+                        }
+                        else {
+                          return Container(
+                              child:Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    height: 35,
+                                    width: 35,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      backgroundBlendMode: BlendMode.darken,
+                                      color: Colors.blue[200],
+                                    ),),
+                                  Text(
+                                    '${money?[DateTime.parse(date.toString().substring(0,10))]}',
+                                    style: TextStyle(
+                                      color: Colors.blue[200],
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              )
+                          );
+                        }
+                      }
+                  ),
+
+                  headerStyle: const HeaderStyle(
+                    titleCentered: true,
+                    //titleTextFormatter: (date, locale) => DateFormat.yMMMMd(locale).format(date),
+                    formatButtonVisible: false,
+                    titleTextStyle: TextStyle(
+                      fontSize: 20,
+                      //color: Colors.blue,
+                    ),
+                    headerPadding: EdgeInsets.symmetric(vertical: 4),
+                    leftChevronIcon: Icon(
+                      Icons.keyboard_arrow_left,
+                      size: 30,
+                    ),
+                    rightChevronIcon: Icon(
+                      Icons.keyboard_arrow_right,
+                      size: 30,
+                    ),
+                  ),
+
+                  calendarStyle: const CalendarStyle(
+
+                    canMarkersOverflow : false,
+                    markersAutoAligned : true,
+                    markerSize : 8.0,
+                    markerSizeScale : 8.0,
+                    markersAnchor : 0.7,
+                    markerMargin : const EdgeInsets.symmetric(horizontal: 0.3),
+                    markersAlignment : Alignment.bottomCenter,
+                    markersMaxCount : 4,
+                    markersOffset : const PositionedOffset(),
+
+                    isTodayHighlighted: true, //오늘 표시 여부
+                    todayTextStyle: const TextStyle(//글자 조정
+                      color: const Color(0xFFFAFAFA),
+                      fontSize: 16,
+                    ),
+                    todayDecoration: const BoxDecoration(//모양 조정
+                      color: const Color(0xFF9FA8DA),
+                      shape: BoxShape.circle,
+                    ),
+/*                    selectedTextStyle: const TextStyle(//선택한 날 글자
+                      color: const Color(0xFFFAFAFA),
+                      fontSize: 16,
+                    ),
+                    selectedDecoration: const BoxDecoration(//선택한 날 모양
+                      color: const Color(0xFF5C6BC0),
+                      shape: BoxShape.circle,
+                    ),*/
+
+                    outsideDaysVisible: true, //다른 달 날짜 노출
+                    outsideTextStyle: const TextStyle(color: const Color(0xFFAEAEAE)),
+                    outsideDecoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+
+                    cellMargin: const EdgeInsets.all(6),
+                    cellPadding: const EdgeInsets.all(0),
+                    cellAlignment: Alignment.center,
+                  ),
+                ),
+              ],
+            ),
           )
-*/
-            ],
-          ),
         )
     );
   }

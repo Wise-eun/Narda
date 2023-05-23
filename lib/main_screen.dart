@@ -138,7 +138,6 @@ class MainScreenState extends State<MainScreen> {
         // 1-3. 권한이 없는 경우
         print("위치 권한이 필요합니다.");
       }
-
     } catch (e) {
       print(e);
     }
@@ -339,165 +338,161 @@ class MainScreenState extends State<MainScreen> {
 
     return Scaffold(
         backgroundColor: const Color(0xFF343945),
-    bottomNavigationBar: MenuBottom(
-    userId: widget.userId,
-    tabItem: TabItem.mypage,
-    ),
-    body:
-
-      Stack(
-      children: <Widget>[
-        Scaffold(
-          backgroundColor: const Color(0xFF343945),
-          bottomNavigationBar: MenuBottom(
-            userId: widget.userId,
-            tabItem: TabItem.mypage,
-          ),
-          body: Center(
-              child: Column(
-            children: [
-              /*
+        bottomNavigationBar: MenuBottom(
+          userId: widget.userId,
+          tabItem: TabItem.home,
+        ),
+        body: Stack(
+          children: <Widget>[
+            Scaffold(
+              body: Center(
+                  child: Column(
+                children: [
+                  /*
                   Text("Lat: $latitude, Lng: $longitude"),
                   TextButton(
                     child: Text("Locate Me"),
                     onPressed: () => getCurrentLocation(),
                   )*/
-              SizedBox(
-                  width: mapSize.width,
-                  height: (mapSize.height - 18), //하단바때문에 오버픽셀 부분 뺌
-                  // color: Colors.greenAccent,
-                  child: NaverMap(
-                    options: NaverMapViewOptions(
-                        initialCameraPosition: NCameraPosition(
-                            target: NLatLng(latitudes, longitudes),
-                            zoom: 10,
-                            bearing: 0,
-                            tilt: 0)),
-                    onMapReady: (controller) {
-                      _mapController = controller;
-                      circleCluster();
-                    },
+                  SizedBox(
+                      width: mapSize.width,
+                      height: (mapSize.height - 18), //하단바때문에 오버픽셀 부분 뺌
+                      // color: Colors.greenAccent,
+                      child: NaverMap(
+                        options: NaverMapViewOptions(
+                            initialCameraPosition: NCameraPosition(
+                                target: NLatLng(latitudes, longitudes),
+                                zoom: 10,
+                                bearing: 0,
+                                tilt: 0)),
+                        onMapReady: (controller) {
+                          _mapController = controller;
+                          circleCluster();
+                        },
 
-                    //onCameraChange: onChanged(LatLng(latitude, longitude), CameraChangeReason.location, true),
-                  )),
-            ],
-          )),
-        ),
-        SlidingUpPanelWidget(
-          controlHeight: 50.0,
-          anchor: 0.4,
-          panelController: panelController,
-          onTap: () {
-            if (SlidingUpPanelStatus.expanded == panelController.status) {
-              panelController.collapse();
-            } else {
-              panelController.expand();
-            }
-          },
-          enableOnTap: true,
-          child: Container(
-            //margin: EdgeInsets.symmetric(horizontal: 15.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
+                        //onCameraChange: onChanged(LatLng(latitude, longitude), CameraChangeReason.location, true),
+                      )),
+                ],
+              )),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Container(
+            SlidingUpPanelWidget(
+              controlHeight: 50.0,
+              anchor: 0.4,
+              panelController: panelController,
+              onTap: () {
+                if (SlidingUpPanelStatus.expanded == panelController.status) {
+                  panelController.collapse();
+                } else {
+                  panelController.expand();
+                }
+              },
+              enableOnTap: true,
+              child: Container(
+                //margin: EdgeInsets.symmetric(horizontal: 15.0),
+                decoration: BoxDecoration(
                   color: Colors.white,
-                  alignment: Alignment.center,
-                  height: 30,
-                  child: Icon(
-                    Icons.maximize_rounded,
-                    size: 60,
-                    color: Colors.grey,
-                  ),
                 ),
-                Container(
-                  height: 35,
-                  color: Color(0xfff1f2f3),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                          height: 30,
-                          child: FilledButton(
-                            onPressed: () {
-                              state = 0;
-                              orderList("deliveryFee");
-                              feeTextStyle = TextStyle(color: Colors.white);
-                              feeColor = Colors.blue;
-                              distanceTextStyle =
-                                  TextStyle(color: Colors.black);
-                              distanceColor = Colors.white;
-                              timeTextStyle = TextStyle(color: Colors.black);
-                              timeColor = Colors.white;
-                            },
-                            child: Text(
-                              "배달비 높은",
-                              style: feeTextStyle,
-                            ),
-                            style: FilledButton.styleFrom(
-                                backgroundColor: feeColor),
-                          )),
-                      SizedBox(
-                        height: 30,
-                        child: FilledButton(
-                          onPressed: () {
-                            state = 1;
-                            orderList("deliveryDistance");
-
-                            feeTextStyle = TextStyle(color: Colors.black);
-                            feeColor = Colors.white;
-                            distanceTextStyle = TextStyle(color: Colors.white);
-                            distanceColor = Colors.blue;
-                            timeTextStyle = TextStyle(color: Colors.black);
-                            timeColor = Colors.white;
-                          },
-                          child: Text(
-                            "가까운",
-                            style: distanceTextStyle,
-                          ),
-                          style: FilledButton.styleFrom(
-                              backgroundColor: distanceColor),
-                        ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Container(
+                      color: Colors.white,
+                      alignment: Alignment.center,
+                      height: 30,
+                      child: Icon(
+                        Icons.maximize_rounded,
+                        size: 60,
+                        color: Colors.grey,
                       ),
-                      SizedBox(
-                          height: 30,
-                          child: FilledButton(
-                            onPressed: () {
-                              state = 2;
-                              orderList("orderTime");
+                    ),
+                    Container(
+                      height: 35,
+                      color: Color(0xfff1f2f3),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(
+                              height: 30,
+                              child: FilledButton(
+                                onPressed: () {
+                                  state = 0;
+                                  orderList("deliveryFee");
+                                  feeTextStyle = TextStyle(color: Colors.white);
+                                  feeColor = Colors.blue;
+                                  distanceTextStyle =
+                                      TextStyle(color: Colors.black);
+                                  distanceColor = Colors.white;
+                                  timeTextStyle =
+                                      TextStyle(color: Colors.black);
+                                  timeColor = Colors.white;
+                                },
+                                child: Text(
+                                  "배달비 높은",
+                                  style: feeTextStyle,
+                                ),
+                                style: FilledButton.styleFrom(
+                                    backgroundColor: feeColor),
+                              )),
+                          SizedBox(
+                            height: 30,
+                            child: FilledButton(
+                              onPressed: () {
+                                state = 1;
+                                orderList("deliveryDistance");
 
-                              feeTextStyle = TextStyle(color: Colors.black);
-                              feeColor = Colors.white;
-                              distanceTextStyle =
-                                  TextStyle(color: Colors.black);
-                              distanceColor = Colors.white;
-                              timeTextStyle = TextStyle(color: Colors.white);
-                              timeColor = Colors.blue;
-                            },
-                            child: Text(
-                              "남은 시간",
-                              style: timeTextStyle,
+                                feeTextStyle = TextStyle(color: Colors.black);
+                                feeColor = Colors.white;
+                                distanceTextStyle =
+                                    TextStyle(color: Colors.white);
+                                distanceColor = Colors.blue;
+                                timeTextStyle = TextStyle(color: Colors.black);
+                                timeColor = Colors.white;
+                              },
+                              child: Text(
+                                "가까운",
+                                style: distanceTextStyle,
+                              ),
+                              style: FilledButton.styleFrom(
+                                  backgroundColor: distanceColor),
                             ),
-                            style: FilledButton.styleFrom(
-                                backgroundColor: timeColor),
-                          )),
-                    ],
-                  ),
+                          ),
+                          SizedBox(
+                              height: 30,
+                              child: FilledButton(
+                                onPressed: () {
+                                  state = 2;
+                                  orderList("orderTime");
+
+                                  feeTextStyle = TextStyle(color: Colors.black);
+                                  feeColor = Colors.white;
+                                  distanceTextStyle =
+                                      TextStyle(color: Colors.black);
+                                  distanceColor = Colors.white;
+                                  timeTextStyle =
+                                      TextStyle(color: Colors.white);
+                                  timeColor = Colors.blue;
+                                },
+                                child: Text(
+                                  "남은 시간",
+                                  style: timeTextStyle,
+                                ),
+                                style: FilledButton.styleFrom(
+                                    backgroundColor: timeColor),
+                              )),
+                        ],
+                      ),
+                    ),
+                    Flexible(
+                      child: Container(
+                        child: _listView,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
-                Flexible(
-                  child: Container(
-                    child: _listView,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ],
-    ));
+          ],
+        ));
   }
 }
