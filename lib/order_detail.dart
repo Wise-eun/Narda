@@ -8,6 +8,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:speelow/HorizontalDashedDivider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'api/api.dart';
@@ -31,6 +32,10 @@ class OrderDetailScreen extends StatefulWidget {
   State<OrderDetailScreen> createState() => _OrderDetailScreenState();
 }
 
+
+
+
+
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
   late NaverMapController _mapController;
   Completer<NaverMapController> mapControllerCompleter = Completer();
@@ -40,6 +45,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   double from_longitude = 26.356;
   double to_latitude = 30;
   double to_longitude = 20;
+
+
+
+
+
+
+
+
+
 
   addressToPM(String address) async {
     //String address = '경북 경산시 대학로 280';
@@ -210,6 +224,9 @@ String ReturnStatusString()
       print(e.toString());
     }
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -477,47 +494,100 @@ callOk? Column(
                   const SizedBox(
                     height: 20,
                   ),
-                  Row(
 
-                    children: [
                       SizedBox(width: 30,),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("주문 정보",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700)),
-                          SizedBox(height: 10,),
-                          Text(order!.orderInfo,style: TextStyle(fontSize: 18)),
-                          SizedBox(height: 10,),
-                          Container(
-                            width: 350,
-                            child: Divider(color: Colors.grey[400],thickness: 1.0,),),
-                          Row(
-                            children: [
-                              SizedBox(height: 30,),
-                              Text("메뉴 금액",style: TextStyle(fontSize: 18)),
-                              SizedBox(width: 220,),
-                              Text(valueFormat.format(order!.orderValue) + "원", style: TextStyle(fontSize: 18)),
-                              SizedBox(height: 30,)
-                            ],
+                      Container(
+                          margin: EdgeInsets.fromLTRB(50,0,50,50),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("주문 정보",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700)),
+                            SizedBox(height: 10,),
+                            Text(order!.orderInfo,style: TextStyle(fontSize: 18)),
+                            SizedBox(height: 10,),
+                            Container(
+                              width: 350,
+                              child: Divider(color: Colors.grey[400],thickness: 1.0,),),
+                            SizedBox(height: 5,),
+                            Container(
+                                width:300,
+                                child:
+                                Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("메뉴 금액",
+                                    style: TextStyle(fontSize: 18)
+                                    ,  textAlign: TextAlign.start),
 
-                          ),
-                          Container(
-                            width: 350,
-                            child: Divider(color: Colors.grey[400],thickness: 1.0,),),
-                          Row(
-                            children: [
-                              SizedBox(height: 30,),
-                              Text("총 배달료",style: TextStyle(fontSize: 18)),
-                              SizedBox(width: 220,),
-                              Text(valueFormat.format(order!.deliveryFee) + "원", style: TextStyle(fontSize: 18)),
-                              SizedBox(height: 30,)
-                            ],
-                          ),
-                          SizedBox(height: 40,),
-                        ],
+                                Text(valueFormat.format(order!.orderValue) + "원",
+                                    style: TextStyle(fontSize: 18),
+                                    textAlign: TextAlign.end),
+                              ],
+
+                            )),
+                            SizedBox(height: 5,),
+                            Container(
+                              width: 350,
+                              child: Divider(color: Colors.grey[400],thickness: 1.0,),),
+                            SizedBox(height:10),
+                              Container(
+                                width:300,
+                                child:       Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+
+                                    Text("기본 배달료",style: TextStyle(fontSize: 18)
+                                        ,  textAlign: TextAlign.start),
+
+                                    Text("1,000원",
+                                        style: TextStyle(fontSize: 18)
+                                        ,  textAlign: TextAlign.end)
+                                  ],
+                                ),
+                              ),
+                            SizedBox(height:5),
+                            Container(
+                              width:300,
+                              child:       Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+
+                                  Text("거리 할증",style: TextStyle(fontSize: 18)
+                                      ,  textAlign: TextAlign.start),
+
+                                  Text(valueFormat.format(order!.deliveryFee - 1000) + "원",
+                                      style: TextStyle(fontSize: 18)
+                                      ,  textAlign: TextAlign.end)
+                                ],
+                              ),
+                            ),SizedBox(height:10),
+                              HorizontalDashedDivider(),
+                            SizedBox(height:10),
+                              Container(
+                                width:300,
+                                child:       Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+
+                                    Text("총 배달료",style: TextStyle(fontSize: 18)
+                                        ,  textAlign: TextAlign.start),
+
+                                    Text(valueFormat.format(order!.deliveryFee) + "원",
+                                        style: TextStyle(fontSize: 18)
+                                        ,  textAlign: TextAlign.end)
+                                  ],
+                                ),
+                              ),
+
+
+
+                            SizedBox(height: 20,),
+                          ],
+                        )
                       )
-                    ],
-                  )
+
+
+
                  ,
 
                 ],
