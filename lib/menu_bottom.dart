@@ -15,16 +15,16 @@ const Map<TabItem, int> tabIdx = {
 
 List<BottomNavigationBarItem> navbarItems = [
   BottomNavigationBarItem(
-    icon: Icon(Icons.home),
-    label: 'Home',
+    icon: Icon(Icons.home_filled),
+    label: '홈',
   ),
   BottomNavigationBarItem(
     icon: Icon(Icons.list),
-    label: 'List',
+    label: '오더리스트',
   ),
   BottomNavigationBarItem(
     icon: Icon(Icons.account_circle_rounded),
-    label: 'MyPage',
+    label: '마이페이지',
   ),
 
 ];
@@ -38,15 +38,12 @@ class MenuBottom extends StatefulWidget {
 }
 
 class _MenuBottomState extends State<MenuBottom> {
-
   int _selectedIndex = 0;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
   }
-
 
   void _onItemTapped(int idx){
     setState((){
@@ -54,12 +51,12 @@ class _MenuBottomState extends State<MenuBottom> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     _selectedIndex = widget.tabItem.index;
     return BottomNavigationBar(
+      iconSize: 40 ,
+      selectedItemColor: Color(0xff5a4dfd),
       items: [
         _buildItem(TabItem.home),
         _buildItem(TabItem.list),
@@ -90,15 +87,11 @@ class _MenuBottomState extends State<MenuBottom> {
             );
             break;
         };
-
-
-
       },);
   }
 
   BottomNavigationBarItem _buildItem(TabItem tabItem){
     return navbarItems[tabIdx[tabItem]!];
-
   }
 
 }

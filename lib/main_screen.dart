@@ -341,7 +341,7 @@ class MainScreenState extends State<MainScreen> {
         backgroundColor: const Color(0xFF343945),
     bottomNavigationBar: MenuBottom(
     userId: widget.userId,
-    tabItem: TabItem.home,
+    tabItem: TabItem.mypage,
     ),
     body:
 
