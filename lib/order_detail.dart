@@ -442,6 +442,7 @@ callOk? Column(
                     height: 20,
                   ),
                   SizedBox(height: 20,),
+                  callOk ?
                   Container(
                     alignment: Alignment.centerLeft,
                     child:  Row(
@@ -484,7 +485,7 @@ callOk? Column(
 
                       ],
                     )   ,
-                  )
+                  ):Text("요청사항")
              ,
                   SizedBox(height: 20,),
                   Container(
@@ -496,6 +497,7 @@ callOk? Column(
                   ),
 
                       SizedBox(width: 30,),
+                  callOk ?
                       Container(
                           margin: EdgeInsets.fromLTRB(50,0,50,50),
                         child: Column(
@@ -572,7 +574,7 @@ callOk? Column(
                                     Text("총 배달료",style: TextStyle(fontSize: 18)
                                         ,  textAlign: TextAlign.start),
 
-                                    Text(valueFormat.format(order!.deliveryFee) + "원",
+                                    Text(valueFormat.format(order?.deliveryFee) + "원",
                                         style: TextStyle(fontSize: 18)
                                         ,  textAlign: TextAlign.end)
                                   ],
@@ -584,7 +586,7 @@ callOk? Column(
                             SizedBox(height: 20,),
                           ],
                         )
-                      )
+                      ): Text("배달료")
 
 
 
