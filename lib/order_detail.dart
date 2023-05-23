@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,15 +10,15 @@ import 'package:geocoding/geocoding.dart' as geo;
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:speelow/HorizontalDashedDivider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'api/api.dart';
 import 'kakao_map.dart';
 import 'menu_bottom.dart';
 import 'model/store.dart';
 import 'model/orderDetail.dart';
-import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 OrderDetail? order;
 Duration? duration;
 
@@ -32,10 +33,6 @@ class OrderDetailScreen extends StatefulWidget {
   State<OrderDetailScreen> createState() => _OrderDetailScreenState();
 }
 
-
-
-
-
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
   late NaverMapController _mapController;
   Completer<NaverMapController> mapControllerCompleter = Completer();
@@ -45,15 +42,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   double from_longitude = 26.356;
   double to_latitude = 30;
   double to_longitude = 20;
-
-
-
-
-
-
-
-
-
 
   addressToPM(String address) async {
     //String address = '경북 경산시 대학로 280';
@@ -79,14 +67,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         await Geolocator.getCurrentPosition(
                 desiredAccuracy: LocationAccuracy.high)
             .then((position) {
-          setState(() {
+          setState(() async {
             from_latitude = position.latitude;
             from_longitude = position.longitude;
             print('현재위치 받아옴');
-            Size size = new Size(16, 20);
+            Size size = new Size(17, 22);
+
             final marker = NMarker(
                 id: '출발지', position: NLatLng(from_latitude, from_longitude));
-            //marker.setIconTintColor(Color(0xFF311B92));
             marker.setIcon(const NOverlayImage.fromAssetImage('asset/images/from.png'));
             marker.setSize(size);
             _mapController.addOverlay(marker);
@@ -97,32 +85,29 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             marker2.setSize(size);
             _mapController.addOverlay(marker2);
 
-            print('출발지!!! : $from_latitude, $from_longitude');
-            print('목적지!!! : $to_latitude, $to_longitude');
-
-            NPathOverlay path = NPathOverlay(id: 'route', coords: [
+            NPathOverlay path = NPathOverlay(
+              id: 'route', coords: [
               NLatLng(from_latitude, from_longitude),
-              NLatLng(to_latitude, to_longitude),
-            ]);
+              NLatLng(to_latitude, to_longitude)],
+              outlineWidth: 0,
+            );
             path.setPatternImage(
                 NOverlayImage.fromAssetImage('asset/images/testing.png')
             );
             path.setPatternInterval(9);
+            path.setWidth(5);
+            path.setColor(Colors.blue);
+            _mapController.addOverlay(path);
 
-              path.setWidth(10);
-              path.setColor(Colors.blue);
-              _mapController.addOverlay(path);
+            double centerlat = (from_latitude + to_latitude);
+            double centerlon = (from_longitude + to_longitude);
+            NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
+                target: NLatLng(centerlat/2, centerlon/2),
+                zoom: 9
+            );
 
-              double centerlat = (from_latitude + to_latitude);
-              double centerlon = (from_longitude + to_longitude);
-              NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
-                  target: NLatLng(centerlat/2, centerlon/2),
-                  zoom: 13.5
-              );
-
-              if (_mapController != null)
-                _mapController.updateCamera(nCameraUpdate);
-
+            if (_mapController != null)
+              _mapController.updateCamera(nCameraUpdate);
           });
         });
       } else {
