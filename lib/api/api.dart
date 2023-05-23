@@ -14,6 +14,5 @@ class API{
   static const checkIdPhoneNum = "$hostConnect/checkIdPhoneNum.php";
   static const afterOrderList = "$hostConnect/afterOrderList.php";
   static const newOrderList = "$hostConnect/newOrderList.php";
-
   static const calendar = "$hostConnect/calendar.php";
 }

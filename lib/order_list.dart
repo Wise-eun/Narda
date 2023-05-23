@@ -22,19 +22,24 @@ class _OrderListScreenState extends State<OrderListScreen> {
   late ScrollController scrollController;
   SlidingUpPanelController panelController = SlidingUpPanelController();
   int state = 0;
-  TextStyle clicked = TextStyle(color: Colors.white);
-  TextStyle unclicked = TextStyle(color: Colors.black);
+  TextStyle feeTextStyle = TextStyle(color: Colors.white);
+  TextStyle distanceTextStyle = TextStyle(color: Colors.black);
+  TextStyle timeTextStyle = TextStyle(color: Colors.black);
+
+  Color feeColor = Colors.blue;
+  Color distanceColor = Colors.white;
+  Color timeColor = Colors.white;
 
   @override
   void initState() {
     scrollController = ScrollController();
     scrollController.addListener(() {
       if (scrollController.offset >=
-          scrollController.position.maxScrollExtent &&
+              scrollController.position.maxScrollExtent &&
           !scrollController.position.outOfRange) {
         panelController.expand();
       } else if (scrollController.offset <=
-          scrollController.position.minScrollExtent &&
+              scrollController.position.minScrollExtent &&
           !scrollController.position.outOfRange) {
         panelController.anchor();
       } else {}
@@ -76,7 +81,6 @@ class _OrderListScreenState extends State<OrderListScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     var _listView = ListView.separated(
       padding: const EdgeInsets.all(8),
       itemCount: orders.length,
@@ -96,77 +100,80 @@ class _OrderListScreenState extends State<OrderListScreen> {
         DateTime current = DateTime.now();
         Duration duration = current.difference(orderTime);
         double percent =
-        (duration.inMinutes / orders[index].predictTime).toDouble();
+            (duration.inMinutes / orders[index].predictTime).toDouble();
 
         return GestureDetector(
-          child:Container(
+          child: Container(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Container(
+                  margin: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                  decoration: BoxDecoration(
-                                      color: Color(0xfff1f2f3),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Container(
-                                    padding: EdgeInsets.all(5),
-                                    child: Text(
-                                      "${storeDong} > ${deliveryDong}  |  ${orders[index].deliveryDistance.toStringAsFixed(2)}km",
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                  )),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                "${orders[index].storeName}",
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                            ],
+                          Container(
+                              decoration: BoxDecoration(
+                                  color: Color(0xfff1f2f3),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Container(
+                                padding: EdgeInsets.all(5),
+                                child: Text(
+                                  "${storeDong} > ${deliveryDong}  |  ${orders[index].deliveryDistance.toStringAsFixed(2)}km",
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              )),
+                          SizedBox(
+                            height: 5,
                           ),
                           Text(
-                            "${orders[index].deliveryFee}원",
-                            style: TextStyle(color: Colors.red, fontSize: 15),
+                            "${orders[index].storeName}",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          SizedBox(
+                            height: 5,
                           ),
                         ],
                       ),
+                      Text(
+                        "${orders[index].deliveryFee}원",
+                        style: TextStyle(color: Colors.red, fontSize: 15),
+                      ),
+                    ],
+                  ),
+                ),
+                Stack(
+                  children: [
+                    LinearProgressIndicator(
+                      backgroundColor: Color(0xfff1f2f3),
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                      value: 0.2,
+                      minHeight: 20,
                     ),
-                    Stack(
-                      children: [
-                        LinearProgressIndicator(
-                          backgroundColor: Color(0xfff1f2f3),
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                          value: 0.2,
-                          minHeight: 20,
-                        ),
-                        Container(
-                            alignment: Alignment.centerRight,
-                            margin: EdgeInsets.only(right: 10),
-                            child: Text(
-                              "${duration.inMinutes}분",
-                              style: TextStyle(color: Colors.black),
-                            )),
-                      ],
-                    )
-                  ])),
-          onTap: (){Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => OrderDetailScreen(
-                  orderId: orders[index].orderId,
-                  storeId: orders[index].storeId,
-                )),
-          );},);
+                    Container(
+                        alignment: Alignment.centerRight,
+                        margin: EdgeInsets.only(right: 10),
+                        child: Text(
+                          "${duration.inMinutes}분",
+                          style: TextStyle(color: Colors.black),
+                        )),
+                  ],
+                )
+              ])),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OrderDetailScreen(
+                        orderId: orders[index].orderId,
+                        storeId: orders[index].storeId,
+                      )),
+            );
+          },
+        );
       },
       separatorBuilder: (BuildContext context, int index) {
         return Divider();
@@ -177,7 +184,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
       children: <Widget>[
         Scaffold(
           appBar: AppBar(
-
+            title: Text("오더리스트"),
           ),
           body: Container(
             child: Center(
@@ -215,22 +222,76 @@ class _OrderListScreenState extends State<OrderListScreen> {
                     color: Colors.grey,
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    FilledButton(onPressed: (){
-                      state = 0;
-                      orderList("deliveryFee");
-                    }, child: Text("배달비 높은", )),
-                    FilledButton(onPressed: (){
-                      state = 1;
-                      orderList("deliveryDistance");
-                    }, child: Text("가까운")),
-                    FilledButton(onPressed: (){
-                      state = 2;
-                      orderList("orderTime");
-                    }, child: Text("남은 시간")),
-                  ],
+                Container(
+                  height: 35,
+                  color: Color(0xfff1f2f3),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                          height: 30,
+                          child: FilledButton(
+                        onPressed: () {
+                          state = 0;
+                          orderList("deliveryFee");
+                          feeTextStyle = TextStyle(color: Colors.white);
+                          feeColor = Colors.blue;
+                          distanceTextStyle = TextStyle(color: Colors.black);
+                          distanceColor = Colors.white;
+                          timeTextStyle = TextStyle(color: Colors.black);
+                          timeColor = Colors.white;
+                        },
+                        child: Text(
+                          "배달비 높은",
+                          style: feeTextStyle,
+                        ),
+                        style:
+                            FilledButton.styleFrom(backgroundColor: feeColor),
+                      )),
+                  SizedBox(
+                    height: 30,
+                    child:FilledButton(
+                        onPressed: () {
+                          state = 1;
+                          orderList("deliveryDistance");
+
+                          feeTextStyle = TextStyle(color: Colors.black);
+                          feeColor = Colors.white;
+                          distanceTextStyle = TextStyle(color: Colors.white);
+                          distanceColor = Colors.blue;
+                          timeTextStyle = TextStyle(color: Colors.black);
+                          timeColor = Colors.white;
+                        },
+                        child: Text(
+                          "가까운",
+                          style: distanceTextStyle,
+                        ),
+                        style: FilledButton.styleFrom(
+                            backgroundColor: distanceColor),
+                      ),),
+                  SizedBox(
+                    height: 30,
+                    child:FilledButton(
+                        onPressed: () {
+                          state = 2;
+                          orderList("orderTime");
+
+                          feeTextStyle = TextStyle(color: Colors.black);
+                          feeColor = Colors.white;
+                          distanceTextStyle = TextStyle(color: Colors.black);
+                          distanceColor = Colors.white;
+                          timeTextStyle = TextStyle(color: Colors.white);
+                          timeColor = Colors.blue;
+                        },
+                        child: Text(
+                          "남은 시간",
+                          style: timeTextStyle,
+                        ),
+                        style:
+                            FilledButton.styleFrom(backgroundColor: timeColor),
+                      )),
+                    ],
+                  ),
                 ),
                 Flexible(
                   child: Container(
@@ -244,6 +305,5 @@ class _OrderListScreenState extends State<OrderListScreen> {
         ),
       ],
     );
-
   }
 }

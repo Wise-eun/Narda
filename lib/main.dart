@@ -15,10 +15,25 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'model/user.dart';
 import 'model/order.dart';
-import 'initial_setting_screen.dart';
 import 'order_list.dart';
-import 'package:naver_map_plugin/naver_map_plugin.dart';
 import 'package:intl/date_symbol_data_local.dart';
+
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+
+
+import 'api/api.dart';
+import 'menu_bottom.dart';
+import 'model/order.dart';
+import 'model/orderDetail.dart';
+import 'order_detail.dart';
+
+import 'dart:math' as math;
+
+import 'package:flutter/material.dart';
+//import 'package:flutter_hooks/flutter_hooks.dart';
 
 void main() async {
   KakaoSdk.init(nativeAppKey: '3e8531d2fdf84a885535fc7c4ac309ca');
