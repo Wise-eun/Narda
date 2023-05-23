@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:speelow/reset_pw.dart';
 import 'package:http/http.dart' as http;
+import 'package:speelow/slider_tickmark_shape.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'api/api.dart';
 import 'calendar_screen.dart';
@@ -27,6 +29,8 @@ class _MyPageScreenState extends State<MyPageScreen> {
   double _voiceSpeedValue = 3;
   double _voiceVolumeValue = 3;
   double _deliveryRadius = 3;
+
+
 
   @override
   void initState() {
@@ -66,8 +70,21 @@ class _MyPageScreenState extends State<MyPageScreen> {
     return Scaffold(
         bottomNavigationBar: MenuBottom(userId: widget.userId, tabItem: TabItem.mypage,),
         appBar: AppBar(
-          title: Text('마이페이지'),
+          title: Container(
+            child: Text(
+              "마이페이지",
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+          shape: Border(
+              bottom: BorderSide(
+                color: Color(0xfff1f2f3),
+                width: 2,
+              )),
+          automaticallyImplyLeading: false,
           centerTitle: true,
+          backgroundColor: Color(0xfff1f2f3),
+          elevation: 0,
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -120,10 +137,10 @@ class _MyPageScreenState extends State<MyPageScreen> {
                         //수입 가져오는 로직 필요
                         Text("오늘의 수입은 127,000원 입니다.",
                             textAlign: TextAlign.start,
-                            style: TextStyle(fontSize: 18)),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
                         SizedBox(
                           width: mediaQuery.size.width,
-                          height: 15,
+                          height: 25,
                         ),
                       ])),
               SizedBox(
@@ -140,226 +157,267 @@ class _MyPageScreenState extends State<MyPageScreen> {
                       children: [
                         SizedBox(
                           width: mediaQuery.size.width,
-                          height: 15,
+                          height: 25,
                         ),
-                        Row(
+                        Row(//https://flutteragency.com/how-to-customize-the-switch-button-in-a-flutter/
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("내 AR 헬멧", style: TextStyle(fontSize: 18)),
-                            Switch(
-                              value: isSwitched_helmet,
-                              onChanged: (value) {
-                                print(value);
-                                setState(() {
-                                  isSwitched_helmet = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        Text("음성 출력 속도", style: TextStyle(fontSize: 17)),
-                      ])),
-              Container(
-                  margin: EdgeInsets.only(left: 10, right: 10),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SfSlider(
-                          min: 1,
-                          max: 5,
-                          value: _voiceSpeedValue,
-                          interval: 1,
-                          showTicks: true,
-                          showLabels: false,
-                          enableTooltip: false,
-                          minorTicksPerInterval: 1,
-                          onChanged: (dynamic value) {
-                            setState(() {
-                              _voiceSpeedValue = value.toInt().toDouble();
-                            });
-                          },
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 10, right: 10),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("느리게"),
-                              Text("보통"),
-                              Text("빠르게"),
-                            ],
-                          ),
-                        )
-                      ])),
-              Container(
-                margin: EdgeInsets.only(left: 20, top: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: mediaQuery.size.width,
-                      height: 10,
-                    ),
-                    Text("음성 크기", style: TextStyle(fontSize: 17)),
-                    SizedBox(
-                      width: mediaQuery.size.width,
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                  margin: EdgeInsets.only(left: 10, right: 10),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SfSlider(
-                          min: 1,
-                          max: 5,
-                          value: _voiceVolumeValue,
-                          interval: 1,
-                          showTicks: true,
-                          showLabels: false,
-                          enableTooltip: false,
-                          minorTicksPerInterval: 1,
-                          onChanged: (dynamic value) {
-                            setState(() {
-                              _voiceVolumeValue = value.toInt().toDouble();
-                            });
-                          },
-                        ),
-                        Container(
-                          margin:
-                              EdgeInsets.only(left: 10, right: 10, bottom: 20),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("작게"),
-                              Text("보통"),
-                              Text("크게"),
-                            ],
-                          ),
-                        )
-                      ])),
-              SizedBox(
-                width: mediaQuery.size.width,
-                height: 15,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(color: Color(0xfff1f2f3)),
-                ),
-              ),
-              Container(
-                  margin: EdgeInsets.only(left: 20),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: mediaQuery.size.width,
-                          height: 15,
-                        ),
-                        Text("배달 및 환경 설정", style: TextStyle(fontSize: 18)),
-                        Row(
-                          children: [
-                            Text("안전경로", style: TextStyle(fontSize: 17)),
-                            Switch(
-                              value: isSwitched_safety,
-                              onChanged: (value) {
-                                print(value);
-                                setState(() {
-                                  isSwitched_safety = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        Text("배달 반경", style: TextStyle(fontSize: 17)),
-                      ])),
-              Container(
-                  margin: EdgeInsets.only(left: 10, right: 10),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SfSlider(
-                          min: 1,
-                          max: 5,
-                          value: _deliveryRadius,
-                          interval: 1,
-                          showTicks: true,
-                          showLabels: false,
-                          enableTooltip: false,
-                          minorTicksPerInterval: 1,
-                          onChanged: (dynamic value) {
-                            setState(() {
-                              _deliveryRadius = value.toInt().toDouble();
-                            });
-                          },
-                        ),
-                        Container(
-                          margin:
-                              EdgeInsets.only(left: 10, right: 10, bottom: 15),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("1km"),
-                              Text("3km"),
-                              Text("5km"),
-                            ],
-                          ),
-                        )
-                      ])),
-              SizedBox(
-                width: mediaQuery.size.width,
-                height: 15,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(color: Color(0xfff1f2f3)),
-                ),
-              ),
-              Container(
-                  margin: EdgeInsets.only(left: 20),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: mediaQuery.size.width,
-                          height: 15,
-                        ),
-                        Text("내 정보 관리", style: TextStyle(fontSize: 18)),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            minimumSize: Size.zero,
-                            padding: EdgeInsets.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child:
-                              Text("비밀번호 변경", style: TextStyle(fontSize: 17, color: Colors.black)),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ResetPwScreen(user: userInfo,)),
-                            );
-                          },
-                        ),
-                        SizedBox(
-                          height: 7,
-                        ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            minimumSize: Size.zero,
-                            padding: EdgeInsets.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: Text("로그아웃", style: TextStyle(fontSize: 17, color: Colors.black)),
-                          onPressed: () {
-                            //로그아웃 할 것인지 여부 확인 팝업 띄우기
-                            Navigator.of(context).popUntil((route) => route.isFirst);
-                          },
-                        ),
-                      ])),
-            ],
-          ),
-        ));
-  }
-}
+                            Text("내 AR 헬멧", style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)),
+                           FlutterSwitch(value: isSwitched_helmet,
+                             onToggle: (bool value) {
+                             setState(() {
+                               isSwitched_helmet = value;
+                             });
+
+                           },height: 25,width: 50,toggleSize: 23,
+                           activeColor: Color(0xff4F40FD),)
+                           ],
+                           ),
+                           SizedBox(height: 20,),
+                           Text("음성 출력 속도", style: TextStyle(fontSize: 17)),
+                           ])),
+                           Container(
+                           margin: EdgeInsets.only(left: 10, right: 10),
+                           child: Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
+                           SliderTheme(
+                           data: const SliderThemeData(
+                           inactiveTickMarkColor: Colors.grey,
+                           inactiveTrackColor: Color(0xfff1f2f3),
+                           activeTickMarkColor: Color(0xff4F40FD),
+                           activeTrackColor: Color(0xff4F40FD),
+                           //   valueIndicatorColor: Colors.black,
+                           //  disabledThumbColor:Colors.black,
+                           trackHeight: 18,
+                           tickMarkShape:const LineSliderTickMarkShape(),
+                           thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10,)
+                           )
+
+                           , child:    Slider(
+                           min: 1,
+                           max: 5,
+                           value: _voiceSpeedValue,
+                           divisions: 4,
+//activeColor: Color(0xff4F40FD),
+                           thumbColor: Color(0xff4F40FD),
+                           onChanged: (dynamic value) {
+                           setState(() {
+                           _voiceSpeedValue = value.toInt().toDouble();
+                           });
+                           },
+                           )),
+
+                           Container(
+                           margin: EdgeInsets.only(left: 20, right: 20),
+                           child: const Row(
+                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                           children: [
+                           Text("느리게"),
+                           Text("보통"),
+                           Text("빠르게"),
+                           ],
+                           ),
+                           )
+                           ])),
+                           Container(
+                           margin: EdgeInsets.only(left: 20, top: 10),
+                           child: Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
+                           SizedBox(
+                           width: mediaQuery.size.width,
+                           height: 10,
+                           ),
+                           Text("음성 크기", style: TextStyle(fontSize: 17)),
+                           SizedBox(
+                           width: mediaQuery.size.width,
+                           ),
+                           ],
+                           ),
+                           ),
+                           Container(
+                           margin: EdgeInsets.only(left: 10, right: 10),
+                           child: Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
+                           SliderTheme(
+                           data: const SliderThemeData(
+                           inactiveTickMarkColor: Colors.grey,
+                           inactiveTrackColor: Color(0xfff1f2f3),
+                           activeTickMarkColor: Color(0xff4F40FD),
+                           activeTrackColor: Color(0xff4F40FD),
+                           //   valueIndicatorColor: Colors.black,
+                           //  disabledThumbColor:Colors.black,
+                           trackHeight: 18,
+                           tickMarkShape:const LineSliderTickMarkShape(),
+                           thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10,)
+                           )
+
+                           , child:    Slider(
+                           min: 1,
+                           max: 5,
+                           value: _voiceVolumeValue,
+                           divisions: 4,
+//activeColor: Color(0xff4F40FD),
+                           thumbColor: Color(0xff4F40FD),
+
+                           onChanged: (dynamic value) {
+                           setState(() {
+                           _voiceVolumeValue = value.toInt().toDouble();
+                           });
+                           },
+                           )),
+                           Container(
+                           margin:
+                           EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                           child: const Row(
+                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                           children: [
+                           Text("작게"),
+                           Text("보통"),
+                           Text("크게"),
+                           ],
+                           ),
+                           )
+                           ])),
+                           SizedBox(
+                           width: mediaQuery.size.width,
+                           height: 15,
+                           child: DecoratedBox(
+                           decoration: BoxDecoration(color: Color(0xfff1f2f3)),
+                           ),
+                           ),
+                           Container(
+                           margin: EdgeInsets.only(left: 20),
+                           child: Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
+                           SizedBox(
+                           width: mediaQuery.size.width,
+                           height: 25,
+                           ),
+                           Text("배달 및 환경 설정", style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)),
+                           SizedBox(height: 20,),
+                             Row(
+                           children: [
+                           Text("안전경로", style: TextStyle(fontSize: 17)),
+                             SizedBox(width:10),
+                             FlutterSwitch(value: isSwitched_safety,
+                               onToggle: (bool value) {
+                                 setState(() {
+                                   isSwitched_safety = value;
+                                 });
+
+                               },height: 25,width: 50,toggleSize: 23,
+                               activeColor: Color(0xff4F40FD),),
+                           ],
+                           ),
+                           SizedBox(height: 10,),
+                           Text("배달 반경", style: TextStyle(fontSize: 17)),
+                           ])),
+                           Container(
+                           margin: EdgeInsets.only(left: 10, right: 10),
+                           child: Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
+                           SliderTheme(
+                           data: const SliderThemeData(
+                           inactiveTickMarkColor: Colors.grey,
+                           inactiveTrackColor: Color(0xfff1f2f3),
+                           activeTickMarkColor: Color(0xff4F40FD),
+                           activeTrackColor: Color(0xff4F40FD),
+                           //   valueIndicatorColor: Colors.black,
+                           //  disabledThumbColor:Colors.black,
+                           trackHeight: 18,
+                           tickMarkShape:const LineSliderTickMarkShape(),
+                           thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10,)
+                           )
+
+                           , child:    Slider(
+                           min: 1,
+                           max: 5,
+                           value: _deliveryRadius,
+                           divisions: 4,
+//activeColor: Color(0xff4F40FD),
+                           thumbColor: Color(0xff4F40FD),
+
+                           onChanged: (dynamic value) {
+                           setState(() {
+                           _deliveryRadius = value.toInt().toDouble();
+                           });
+                           },
+                           )),
+
+                           Container(
+                           margin:
+                           EdgeInsets.only(left: 20, right: 20, bottom: 15),
+                           child: const Row(
+                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                           children: [
+                           Text("1km"),
+                           Text("3km"),
+                           Text("5km"),
+                           ],
+                           ),
+                           )
+                           ])),
+                           SizedBox(
+                           width: mediaQuery.size.width,
+                           height: 15,
+                           child: DecoratedBox(
+                           decoration: BoxDecoration(color: Color(0xfff1f2f3)),
+                           ),
+                           ),
+                           Container(
+                           margin: EdgeInsets.only(left: 20),
+                           child: Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
+                           SizedBox(
+                           width: mediaQuery.size.width,
+                           height: 15,
+                           ),
+                           Text("내 정보 관리", style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)),
+                           SizedBox(
+                           height: 20,
+                           ),
+                           TextButton(
+                           style: TextButton.styleFrom(
+                           minimumSize: Size.zero,
+                           padding: EdgeInsets.zero,
+                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                           ),
+                           child:
+                           Text("비밀번호 변경", style: TextStyle(fontSize: 17, color: Colors.black)),
+                           onPressed: () {
+                           Navigator.push(
+                           context,
+                           MaterialPageRoute(
+                           builder: (context) => ResetPwScreen(user: userInfo,)),
+                           );
+                           },
+                           ),
+                           SizedBox(
+                           height: 10,
+                           ),
+                           TextButton(
+                           style: TextButton.styleFrom(
+                           minimumSize: Size.zero,
+                           padding: EdgeInsets.zero,
+                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                           ),
+                           child: Text("로그아웃", style: TextStyle(fontSize: 17, color: Colors.black)),
+                           onPressed: () {
+                           //로그아웃 할 것인지 여부 확인 팝업 띄우기
+                           Navigator.of(context).popUntil((route) => route.isFirst);
+                           },
+                           ),
+                             SizedBox(height: 30)
+                           ])),
+                           ],
+                           ),
+                           ));
+                           }
+                           }
+
