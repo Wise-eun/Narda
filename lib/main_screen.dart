@@ -78,15 +78,13 @@ class MainScreenState extends State<MainScreen> {
                 locationSplitList[1] +
                 " " +
                 locationSplitList[2];
-            print(orderLocation);
+            print("orderListLocation 출력 $orderLocation");
 
 
             if (orderLocations.containsKey(orderLocation) == false) {
-              print("어이");
               orderLocations.addEntries({orderLocation: 1}.entries);
             } //여기서 바로 스플릿해서 지도 넣는데 맵으로 넣자자자자자ㅏ잦
             else {
-              print("짱나");
               orderLocations[orderLocation] =
                   orderLocations[orderLocation]! + 1;
             }
@@ -104,7 +102,6 @@ class MainScreenState extends State<MainScreen> {
   }
 
   addressToPM(String address) async {
-    print("투피엠");
     List<Location> locations = await locationFromAddress(address);
     circlelatitude = locations[0].latitude.toDouble();
     circlelongitude = locations[0].longitude.toDouble();
@@ -124,11 +121,6 @@ class MainScreenState extends State<MainScreen> {
                 desiredAccuracy: LocationAccuracy.high)
             .then((position) {
           setState(() {
-            print("latitude : " +
-                latitudes.toString() +
-                ", " +
-                "longitude : " +
-                longitudes.toString());
             latitudes = position.latitude;
             longitudes = position.longitude;
 
@@ -152,27 +144,44 @@ class MainScreenState extends State<MainScreen> {
   }
 
   circleCluster() async {
-    print('나 여기똥');
     //print(orderLocations.length);
     for (MapEntry element in orderLocations.entries) {
       //addressToPM(element.key);
       List<Location> locations = await locationFromAddress(element.key);
       circlelatitude = locations[0].latitude.toDouble();
       circlelongitude = locations[0].longitude.toDouble();
-      print(element.key);
-      print('좌표 :$circlelatitude, $circlelongitude');
+      print("key ${element.key}");
       int count = element.value;
-      final NCircleOverlay overlay = await NCircleOverlay(
+
+      final iconImage = await NOverlayImage.fromWidget(
+        widget: Icon(Icons.circle, color: element.value<6?Color(0xB35a4dfd):element.value<16?Color(0xB3ffc800):Color(0xB3ff0084), size: element.value<6?150:element.value<16?200:250,),
+          size: Size(element.value<6?150:element.value<16?200:250, element.value<6?150:element.value<16?200:250,),
+          context: context);
+
+      final marker = NMarker(
+          captionAligns : const [NAlign.center],
+        caption: NOverlayCaption(text: count.toString(), textSize: 20),
+          id: element.key,
+          position: NLatLng(circlelatitude, circlelongitude),
+        icon: iconImage
+      );
+      _mapController.addOverlay(marker);
+
+
+/*      final NCircleOverlay overlay = await NCircleOverlay(
         id: element.key, center: NLatLng(circlelatitude, circlelongitude),
         radius: element.value<6?400:element.value<16?500:800,
         color: element.value<6?Color(0xB35a4dfd):element.value<16?Color(0xB3ffc800):Color(0xB3ff0084),
-      );
+      );*/
       //overlay.setOnTapListener((overlay) => )
-      overlay.setOnTapListener((overlay) {
+      marker.setOnTapListener((overlay) {
         panelController.expand();
       });
-      _mapController.addOverlay(overlay);
+      //_mapController.addOverlay(overlay);
       print("오버레이 추가 완");
+
+
+
     }
   }
 
@@ -244,8 +253,8 @@ class MainScreenState extends State<MainScreen> {
     final physicalSize =
         Size(mapSize.width * pixelRatio, mapSize.height * pixelRatio);
 
-    print("physicalSize: $physicalSize");
-    print('build : $latitudes, $longitudes');
+    //print("physicalSize: $physicalSize");
+    //print('build : $latitudes, $longitudes');
 
     var _listView = ListView.separated(
       padding: const EdgeInsets.all(8),

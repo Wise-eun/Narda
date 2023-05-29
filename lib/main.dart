@@ -257,12 +257,6 @@ class _LoginscreenState extends State<Loginscreen> {
                           },
                           child: Text('회원가입', style: TextStyle(color: Colors.black))),
                     ),
-/*                    TextButton(onPressed: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => OrderListScreen()),
-                      );
-                    }, child: Text("신규 오더 리스트")),*/
                     Spacer(),
                   ],
                 )
