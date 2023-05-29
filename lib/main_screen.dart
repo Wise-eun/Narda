@@ -34,8 +34,8 @@ class MainScreenState extends State<MainScreen> {
   Completer<NaverMapController> mapControllerCompleter = Completer();
 
   List<NMarker> markers = [];
-  double latitudes = 37.588;
-  double longitudes = 26.356;
+  double latitudes = 35.830624;
+  double longitudes = 128.7544595;
   double circlelatitude = 37.588;
   double circlelongitude = 26.356;
 
