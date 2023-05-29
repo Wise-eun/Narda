@@ -37,7 +37,7 @@ class MainScreenState extends State<MainScreen> {
   double circlelatitude = 37.588;
   double circlelongitude = 26.356;
 
-  bool _serviceEnabled = false;
+  bool attendance= false;
 
   // late PermissionStatus _permissionGranted;
 
@@ -358,6 +358,22 @@ class MainScreenState extends State<MainScreen> {
           userId: widget.userId,
           tabItem: TabItem.home,
         ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            setState(() {
+              if (attendance == false)
+                attendance = true;
+              else
+                attendance = false;
+            },
+            );
+          },
+          icon: attendance ? Icon(Icons.toggle_off_outlined) : Icon(Icons.toggle_on_outlined),
+          label: attendance ? Text('출근') : Text('퇴근'),
+          //extendedPadding: EdgeInsetsDirectional.only(top:10.0), 버튼 안에 여백 주는 거임
+        ),
+        //floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+
         body: Stack(
           children: <Widget>[
             Scaffold(
@@ -376,6 +392,7 @@ class MainScreenState extends State<MainScreen> {
                       // color: Colors.greenAccent,
                       child: NaverMap(
                         options: NaverMapViewOptions(
+                            locationButtonEnable: true,
                             initialCameraPosition: NCameraPosition(
                                 target: NLatLng(latitudes, longitudes),
                                 zoom: 10,
