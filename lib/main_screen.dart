@@ -19,6 +19,7 @@ import 'order_detail.dart';
 
 Map<String, int> orderLocations = {};
 Map<String, List<OrderDetail>> detaillist={};
+List<OrderDetail> newOrders = [];
 List<OrderDetail> orders = [];
 
 class MainScreen extends StatefulWidget {
@@ -66,6 +67,7 @@ class MainScreenState extends State<MainScreen> {
       );
       if (response.statusCode == 200) {
         //orderLocations= [];
+        newOrders.clear();
         var responseBody = jsonDecode(response.body);
         if (responseBody['success'] == true) {
           print("오더 리스트 불러오기 성공");
@@ -82,6 +84,12 @@ class MainScreenState extends State<MainScreen> {
                 locationSplitList[2];
             print("orderListLocation 출력 $orderLocation");
 
+            if(detaillist.containsKey(orderLocation) == false){
+              detaillist.addEntries({orderLocation: [OrderDetail.fromJson(responseList[i])]}.entries);
+            }
+            else{
+              detaillist[orderLocation]?.add(OrderDetail.fromJson(responseList[i]));
+            }
 
             if (orderLocations.containsKey(orderLocation) == false) {
               orderLocations.addEntries({orderLocation: 1}.entries);
@@ -177,6 +185,12 @@ class MainScreenState extends State<MainScreen> {
       );*/
       //overlay.setOnTapListener((overlay) => )
       marker.setOnTapListener((overlay) {
+        orders.clear();
+        for(OrderDetail value in detaillist[(element.key)]!){
+          orders.add(value);
+          print("entry 순환 : ${value.storeName}");
+        }
+        sorting("deliveryFee");
         setState(() {
           isOrderlist = true;
         });
@@ -184,19 +198,33 @@ class MainScreenState extends State<MainScreen> {
       });
       //_mapController.addOverlay(overlay);
       print("오버레이 추가 완");
-
-
-
     }
   }
 
-  orderList(String sort) async {
-    try {
+  sorting(String sort) async {
+
+    if(sort == "deliveryFee"){
+      "SELECT * FROM `order` JOIN `store` ON `order`.`storeId` = `store`.`storeId` ORDER BY `order`.`deliveryFee` DESC";
+      orders.sort((a,b)=>b.deliveryFee.compareTo(a.deliveryFee));
+      //배달비 높은순
+    }
+    else if(sort == "deliveryDistance"){
+      "SELECT * FROM `order` JOIN `store` ON `order`.`storeId` = `store`.`storeId` ORDER BY `order`.`deliveryDistance`";
+      orders.sort((a,b)=>a.deliveryDistance.compareTo(b.deliveryDistance));
+      //거리 가까운순
+    }
+    else {
+      "SELECT * FROM `order` JOIN `store` ON `order`.`storeId` = `store`.`storeId` ORDER BY (TIMESTAMPDIFF(MINUTE, `order`.`orderTime`, now()) + `order`.`predictTime` )/`order`.`predictTime` DESC";
+      //남은 시간순
+    }
+    setState(() {});
+
+/*    try {
       var response = await http.post(Uri.parse(API.orderList), body: {
         'sort': sort,
       });
       if (response.statusCode == 200) {
-        orders = [];
+        newOrders = [];
         var responseBody = jsonDecode(response.body);
         if (responseBody['success'] == true) {
           print("$sort 오더 리스트 불러오기 성공");
@@ -204,17 +232,17 @@ class MainScreenState extends State<MainScreen> {
           List<dynamic> responseList = responseBody['userData'];
           for (int i = 0; i < responseList.length; i++) {
             print(OrderDetail.fromJson(responseList[i]));
-            orders.add(OrderDetail.fromJson(responseList[i]));
+            newOrders.add(OrderDetail.fromJson(responseList[i]));
           }
         } else {
           print("오더 리스트 불러오기 실패");
         }
         setState(() {});
-        return orders;
+        return newOrders;
       }
     } catch (e) {
       print(e.toString());
-    }
+    }*/
   }
 
   void onMapCreated(NaverMapController controller) {
@@ -250,12 +278,16 @@ class MainScreenState extends State<MainScreen> {
       } else {}
     });
 
-    orderList("deliveryFee");
+
 
     //addressToPM();
+    newOrders.clear();
+    detaillist.clear();
     getCurrentLocation();
     orderLocations.clear();
+    orders.clear();
     newOrderList();
+    sorting("deliveryFee");
 
     super.initState();
   }
@@ -520,7 +552,7 @@ class MainScreenState extends State<MainScreen> {
                                     child: FilledButton(
                                       onPressed: () {
                                         state = 0;
-                                        orderList("deliveryFee");
+                                        sorting("deliveryFee");
                                         feeTextStyle = TextStyle(color: Colors.white);
                                         feeColor = Colors.blue;
                                         distanceTextStyle =
@@ -548,7 +580,7 @@ class MainScreenState extends State<MainScreen> {
                                   child: FilledButton(
                                     onPressed: () {
                                       state = 1;
-                                      orderList("deliveryDistance");
+                                      sorting("deliveryDistance");
 
                                       feeTextStyle = TextStyle(color: Colors.black);
                                       feeColor = Colors.white;
@@ -577,7 +609,7 @@ class MainScreenState extends State<MainScreen> {
                                     child: FilledButton(
                                       onPressed: () {
                                         state = 2;
-                                        orderList("orderTime");
+                                        sorting("orderTime");
 
                                         feeTextStyle = TextStyle(color: Colors.black);
                                         feeColor = Colors.white;
