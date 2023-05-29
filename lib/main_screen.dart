@@ -12,7 +12,6 @@ import 'package:geocoding/geocoding.dart';
 import 'api/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
-
 import 'model/orderDetail.dart';
 import 'order_detail.dart';
 

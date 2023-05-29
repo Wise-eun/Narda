@@ -19,7 +19,7 @@
         </intent>
     </queries>
     <application
-        android:label="speelow"
+        android:label="NARDA"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
