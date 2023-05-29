@@ -33,7 +33,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
   static double _voiceVolumeValue = 3;
   static double _deliveryRadius = 3;
 
-  double todayIncome=0;
+  int todayIncome=0;
 
   @override
   void initState() {
@@ -132,9 +132,9 @@ try{
     final mediaQuery = MediaQuery.of(context);
     todayIncome=0;
     for(int i=0;i<order.length;i++) {
-      if((DateTime.now().toString().substring(0, 10) == order[i].orderTime.substring(0, 10))) {
+      if((DateTime.now().toString().substring(0, 10) == order[i].deliveryTime.substring(0, 10))) {
         todayIncome=todayIncome+order[i].deliveryFee;
-        print(order[i].orderTime);
+        print(order[i].deliveryTime);
       }
     }
 
