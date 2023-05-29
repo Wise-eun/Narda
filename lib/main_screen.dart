@@ -408,7 +408,7 @@ class MainScreenState extends State<MainScreen> {
                     elevation: 0,
                   ),
                 ),
-                floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+                floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
                 floatingActionButton: FloatingActionButton.extended(
                   backgroundColor: Colors.white,
                   elevation: 12,
