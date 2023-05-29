@@ -316,10 +316,10 @@ getStore() async {
 
     return Scaffold(
 appBar: AppBar(
-  leading: IconButton(
-    icon: Icon(CupertinoIcons.chevron_left,
-      color: Colors.grey[400],
-      size: 30,), onPressed: () {
+    leading: IconButton(
+      icon: Icon(CupertinoIcons.chevron_left,
+        color: Colors.grey[400],
+        size: 30,), onPressed: () {
       Navigator.pop(context);
       Navigator.pop(context);
       Navigator.push(
@@ -327,24 +327,18 @@ appBar: AppBar(
         MaterialPageRoute(builder: (context) =>  AfterOrderListScreen(userId: widget.userId)),
       );
 
-  },
-  ),
-  title: Container(
-    child:
-         Text(
-              "주문내역",
-              style: TextStyle(color: Colors.black),
-            )
-
-  ,),
+    },
+    ),
   shape: Border(
       bottom: BorderSide(
         color: Color(0xfff1f2f3),
         width: 2,
       )),
-
+  title: Text("주문내역",
+      style: TextStyle(color: Colors.black, fontSize: 18)),
+  automaticallyImplyLeading: false,
   centerTitle: true,
-  backgroundColor: Color(0xfff1f2f3),
+  backgroundColor: Colors.white,
   elevation: 0,
 ),
         body:Column(

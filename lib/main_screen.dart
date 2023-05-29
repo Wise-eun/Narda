@@ -39,7 +39,7 @@ class MainScreenState extends State<MainScreen> {
   double circlelongitude = 26.356;
 
   bool attendance= false;
-
+bool isOrderlist = false;
   // late PermissionStatus _permissionGranted;
 
   late ScrollController scrollController;
@@ -170,6 +170,9 @@ class MainScreenState extends State<MainScreen> {
       );
       //overlay.setOnTapListener((overlay) => )
       overlay.setOnTapListener((overlay) {
+        setState(() {
+          isOrderlist = true;
+        });
         panelController.expand();
       });
       _mapController.addOverlay(overlay);
@@ -247,6 +250,18 @@ class MainScreenState extends State<MainScreen> {
 
     print("physicalSize: $physicalSize");
     print('build : $latitudes, $longitudes');
+
+    String changeAppBarText()
+    {
+      if(isOrderlist==true)
+        {
+          return "오더리스트";
+        }
+      else
+        {
+          return "홈";
+        }
+    }
 
     var _listView = ListView.separated(
       padding: const EdgeInsets.all(8),
@@ -356,6 +371,19 @@ class MainScreenState extends State<MainScreen> {
     );
 
     return Scaffold(
+appBar:  AppBar(
+  shape: Border(
+      bottom: BorderSide(
+        color: Color(0xfff1f2f3),
+        width: 2,
+      )),
+  title: Text(changeAppBarText(),
+      style: TextStyle(color: Colors.black, fontSize: 18)),
+  automaticallyImplyLeading: false,
+  centerTitle: true,
+  backgroundColor: Colors.white,
+  elevation: 0,
+),
         backgroundColor: const Color(0xFF343945),
         bottomNavigationBar: MenuBottom(
           userId: widget.userId,
@@ -391,7 +419,7 @@ class MainScreenState extends State<MainScreen> {
                   )*/
                   SizedBox(
                       width: mapSize.width,
-                      height: (mapSize.height - 18), //하단바때문에 오버픽셀 부분 뺌
+                      height: (mapSize.height -110), //하단바때문에 오버픽셀 부분 뺌
                       // color: Colors.greenAccent,
                       child: NaverMap(
                         options: NaverMapViewOptions(
@@ -415,30 +443,19 @@ class MainScreenState extends State<MainScreen> {
               controlHeight: 0.0,
               anchor: 0.4,
               panelController: panelController,
-              onTap: () {},
+              onTap: () {
+              },
               enableOnTap: true,
               child: Scaffold(
-                appBar: PreferredSize(
-                  preferredSize: Size.fromHeight(50.0),
-                  child: AppBar(
-                    shape: Border(
-                        bottom: BorderSide(
-                          color: Color(0xfff1f2f3),
-                          width: 2,
-                        )),
-                    title: Text('오더리스트',
-                        style: TextStyle(color: Colors.black, fontSize: 18)),
-                    automaticallyImplyLeading: false,
-                    centerTitle: true,
-                    backgroundColor: Colors.white,
-                    elevation: 0,
-                  ),
-                ),
                 floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
                 floatingActionButton: FloatingActionButton.extended(
                   backgroundColor: Colors.white,
                   elevation: 12,
-                    onPressed: (){panelController.collapse();},
+                    onPressed: (){
+                      setState(() {
+                        isOrderlist = false;
+                      });
+                    panelController.collapse();},
                     label: Container(child:Row(
                         children:[
                           Icon(Icons.map_outlined, color: Colors.blue,),
