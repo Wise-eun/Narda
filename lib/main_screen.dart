@@ -486,7 +486,11 @@ class MainScreenState extends State<MainScreen> {
                 floatingActionButton: FloatingActionButton.extended(
                   backgroundColor: Colors.white,
                   elevation: 12,
-                    onPressed: (){panelController.collapse();},
+                    onPressed: (){
+                      setState(() {
+                        isOrderlist = false;
+                      });
+                    panelController.collapse();},
                     label: Container(child:Row(
                         children:[
                           Icon(Icons.map_outlined, color: Colors.blue,),
