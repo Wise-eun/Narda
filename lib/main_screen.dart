@@ -262,9 +262,12 @@ class MainScreenState extends State<MainScreen> {
         DateTime orderTime = DateTime.parse(orders[index].orderTime);
 
         DateTime current = DateTime.now();
-        Duration duration = current.difference(orderTime);
-        double percent =
-            (duration.inMinutes / orders[index].predictTime).toDouble();
+        Duration duration = orderTime.difference(current);
+
+        int timestamp1 = duration.inMinutes + orders[index].predictTime;
+        int timestamp2 = orders[index].predictTime;
+
+        double percent = timestamp1/timestamp2;
 
         return GestureDetector(
           child: Container(
@@ -307,10 +310,14 @@ class MainScreenState extends State<MainScreen> {
                               "${orders[index].storeName}",
                               style: TextStyle(fontSize: 20),
                             ),
-                            Text(
-                              "${duration.inMinutes}분",
+                            timestamp1>0?Text(
+                              "${timestamp1}분",
                               style: TextStyle(color: Colors.grey),
+                            ):Text(
+                              "+${timestamp1.abs()}분",
+                              style: TextStyle(color: Colors.red),
                             )
+
                           ],
                         ),
                         SizedBox(
@@ -321,12 +328,11 @@ class MainScreenState extends State<MainScreen> {
                 ),
                     LinearPercentIndicator(
                       lineHeight: 12,
-                      percent: percent>1?1:percent,
+                      percent: percent<0?0:percent,
                       barRadius: const Radius.circular(16),
-                      progressColor: Colors.blue[400],
+                      progressColor: percent<0.33?Colors.red:percent<0.66?Colors.yellow:Colors.green,
                       backgroundColor: Colors.grey[300],
                     ),
-
               ])),
           onTap: () {
             Navigator.push(
