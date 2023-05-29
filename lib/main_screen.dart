@@ -435,6 +435,46 @@ class MainScreenState extends State<MainScreen> {
                 ],
               )),
             ),
+            Column(
+              children: [
+                SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+
+                    FlutterSwitch(value: attendance,
+                      onToggle: (bool value) {
+                        setState(() {
+                          attendance = value;
+                        });
+
+                      },height: 40,
+                      width: 85,
+                      toggleSize: 25,
+                      valueFontSize: 20,
+                      showOnOff: true,
+                      activeText: "출근",
+                      activeTextFontWeight: FontWeight.w400,
+                      activeColor: Colors.white,
+                      activeToggleColor: Color(0xff3478f6),
+                      activeTextColor: Color(0xff3478f6),
+                      inactiveText: "퇴근",
+                      inactiveTextFontWeight: FontWeight.w400,
+                      inactiveColor: Color(0xFF666666),
+                      inactiveToggleColor: Colors.white,
+                      inactiveTextColor: Colors.white,
+                      switchBorder: Border.all(
+                          color: Color.fromRGBO(52, 120, 246, 1)
+                      ),
+
+
+                    ),
+                    SizedBox(width: 20,)
+                  ],
+                )
+
+              ],
+            ),
             SlidingUpPanelWidget(
               controlHeight: 0.0,
               anchor: 0.4,
@@ -442,22 +482,6 @@ class MainScreenState extends State<MainScreen> {
               onTap: () {},
               enableOnTap: true,
               child: Scaffold(
-                appBar: PreferredSize(
-                  preferredSize: Size.fromHeight(50.0),
-                  child: AppBar(
-                    shape: Border(
-                        bottom: BorderSide(
-                          color: Color(0xfff1f2f3),
-                          width: 2,
-                        )),
-                    title: Text('오더리스트',
-                        style: TextStyle(color: Colors.black, fontSize: 18)),
-                    automaticallyImplyLeading: false,
-                    centerTitle: true,
-                    backgroundColor: Colors.white,
-                    elevation: 0,
-                  ),
-                ),
                 floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
                 floatingActionButton: FloatingActionButton.extended(
                   backgroundColor: Colors.white,
@@ -580,46 +604,7 @@ class MainScreenState extends State<MainScreen> {
                 ),
               ),)
             ),
-            Column(
-              children: [
-                SizedBox(height: 10,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
 
-                    FlutterSwitch(value: attendance,
-                      onToggle: (bool value) {
-                        setState(() {
-                          attendance = value;
-                        });
-
-                      },height: 40,
-                      width: 85,
-                      toggleSize: 25,
-                      valueFontSize: 20,
-                      showOnOff: true,
-                      activeText: "출근",
-                      activeTextFontWeight: FontWeight.w400,
-                      activeColor: Colors.white,
-                      activeToggleColor: Color(0xff3478f6),
-                      activeTextColor: Color(0xff3478f6),
-                      inactiveText: "퇴근",
-                      inactiveTextFontWeight: FontWeight.w400,
-                      inactiveColor: Color(0xFF666666),
-                      inactiveToggleColor: Colors.white,
-                      inactiveTextColor: Colors.white,
-                      switchBorder: Border.all(
-                        color: Color.fromRGBO(52, 120, 246, 1)
-                      ),
-
-
-                    ),
-                    SizedBox(width: 20,)
-                  ],
-                )
-
-              ],
-            )
           ],
         ));
   }
