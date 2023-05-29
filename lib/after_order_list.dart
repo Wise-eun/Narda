@@ -257,6 +257,7 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
               builder: (context) => OrderDetailScreen(
                 orderId: proceedingOrders[index].orderId,
                 storeId: proceedingOrders[index].storeId,
+                userId: widget.userId,
               )),
         );},);
       },
@@ -364,6 +365,7 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                  builder: (context) => OrderDetailScreen(
                    orderId: completeOrders[index].orderId,
                    storeId: completeOrders[index].storeId,
+                   userId: widget.userId,
                  )),
              );
           },

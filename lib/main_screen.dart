@@ -329,6 +329,7 @@ class MainScreenState extends State<MainScreen> {
                   builder: (context) => OrderDetailScreen(
                         orderId: orders[index].orderId,
                         storeId: orders[index].storeId,
+                    userId: widget.userId,
                       )),
             );
           },

@@ -12,8 +12,8 @@ import 'order_detail.dart';
 List<OrderDetail> orders = [];
 
 class OrderListScreen extends StatefulWidget {
-  const OrderListScreen({Key? key}) : super(key: key);
-
+  const OrderListScreen({Key? key, required this.userId}) : super(key: key);
+final String userId;
   @override
   _OrderListScreenState createState() => _OrderListScreenState();
 }
@@ -170,6 +170,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
                   builder: (context) => OrderDetailScreen(
                         orderId: orders[index].orderId,
                         storeId: orders[index].storeId,
+                    userId: widget.userId,
                       )),
             );
           },
