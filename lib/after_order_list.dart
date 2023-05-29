@@ -437,7 +437,7 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
               title: Container(
                 child: Text(
                   "오더리스트",
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.black, fontSize: 18),
                 ),
               ),
 
