@@ -147,9 +147,9 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
         if (proceedingOrders[index].payment == 0)
           payment = "선결제";
         else if (proceedingOrders[index].payment == 1)
-          payment = "현장결제 / 카드";
+          payment = "현장/카드";
         else
-          payment = "현장결제 / 현금";
+          payment = "현장/현금";
 
         if (proceedingOrders[index].state == 2) {
           state = "픽업 전";
@@ -188,50 +188,88 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
 
         return GestureDetector(
             child:Container(
+                margin: EdgeInsets.fromLTRB(15,0,15,0),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
               Container(
                 margin: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                child:
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                            decoration: BoxDecoration(
-                                color: Color(0xfff1f2f3),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Container(
-                              padding: EdgeInsets.all(5),
-                              child: Text(
-                                "${storeDong} > ${deliveryDong}  |  ${proceedingOrders[index].deliveryDistance.toStringAsFixed(2)}km",
-                                style: TextStyle(fontSize: 12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                      decoration: BoxDecoration(
+                                          color: Color(0xfff1f2f3),
+                                          borderRadius: BorderRadius.circular(10)),
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Text(
+                                          "${storeDong} > ${deliveryDong}  |  ${proceedingOrders[index].deliveryDistance.toStringAsFixed(2)}km",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      )),
+                                  SizedBox(width: 5,),
+                                  Container(
+                                      decoration: BoxDecoration(
+                                          color: Color(0xfff1f2f3),
+                                          borderRadius: BorderRadius.circular(10)),
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Text(
+                                          payment,
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      )),
+                                ],
                               ),
-                            )),
+                            ),
+                            Container(
+
+
+                              alignment: Alignment.centerRight,
+                              child:  Text(
+                                state,
+                                style: TextStyle(color:SetColorState(index), fontSize: 23),textAlign: TextAlign.end
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${proceedingOrders[index].storeName}",
+                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                            )
+                            ,
+                            Container(
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                  "${duration.inMinutes}분",
+                                  style: TextStyle(color: Colors.grey, fontSize: 19),
+                                ))
+                          ],
+                        )
+                       ,
                         SizedBox(
                           height: 5,
                         ),
-                        Text(
-                          "${proceedingOrders[index].storeName}",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          payment,
-                          style: TextStyle(fontSize: 12),
-                        ),
+
                       ],
                     ),
-                    Text(
-                      state,
-                      style: TextStyle(color: Colors.red, fontSize: 15),
-                    ),
-                  ],
-                ),
+
               ),
               Stack(
                 children: [
@@ -241,13 +279,7 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                     value: 0.2,
                     minHeight: 20,
                   ),
-                  Container(
-                      alignment: Alignment.centerRight,
-                      margin: EdgeInsets.only(right: 10),
-                      child: Text(
-                        "${duration.inMinutes}분",
-                        style: TextStyle(color: Colors.black),
-                      )),
+
                 ],
               )
             ])),
@@ -267,6 +299,20 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
     );
   }
 
+  Color SetColorState(int index)
+  {
+
+    if(proceedingOrders[index].state == 3)
+      {
+        return Color(0xffFE4B14);
+      }
+    else
+      {
+        return Colors.grey;
+      }
+
+  }
+
   complete() {
     _listView = ListView.separated(
       itemCount: completeOrders.length,
@@ -279,9 +325,9 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
         if (completeOrders[index].payment == 0)
           payment = "선결제";
         else if (completeOrders[index].payment == 1)
-          payment = "현장결제 / 카드";
+          payment = "현장/카드";
         else
-          payment = "현장결제 / 현금";
+          payment = "현장/현금";
 
         if (completeOrders[index].state == 2) {
           state = "픽업 전";
