@@ -1,19 +1,19 @@
 
 class calendar{
-  String orderTime;
+  String deliveryTime;
   int deliveryFee;
   double deliveryDistance;
 
-  calendar(this.orderTime, this.deliveryFee, this.deliveryDistance);
+  calendar(this.deliveryTime, this.deliveryFee, this.deliveryDistance);
 
   factory calendar.fromJson(Map<String,dynamic> json) => calendar(
-    json['orderTime'] as String,
+    json['deliveryTime'] as String,
     int.parse(json['deliveryFee']),
     double.parse(json['deliveryDistance']),
   );
 
   Map<String, dynamic> toJson() =>{
-    'orderTime' : orderTime,
+    'deliveryTime' : deliveryTime,
     'deliveryFee' : deliveryFee.toString(),
     'deliveryDisstance' : deliveryDistance,
   };
