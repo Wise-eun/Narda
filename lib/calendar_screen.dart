@@ -55,8 +55,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
     monthlyFee=0;
     print('order length ${responseList2!.length}');
     for(int i=0;i<responseList2!.length;i++) {
-      if(selectedDay.year.toString() == order[i].orderTime.substring(0, 4)
-          && selectedDay.toString().substring(5, 7) == order[i].orderTime.substring(5, 7)) {
+      if(selectedDay.year.toString() == order[i].deliveryTime.substring(0, 4)
+          && selectedDay.toString().substring(5, 7) == order[i].deliveryTime.substring(5, 7)) {
         print('조건문 체크2222');
         print(selectedDay);
         delivercount=delivercount+1;
@@ -94,11 +94,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
           delivercount=0;
           for(int i=0;i<responseList.length;i++) {
             order.add(calendar.fromJson(responseList[i]));
-            print('orderDay : ${order[i].orderTime}');
-            int year = int.parse(order[i].orderTime.substring(0, 4));
-            int month = int.parse(order[i].orderTime.substring(5, 7));
-            int day = int.parse(order[i].orderTime.substring(8, 10));
-            DateTime orderDay = DateTime.parse(order[i].orderTime.substring(0, 10));
+            print('orderDay : ${order[i].deliveryTime}');
+            int year = int.parse(order[i].deliveryTime.substring(0, 4));
+            int month = int.parse(order[i].deliveryTime.substring(5, 7));
+            int day = int.parse(order[i].deliveryTime.substring(8, 10));
+            DateTime orderDay = DateTime.parse(order[i].deliveryTime.substring(0, 10));
             DateTime orderDay2 = DateTime.utc(year, month, day);
             print('money_parse : $orderDay, event_utc : $orderDay2');
             String temp = order[i].deliveryFee.toString();
@@ -114,8 +114,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
               money[orderDay] = temp;
             }
             totalFee = (totalFee + order[i].deliveryFee);
-            if((DateTime.now().year.toString() == order[i].orderTime.substring(0, 4)
-                && DateTime.now().toString().substring(5, 7) == order[i].orderTime.substring(5, 7))) {
+            if((DateTime.now().year.toString() == order[i].deliveryTime.substring(0, 4)
+                && DateTime.now().toString().substring(5, 7) == order[i].deliveryTime.substring(5, 7))) {
               print('조건문 체크');
               delivercount=delivercount+1;
               totalDistance = (totalDistance + order[i].deliveryDistance);
@@ -219,7 +219,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('일일 평균 수입 : ${(monthlyFee/30).toStringAsFixed(0)}원',
+                      Text('일일 평균 수입 : ${(monthlyFee/delivercount).toStringAsFixed(0)}원',
                           style: TextStyle(
                             color: Colors.grey[700],
                           )

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speelow/reset_pw.dart';
 import 'package:http/http.dart' as http;
@@ -32,8 +33,8 @@ class _MyPageScreenState extends State<MyPageScreen> {
   static double _voiceSpeedValue = 3;
   static double _voiceVolumeValue = 3;
   static double _deliveryRadius = 3;
-
-  double todayIncome=0;
+  var valueFormat = NumberFormat('###,###,###,###');
+  int todayIncome=0;
 
   @override
   void initState() {
@@ -132,9 +133,9 @@ try{
     final mediaQuery = MediaQuery.of(context);
     todayIncome=0;
     for(int i=0;i<order.length;i++) {
-      if((DateTime.now().toString().substring(0, 10) == order[i].orderTime.substring(0, 10))) {
+      if((DateTime.now().toString().substring(0, 10) == order[i].deliveryTime.substring(0, 10))) {
         todayIncome=todayIncome+order[i].deliveryFee;
-        print(order[i].orderTime);
+        print(order[i].deliveryTime);
       }
     }
 
@@ -206,7 +207,7 @@ try{
                           ],
                         ),
                         //수입 가져오는 로직 필요
-                        Text("오늘의 수입은 $todayIncome원 입니다.",
+                        Text("오늘의 수입은 "+ valueFormat.format(todayIncome)+"원 입니다.",
                             textAlign: TextAlign.start,
                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
                         SizedBox(
