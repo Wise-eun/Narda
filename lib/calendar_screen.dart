@@ -28,6 +28,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   CalendarFormat format = CalendarFormat.month;
   late final ValueNotifier<List<Event>> _selectedEvents;
   bool callOk = false;
+  var valueFormat = NumberFormat('###,###,###,###');
+
   DateTime selectedDay = DateTime(
     DateTime.now().year,
     DateTime.now().month,
@@ -148,15 +150,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     return Scaffold(
         //bottomNavigationBar: MenuBottom(userId: widget.userId),
-        appBar: AppBar(
-          title: Text(
-            "정산",
-            style: TextStyle(color: Colors.black),
-          ),
+        appBar:
+        AppBar(
+          shape: Border(
+              bottom: BorderSide(
+                color: Color(0xfff1f2f3),
+                width: 2,
+              )),
+          title: Text('정산',
+              style: TextStyle(color: Colors.black, fontSize: 18)),
+          automaticallyImplyLeading: false,
           centerTitle: true,
-          backgroundColor: Color(0xfff1f2f3),
+          backgroundColor: Colors.white,
           elevation: 0,
-        ),
+        )
+    ,
         body: SingleChildScrollView(
           child:
           Container(
@@ -174,7 +182,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             fontSize: 18,
                           ),
                         ),
-                        Text('$monthlyFee원',
+                        Text(valueFormat.format(monthlyFee)+"원",
                           style : TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
@@ -201,7 +209,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             fontSize: 15,
                           )
                       ),
-                      Text('${(totalFee/30).toStringAsFixed(0)}원\n'
+                      Text(valueFormat.format((totalFee/30))+'원\n'
                           '$totalDistance km\n'
                           '${(delivercount/30).toStringAsFixed(2)}건',
                           style: TextStyle(
@@ -219,24 +227,29 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('일일 평균 수입 : ${(monthlyFee/delivercount).toStringAsFixed(0)}원',
+                      Text('일일 평균 수입 : '+valueFormat.format(monthlyFee/delivercount) +'원',
                           style: TextStyle(
                             color: Colors.grey[700],
                           )
                       ),
                       Row(
                         children: [
-                          Text('평균이하',
+                          Icon(CupertinoIcons.circle_fill,color:Color(0xff475DFE) ,size: 10,),
+                          SizedBox(width: 5,),
+                          Text('평균이상',
                               style: TextStyle(
-                                color: Colors.blue[400],
+                                color:Color(0xff475DFE),
                               )
                           ),
                           SizedBox(width: 10,),
-                          Text('평균이상',
+                          Icon(CupertinoIcons.circle_fill,color:Color(0xffFF3055) ,size: 10,),
+                          SizedBox(width: 5,),
+                          Text('평균이하',
                               style: TextStyle(
-                                color:Colors.red[200],
+                                color: Color(0xffFF3055),
                               )
-                          ),
+                          )
+                         ,
                         ],
                       )
                     ],
@@ -276,59 +289,54 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       markerBuilder: (BuildContext context, date, events) {
 
                         if(events.isEmpty) return SizedBox();
+                        print("AVERAGE : " + (monthlyFee/delivercount).toString());
                         print(int.parse(money[DateTime.parse(date.toString().substring(0,10))]!));
                         if(int.parse(money[DateTime.parse(date.toString().substring(0,10))]!)
                             > (monthlyFee/delivercount)) {
                           average = true;
                           print('bool chandged');
                         }
+                        else
+                          {
+                            average = false;
+                          }
                         if(average) {
                           print('true');
                           return Container(
                               child:Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Container(
-                                    height: 35,
-                                    width: 35,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      shape: BoxShape.rectangle,
-                                      backgroundBlendMode: BlendMode.darken,
-                                      color: Colors.red[200],
-                                    ),),
+                                  SizedBox(height: 10,),
+Icon(CupertinoIcons.circle_fill,color:Color(0xff475DFE) ,size: 6,),
+                                  SizedBox(height: 20,),
                                   Text(
                                     '${money?[DateTime.parse(date.toString().substring(0,10))]}',
                                     style: TextStyle(
-                                      color: Colors.red[200],
+                                      color: Color(0xff475DFE),
                                       fontSize: 12,
                                     ),
                                   ),
+                                  SizedBox(height: 10,)
                                 ],
                               )
                           );
                         }
-                        else {
+                        else {    print('false');
                           return Container(
                               child:Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Container(
-                                    height: 35,
-                                    width: 35,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      shape: BoxShape.rectangle,
-                                      backgroundBlendMode: BlendMode.darken,
-                                      color: Colors.blue[200],
-                                    ),),
+                                  SizedBox(height: 10,),
+                                  Icon(CupertinoIcons.circle_fill,color:Color(0xffFF3055) ,size: 6,),
+                                  SizedBox(height: 20,),
                                   Text(
                                     '${money?[DateTime.parse(date.toString().substring(0,10))]}',
                                     style: TextStyle(
-                                      color: Colors.blue[200],
+                                      color: Color(0xffFF3055),
                                       fontSize: 12,
                                     ),
                                   ),
+                                  SizedBox(height: 10,)
                                 ],
                               )
                           );
@@ -369,13 +377,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
                     isTodayHighlighted: true, //오늘 표시 여부
                     todayDecoration:  BoxDecoration(
-                      shape: BoxShape.circle,
-                      border : Border.all(
-                        color: Colors.black
-                      )
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      shape: BoxShape.rectangle,
+                      backgroundBlendMode: BlendMode.darken,
+                      color: Colors.grey[200],
                     ),
-                    todayTextStyle: TextStyle(color: Colors.red),
-
+todayTextStyle: TextStyle(color: Colors.black),
                     outsideDaysVisible: true, //다른 달 날짜 노출
                     outsideTextStyle: const TextStyle(color: const Color(0xFFAEAEAE)),
                     outsideDecoration: const BoxDecoration(
