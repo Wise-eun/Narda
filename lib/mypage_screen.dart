@@ -142,20 +142,16 @@ try{
     return Scaffold(
         bottomNavigationBar: MenuBottom(userId: widget.userId, tabItem: TabItem.mypage,),
         appBar: AppBar(
-          title: Container(
-            child: Text(
-              "마이페이지",
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
           shape: Border(
               bottom: BorderSide(
                 color: Color(0xfff1f2f3),
                 width: 2,
               )),
+          title: Text('마이페이지',
+              style: TextStyle(color: Colors.black, fontSize: 18)),
           automaticallyImplyLeading: false,
           centerTitle: true,
-          backgroundColor: Color(0xfff1f2f3),
+          backgroundColor: Colors.white,
           elevation: 0,
         ),
         body: SingleChildScrollView(
@@ -207,9 +203,16 @@ try{
                           ],
                         ),
                         //수입 가져오는 로직 필요
-                        Text("오늘의 수입은 "+ valueFormat.format(todayIncome)+"원 입니다.",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                     Row(
+                       children: [
+                         Text("오늘의 수입은 ",
+                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                         Text(valueFormat.format(todayIncome),
+                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xff4F40FD))),
+                         Text("원 입니다.",
+                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
+                       ],
+                     ),
                         SizedBox(
                           width: mediaQuery.size.width,
                           height: 25,
