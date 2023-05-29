@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:speelow/menu_bottom.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -50,6 +51,11 @@ class MainScreenState extends State<MainScreen> {
   Color feeColor = Colors.blue;
   Color distanceColor = Colors.white;
   Color timeColor = Colors.white;
+
+  void dispose() {
+    super.dispose();
+    panelController.dispose();
+  }
 
   newOrderList() async {
     try {
@@ -232,8 +238,7 @@ class MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final pixelRatio = mediaQuery.devicePixelRatio;
-    final mapSize =
-        Size(mediaQuery.size.width, mediaQuery.size.height - 50);
+    final mapSize = Size(mediaQuery.size.width, mediaQuery.size.height - 50);
     final physicalSize =
         Size(mapSize.width * pixelRatio, mapSize.height * pixelRatio);
 
@@ -268,59 +273,60 @@ class MainScreenState extends State<MainScreen> {
                   children: <Widget>[
                 Container(
                   margin: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                              decoration: BoxDecoration(
-                                  color: Color(0xfff1f2f3),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Container(
-                                padding: EdgeInsets.all(5),
-                                child: Text(
-                                  "${storeDong} > ${deliveryDong}  |  ${orders[index].deliveryDistance.toStringAsFixed(2)}km",
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              )),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "${orders[index].storeName}",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                        ],
-                      ),
-                      Text(
-                        "${orders[index].deliveryFee}원",
-                        style: TextStyle(color: Colors.red, fontSize: 15),
-                      ),
-                    ],
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                                decoration: BoxDecoration(
+                                    color: Color(0xfff1f2f3),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  child: Text(
+                                    "${storeDong} > ${deliveryDong}  |  ${orders[index].deliveryDistance.toStringAsFixed(2)}km",
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                )),
+                            Text(
+                              "${orders[index].deliveryFee}원",
+                              style: TextStyle(fontSize: 20),
+                            ),
+
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${orders[index].storeName}",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            Text(
+                              "${duration.inMinutes}분",
+                              style: TextStyle(color: Colors.grey),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        ]
                   ),
                 ),
-                Stack(
-                  children: [
-                    LinearProgressIndicator(
-                      backgroundColor: Color(0xfff1f2f3),
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                      value: 0.2,
-                      minHeight: 20,
+                    LinearPercentIndicator(
+                      lineHeight: 12,
+                      percent: percent>1?1:percent,
+                      barRadius: const Radius.circular(16),
+                      progressColor: Colors.blue[400],
+                      backgroundColor: Colors.grey[300],
                     ),
-                    Container(
-                        alignment: Alignment.centerRight,
-                        margin: EdgeInsets.only(right: 10),
-                        child: Text(
-                          "${duration.inMinutes}분",
-                          style: TextStyle(color: Colors.black),
-                        )),
-                  ],
-                )
+
               ])),
           onTap: () {
             Navigator.push(
@@ -383,15 +389,35 @@ class MainScreenState extends State<MainScreen> {
               controlHeight: 0.0,
               anchor: 0.4,
               panelController: panelController,
-              onTap: () {
-                if (SlidingUpPanelStatus.expanded == panelController.status) {
-                  panelController.collapse();
-                } else {
-                  panelController.expand();
-                }
-              },
+              onTap: () {},
               enableOnTap: true,
-              child: Container(
+              child: Scaffold(
+                appBar: PreferredSize(
+                  preferredSize: Size.fromHeight(50.0),
+                  child: AppBar(
+                    shape: Border(
+                        bottom: BorderSide(
+                          color: Color(0xfff1f2f3),
+                          width: 2,
+                        )),
+                    title: Text('오더리스트',
+                        style: TextStyle(color: Colors.black, fontSize: 18)),
+                    automaticallyImplyLeading: false,
+                    centerTitle: true,
+                    backgroundColor: Colors.white,
+                    elevation: 0,
+                  ),
+                ),
+                floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+                floatingActionButton: FloatingActionButton.extended(
+                  backgroundColor: Colors.white,
+                  elevation: 12,
+                    onPressed: (){panelController.collapse();},
+                    label: Container(child:Row(
+                        children:[
+                          Icon(Icons.map_outlined, color: Colors.blue,),
+                          Text(" 지도보기", style: TextStyle(color: Colors.blue),)])),),
+                body:Container(
                 //margin: EdgeInsets.symmetric(horizontal: 15.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -399,24 +425,16 @@ class MainScreenState extends State<MainScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    Container(
-                      color: Colors.white,
-                      alignment: Alignment.center,
-                      height: 30,
-                      child: Icon(
-                        Icons.maximize_rounded,
-                        size: 60,
-                        color: Colors.grey,
-                      ),
-                    ),
+                    SizedBox(height: 5,),
                     Container(
                       height: 35,
-                      color: Color(0xfff1f2f3),
+                      //color: Color(0xfff1f2f3),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           SizedBox(
-                              height: 30,
+                              height: 40,
+                              width: 100,
                               child: FilledButton(
                                 onPressed: () {
                                   state = 0;
@@ -435,10 +453,16 @@ class MainScreenState extends State<MainScreen> {
                                   style: feeTextStyle,
                                 ),
                                 style: FilledButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                      side: BorderSide(width:0.3, color: Colors.grey)
+                                  ),
                                     backgroundColor: feeColor),
                               )),
                           SizedBox(
-                            height: 30,
+                            height: 40,
+                            width: 100,
+
                             child: FilledButton(
                               onPressed: () {
                                 state = 1;
@@ -457,11 +481,17 @@ class MainScreenState extends State<MainScreen> {
                                 style: distanceTextStyle,
                               ),
                               style: FilledButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                      side: BorderSide(width:0.3, color: Colors.grey)
+                                  ),
                                   backgroundColor: distanceColor),
                             ),
                           ),
                           SizedBox(
-                              height: 30,
+                              height: 40,
+                              width: 100,
+
                               child: FilledButton(
                                 onPressed: () {
                                   state = 2;
@@ -481,6 +511,10 @@ class MainScreenState extends State<MainScreen> {
                                   style: timeTextStyle,
                                 ),
                                 style: FilledButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30.0),
+                                        side: BorderSide(width:0.3, color: Colors.grey)
+                                    ),
                                     backgroundColor: timeColor),
                               )),
                         ],
@@ -494,7 +528,7 @@ class MainScreenState extends State<MainScreen> {
                     ),
                   ],
                 ),
-              ),
+              ),)
             ),
           ],
         ));
