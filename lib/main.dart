@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:kakao_flutter_sdk_navi/kakao_flutter_sdk_navi.dart';
 import 'package:speelow/find_id_screen.dart';
@@ -36,6 +37,8 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_hooks/flutter_hooks.dart';
 
 void main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   KakaoSdk.init(nativeAppKey: '3e8531d2fdf84a885535fc7c4ac309ca');
   await initializeDateFormatting();
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +48,12 @@ void main() async {
   ); //얘때문에 main에 async 넣음
 
   runApp(const MyApp());
+}
+
+void initialization() async {
+  print('waiting for 3 seconds');
+  await Future.delayed(const Duration(seconds: 1));
+  FlutterNativeSplash.remove();
 }
 
 class MyApp extends StatelessWidget {
@@ -155,6 +164,11 @@ class _LoginscreenState extends State<Loginscreen> {
         ));
   }
 
+  void initState() {
+    super.initState();
+    initialization();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -243,12 +257,6 @@ class _LoginscreenState extends State<Loginscreen> {
                           },
                           child: Text('회원가입', style: TextStyle(color: Colors.black))),
                     ),
-/*                    TextButton(onPressed: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => OrderListScreen()),
-                      );
-                    }, child: Text("신규 오더 리스트")),*/
                     Spacer(),
                   ],
                 )

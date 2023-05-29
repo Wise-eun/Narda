@@ -12,7 +12,6 @@ import 'package:geocoding/geocoding.dart';
 import 'api/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
-
 import 'model/orderDetail.dart';
 import 'order_detail.dart';
 
@@ -39,7 +38,7 @@ class MainScreenState extends State<MainScreen> {
   double circlelongitude = 26.356;
 
   bool attendance= false;
-bool isOrderlist = false;
+
   // late PermissionStatus _permissionGranted;
 
   late ScrollController scrollController;
@@ -79,15 +78,13 @@ bool isOrderlist = false;
                 locationSplitList[1] +
                 " " +
                 locationSplitList[2];
-            print(orderLocation);
+            print("orderListLocation 출력 $orderLocation");
 
 
             if (orderLocations.containsKey(orderLocation) == false) {
-              print("어이");
               orderLocations.addEntries({orderLocation: 1}.entries);
             } //여기서 바로 스플릿해서 지도 넣는데 맵으로 넣자자자자자ㅏ잦
             else {
-              print("짱나");
               orderLocations[orderLocation] =
                   orderLocations[orderLocation]! + 1;
             }
@@ -105,7 +102,6 @@ bool isOrderlist = false;
   }
 
   addressToPM(String address) async {
-    print("투피엠");
     List<Location> locations = await locationFromAddress(address);
     circlelatitude = locations[0].latitude.toDouble();
     circlelongitude = locations[0].longitude.toDouble();
@@ -125,11 +121,6 @@ bool isOrderlist = false;
                 desiredAccuracy: LocationAccuracy.high)
             .then((position) {
           setState(() {
-            print("latitude : " +
-                latitudes.toString() +
-                ", " +
-                "longitude : " +
-                longitudes.toString());
             latitudes = position.latitude;
             longitudes = position.longitude;
 
@@ -153,30 +144,44 @@ bool isOrderlist = false;
   }
 
   circleCluster() async {
-    print('나 여기똥');
     //print(orderLocations.length);
     for (MapEntry element in orderLocations.entries) {
       //addressToPM(element.key);
       List<Location> locations = await locationFromAddress(element.key);
       circlelatitude = locations[0].latitude.toDouble();
       circlelongitude = locations[0].longitude.toDouble();
-      print(element.key);
-      print('좌표 :$circlelatitude, $circlelongitude');
+      print("key ${element.key}");
       int count = element.value;
-      final NCircleOverlay overlay = await NCircleOverlay(
+
+      final iconImage = await NOverlayImage.fromWidget(
+        widget: Icon(Icons.circle, color: element.value<6?Color(0xB35a4dfd):element.value<16?Color(0xB3ffc800):Color(0xB3ff0084), size: element.value<6?150:element.value<16?200:250,),
+          size: Size(element.value<6?150:element.value<16?200:250, element.value<6?150:element.value<16?200:250,),
+          context: context);
+
+      final marker = NMarker(
+          captionAligns : const [NAlign.center],
+        caption: NOverlayCaption(text: count.toString(), textSize: 20),
+          id: element.key,
+          position: NLatLng(circlelatitude, circlelongitude),
+        icon: iconImage
+      );
+      _mapController.addOverlay(marker);
+
+
+/*      final NCircleOverlay overlay = await NCircleOverlay(
         id: element.key, center: NLatLng(circlelatitude, circlelongitude),
         radius: element.value<6?400:element.value<16?500:800,
         color: element.value<6?Color(0xB35a4dfd):element.value<16?Color(0xB3ffc800):Color(0xB3ff0084),
-      );
+      );*/
       //overlay.setOnTapListener((overlay) => )
-      overlay.setOnTapListener((overlay) {
-        setState(() {
-          isOrderlist = true;
-        });
+      marker.setOnTapListener((overlay) {
         panelController.expand();
       });
-      _mapController.addOverlay(overlay);
+      //_mapController.addOverlay(overlay);
       print("오버레이 추가 완");
+
+
+
     }
   }
 
@@ -248,20 +253,8 @@ bool isOrderlist = false;
     final physicalSize =
         Size(mapSize.width * pixelRatio, mapSize.height * pixelRatio);
 
-    print("physicalSize: $physicalSize");
-    print('build : $latitudes, $longitudes');
-
-    String changeAppBarText()
-    {
-      if(isOrderlist==true)
-        {
-          return "오더리스트";
-        }
-      else
-        {
-          return "홈";
-        }
-    }
+    //print("physicalSize: $physicalSize");
+    //print('build : $latitudes, $longitudes');
 
     var _listView = ListView.separated(
       padding: const EdgeInsets.all(8),
@@ -371,19 +364,6 @@ bool isOrderlist = false;
     );
 
     return Scaffold(
-appBar:  AppBar(
-  shape: Border(
-      bottom: BorderSide(
-        color: Color(0xfff1f2f3),
-        width: 2,
-      )),
-  title: Text(changeAppBarText(),
-      style: TextStyle(color: Colors.black, fontSize: 18)),
-  automaticallyImplyLeading: false,
-  centerTitle: true,
-  backgroundColor: Colors.white,
-  elevation: 0,
-),
         backgroundColor: const Color(0xFF343945),
         bottomNavigationBar: MenuBottom(
           userId: widget.userId,
@@ -419,7 +399,7 @@ appBar:  AppBar(
                   )*/
                   SizedBox(
                       width: mapSize.width,
-                      height: (mapSize.height -110), //하단바때문에 오버픽셀 부분 뺌
+                      height: (mapSize.height - 18), //하단바때문에 오버픽셀 부분 뺌
                       // color: Colors.greenAccent,
                       child: NaverMap(
                         options: NaverMapViewOptions(
@@ -443,19 +423,30 @@ appBar:  AppBar(
               controlHeight: 0.0,
               anchor: 0.4,
               panelController: panelController,
-              onTap: () {
-              },
+              onTap: () {},
               enableOnTap: true,
               child: Scaffold(
+                appBar: PreferredSize(
+                  preferredSize: Size.fromHeight(50.0),
+                  child: AppBar(
+                    shape: Border(
+                        bottom: BorderSide(
+                          color: Color(0xfff1f2f3),
+                          width: 2,
+                        )),
+                    title: Text('오더리스트',
+                        style: TextStyle(color: Colors.black, fontSize: 18)),
+                    automaticallyImplyLeading: false,
+                    centerTitle: true,
+                    backgroundColor: Colors.white,
+                    elevation: 0,
+                  ),
+                ),
                 floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
                 floatingActionButton: FloatingActionButton.extended(
                   backgroundColor: Colors.white,
                   elevation: 12,
-                    onPressed: (){
-                      setState(() {
-                        isOrderlist = false;
-                      });
-                    panelController.collapse();},
+                    onPressed: (){panelController.collapse();},
                     label: Container(child:Row(
                         children:[
                           Icon(Icons.map_outlined, color: Colors.blue,),
