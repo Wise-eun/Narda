@@ -11,6 +11,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:speelow/HorizontalDashedDivider.dart';
 import 'package:http/http.dart' as http;
+import 'package:speelow/calendar_screen.dart';
+import 'after_order_list.dart';
 import 'api/api.dart';
 import 'kakao_map.dart';
 import 'menu_bottom.dart';
@@ -24,10 +26,11 @@ Duration? duration;
 
 class OrderDetailScreen extends StatefulWidget {
   const OrderDetailScreen(
-      {Key? key, required this.orderId, required this.storeId})
+      {Key? key, required this.orderId, required this.storeId, required this.userId})
       : super(key: key);
   final int orderId;
   final String storeId;
+  final String userId;
 
   @override
   State<OrderDetailScreen> createState() => _OrderDetailScreenState();
@@ -42,7 +45,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   double from_longitude = 26.356;
   double to_latitude = 30;
   double to_longitude = 20;
-
+bool pickUped = false;
   addressToPM(String address) async {
     //String address = '경북 경산시 대학로 280';
     print('topm 주소 : $address');
@@ -210,6 +213,57 @@ String ReturnStatusString()
     }
   }
 
+  String ReturnStatusButtonString()
+  {
+    switch(order!.state)
+    {
+      case 2:
+        return "픽업하기";
+      case 3:
+        return "완료하기";
+    }
+    return "";
+  }
+
+  setOrderState(orderId,newState) async{
+    try{
+      var response = await http.post(
+          Uri.parse(API.setOrderState),
+          body:{
+            'orderId' : orderId.toString(),
+            'newState' : (newState+1).toString(),
+          }
+      );
+      if(response.statusCode == 200){
+        var responseBody = jsonDecode(response.body);
+        if(responseBody['success'] == true){
+          print("Order update 완료");
+  if(order?.state == 3) //픽업이 이미 된 경우, 완료 버튼을 눌렀을 때
+    {
+    Navigator.pop(context);
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>  AfterOrderListScreen(userId: widget.userId)),
+    );
+    print("완료되었습니다.");
+    }
+  else if(order?.state == 2) //픽업전인 상태에서, 픽업 버튼을 눌렀을 때
+  {
+    setState(() {
+      print("픽업커튼 누르셨습니다.");
+      order?.pickupTime = DateTime.now().toString();
+      order?.state=3;
+    });
+  }
+        }
+
+        else{
+          print("Order update 실패");
+        }
+      }
+    }catch(e){print(e.toString());}
+  }
 
 
 
@@ -227,6 +281,12 @@ appBar: AppBar(
       color: Colors.grey[400],
       size: 30,), onPressed: () {
       Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) =>  AfterOrderListScreen(userId: widget.userId)),
+      );
+
   },
   ),
   title: Container(
@@ -247,341 +307,333 @@ appBar: AppBar(
   backgroundColor: Color(0xfff1f2f3),
   elevation: 0,
 ),
-        body: Scrollbar(
-            controller: _scrollController,
-            isAlwaysShown: true,
-            thickness: 10,
-            child: ListView(controller: _scrollController, children: [
-              Container(
-                  child: Column(
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  callOk?Container(
-                    margin: EdgeInsets.fromLTRB(30,0,30,0),
-                    child:
-                  Row(
-mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+        body:Column(
+          children: [
+            Expanded(child: Scrollbar(
+              controller: _scrollController,
+              isAlwaysShown: true,
+              thickness: 10,
+              child:
 
-                    Text(ReturnStatusString(),style: TextStyle(fontSize: 25, color: Color(0xffFF3055)),),
-                    Container(
-                      child:Column(
-crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("주문일시 ${order?.orderTime.substring(0,16).replaceAll('-', '.')} ",
-                            style: TextStyle( color: Colors.grey[400]),
-                            textAlign: TextAlign.left,),
-                          order?.pickupTime!=null? Text("픽업시간 ${order?.pickupTime?.substring(0,16).replaceAll('-', '.')}",
-                              style: TextStyle( color: Colors.grey[400]),
-                              textAlign: TextAlign.left)
-                              :Text("픽업시간 ",
-                              textAlign: TextAlign.left,
-                            style: TextStyle( color: Colors.grey[400]),
-                          )
-                        ],
-                      ),
-                    )
-                  ],),)  : Text('배달상태'),
-
-                  SizedBox(
-                    height: 30,
-                  ),
-                  callOk ? Text(order!.storeName,
-                    style:TextStyle(fontSize: 23 ) ,) : Text('가게 이름'),
-                  callOk ? Text(order!.storeLocation
-                  ,style: TextStyle(fontSize: 15),) : Text('가게 주소'),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  callOk ? Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Container(
-
-                     child:       Transform.rotate(angle: -90*math.pi / 180,
-                      child:  Icon(CupertinoIcons.chevron_left_2,
-                      color: Color(0xffFF3055),
-                      size: 18,),),
-                    ),
-
-SizedBox(width: 5,),
-                    Text(order!.deliveryDistance.toString() + "km",
-                      style:TextStyle(fontSize: 18, color: Color(0xffFF3055)) ,)
-                  ],)  : Text('거리'),
-                  SizedBox(
-                    height: 20,
-                  ),
-                 /* clicked
-                      ? ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.black),
-                          ),
-                          onPressed: () async {
-
-                          },
-                          child: Text('완료'))
-                      : ElevatedButton(
-                          onPressed: () async {
-                            setState(() {
-                              clicked = true;
-                            });
-                          },
-                          child: Text('픽업'),
-                        ),
-*/
-                  callOk ? Container(
-      alignment: Alignment.center,
-                    child: Text(order!.deliveryLocation + "\n"+order!.deliveryLocationDetail,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white
-                      ),
-                      textAlign: TextAlign.center,),
-                    decoration: BoxDecoration(
-                      color: Color(0xffFF3055),
-                      borderRadius: BorderRadius.all(Radius.circular(15.0))
-                    ),
-                    width: 250,
-                    height:60
-                  ) : Text('고객 주소'),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                      //지도 띄울 부분 (목적지까지의 거리)
-                      width: mapSize.width,
-                      height: 400,
-                      child: NaverMap(
-                        options: NaverMapViewOptions(
-                          initialCameraPosition: NCameraPosition(
-                              target: NLatLng(from_latitude, from_longitude),
-                              zoom: 11,
-                              bearing: 0,
-                              tilt: 0),
-                          scrollGesturesEnable: true,
-                        ),
-                        onMapReady: (controller) {
-                          _mapController = controller;
-                        },
-                        //onCameraChange: onChanged(LatLng(latitude, longitude), CameraChangeReason.location, true),
-                      )),
-               /*   TextButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.red),
-                      ),
-                      onPressed: () async {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => KakaoMapTest()),
-                        );
-                      },
-                      child: Text('map')),*/
-                  SizedBox(height: 20,),
-callOk? Column(
-  children: [
-    Row(
-      children: [
-        SizedBox(width: 30,),
-        Text("주문 번호",
-        style: TextStyle(fontSize: 18),),
-        SizedBox(width: 30,),
-        Text(order!.orderInfo.hashCode.toRadixString(16).toUpperCase(),
-        style: TextStyle(fontSize: 18))
-      ],
-    ),
-    SizedBox(height: 10),
-    Row(
-      children: [
-        SizedBox(width: 30,),
-        Text("결제 수단",
-          style: TextStyle(fontSize: 18),),
-        SizedBox(width: 30,),
-        Text(ReturnPaymentString(),
-            style: TextStyle(fontSize: 18))
-      ],
-    ),
-    SizedBox(height: 10),
-    Row(
-      children: [
-        SizedBox(width: 30,),
-        Text("가게 번호",
-          style: TextStyle(fontSize: 18),),
-        SizedBox(width: 30,),
-        Text(ReturnPhoneNum(order!.storePhoneNum),
-            style: TextStyle(fontSize: 18))
-      ],
-    )
-  ],
-):Text('주문번호/결제수단/가게번호'),
-                  SizedBox(height: 20,),
-                  Container(
-                    color: Colors.grey[200],
-                    height: 20,
-                  ),
-                  SizedBox(height: 20,),
-                  callOk ?
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child:  Row(
+              ListView(controller: _scrollController, children: [
+                Container(
+                    child: Column(
                       children: [
-                        SizedBox(width: 30,)
-                      ,
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        callOk?Container(
+                          margin: EdgeInsets.fromLTRB(30,0,30,0),
+                          child:
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
 
-                                Text("고객 번호",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700 ),),
-                                SizedBox(height: 5,),
-                                Text(ReturnPhoneNum(order!.customerNum),style: TextStyle(fontSize: 18),)
-                              ],),
-                            SizedBox(height: 25,),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              Text(ReturnStatusString(),style: TextStyle(fontSize: 25, color: Color(0xffFF3055)),),
+                              Container(
+                                child:Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("주문일시 ${order?.orderTime.substring(0,16).replaceAll('-', '.')} ",
+                                      style: TextStyle( color: Colors.grey[400]),
+                                      textAlign: TextAlign.left,),
+                                    order?.pickupTime!=null? Text("픽업시간 ${order?.pickupTime?.substring(0,16).replaceAll('-', '.')}",
+                                        style: TextStyle( color: Colors.grey[400]),
+                                        textAlign: TextAlign.left)
+                                        :Text("픽업시간 ",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle( color: Colors.grey[400]),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],),)  : Text('배달상태'),
+
+                        SizedBox(
+                          height: 30,
+                        ),
+                        callOk ? Text(order!.storeName,
+                          style:TextStyle(fontSize: 23 ) ,) : Text('가게 이름'),
+                        callOk ? Text(order!.storeLocation
+                          ,style: TextStyle(fontSize: 15),) : Text('가게 주소'),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        callOk ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+
+                              child:       Transform.rotate(angle: -90*math.pi / 180,
+                                child:  Icon(CupertinoIcons.chevron_left_2,
+                                  color: Color(0xffFF3055),
+                                  size: 18,),),
+                            ),
+
+                            SizedBox(width: 5,),
+                            Text(order!.deliveryDistance.toString() + "km",
+                              style:TextStyle(fontSize: 18, color: Color(0xffFF3055)) ,)
+                          ],)  : Text('거리'),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        callOk ? Container(
+                            alignment: Alignment.center,
+                            child: Text(order!.deliveryLocation + "\n"+order!.deliveryLocationDetail,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white
+                              ),
+                              textAlign: TextAlign.center,),
+                            decoration: BoxDecoration(
+                                color: Color(0xffFF3055),
+                                borderRadius: BorderRadius.all(Radius.circular(15.0))
+                            ),
+                            width: 250,
+                            height:60
+                        ) : Text('고객 주소'),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          //지도 띄울 부분 (목적지까지의 거리)
+                            width: mapSize.width,
+                            height: 400,
+                            child: NaverMap(
+                              options: NaverMapViewOptions(
+                                initialCameraPosition: NCameraPosition(
+                                    target: NLatLng(from_latitude, from_longitude),
+                                    zoom: 11,
+                                    bearing: 0,
+                                    tilt: 0),
+                                scrollGesturesEnable: true,
+                              ),
+                              onMapReady: (controller) {
+                                _mapController = controller;
+                              },
+                              //onCameraChange: onChanged(LatLng(latitude, longitude), CameraChangeReason.location, true),
+                            )),
+                        SizedBox(height: 20,),
+                        callOk? Column(
+                          children: [
+                            Row(
                               children: [
-                                Text("고객 요청사항",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700),),
-                                SizedBox(height: 5,),
-                                Text("리뷰이벤트 콜라 부탁드려요 :)\n수저,포크(x)",style: TextStyle(fontSize: 18),)
-                              ],),
-                            SizedBox(height: 25,),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                                SizedBox(width: 30,),
+                                Text("주문 번호",
+                                  style: TextStyle(fontSize: 18),),
+                                SizedBox(width: 30,),
+                                Text(order!.orderInfo.hashCode.toRadixString(16).toUpperCase(),
+                                    style: TextStyle(fontSize: 18))
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
                               children: [
-                                Text("라이더 요청사항",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700),),
-                                SizedBox(height: 5,),
-                                Text(order!.deliveryRequest,style: TextStyle(fontSize: 18),)
-                              ],)
+                                SizedBox(width: 30,),
+                                Text("결제 수단",
+                                  style: TextStyle(fontSize: 18),),
+                                SizedBox(width: 30,),
+                                Text(ReturnPaymentString(),
+                                    style: TextStyle(fontSize: 18))
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                SizedBox(width: 30,),
+                                Text("가게 번호",
+                                  style: TextStyle(fontSize: 18),),
+                                SizedBox(width: 30,),
+                                Text(ReturnPhoneNum(order!.storePhoneNum),
+                                    style: TextStyle(fontSize: 18))
+                              ],
+                            )
                           ],
-                        )
+                        ):Text('주문번호/결제수단/가게번호'),
+                        SizedBox(height: 20,),
+                        Container(
+                          color: Colors.grey[200],
+                          height: 20,
+                        ),
+                        SizedBox(height: 20,),
+                        callOk ?
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child:  Row(
+                            children: [
+                              SizedBox(width: 30,)
+                              ,
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+
+                                      Text("고객 번호",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700 ),),
+                                      SizedBox(height: 5,),
+                                      Text(ReturnPhoneNum(order!.customerNum),style: TextStyle(fontSize: 18),)
+                                    ],),
+                                  SizedBox(height: 25,),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("고객 요청사항",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700),),
+                                      SizedBox(height: 5,),
+                                      Text("리뷰이벤트 콜라 부탁드려요 :)\n수저,포크(x)",style: TextStyle(fontSize: 18),)
+                                    ],),
+                                  SizedBox(height: 25,),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("라이더 요청사항",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700),),
+                                      SizedBox(height: 5,),
+                                      Text(order!.deliveryRequest,style: TextStyle(fontSize: 18),)
+                                    ],)
+                                ],
+                              )
+
+                            ],
+                          )   ,
+                        ):Text("요청사항")
+                        ,
+                        SizedBox(height: 20,),
+                        Container(
+                          color: Colors.grey[200],
+                          height: 20,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+
+                        SizedBox(width: 30,),
+                        callOk ?
+                        Container(
+                            margin: EdgeInsets.fromLTRB(30,0,50,50),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("주문 정보",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700)),
+                                SizedBox(height: 10,),
+                                Text(order!.orderInfo,style: TextStyle(fontSize: 18)),
+                                SizedBox(height: 10,),
+                                Container(
+                                  width: 350,
+                                  child: Divider(color: Colors.grey[400],thickness: 1.0,),),
+                                SizedBox(height: 5,),
+                                Container(
+                                    width:300,
+                                    child:
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text("메뉴 금액",
+                                            style: TextStyle(fontSize: 18)
+                                            ,  textAlign: TextAlign.start),
+
+                                        Text(valueFormat.format(order!.orderValue) + "원",
+                                            style: TextStyle(fontSize: 18),
+                                            textAlign: TextAlign.end),
+                                      ],
+
+                                    )),
+                                SizedBox(height: 5,),
+                                Container(
+                                  width: 350,
+                                  child: Divider(color: Colors.grey[400],thickness: 1.0,),),
+                                SizedBox(height:10),
+                                Container(
+                                  width:300,
+                                  child:       Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+
+                                      Text("기본 배달료",style: TextStyle(fontSize: 18)
+                                          ,  textAlign: TextAlign.start),
+
+                                      Text("1,000원",
+                                          style: TextStyle(fontSize: 18)
+                                          ,  textAlign: TextAlign.end)
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height:5),
+                                Container(
+                                  width:300,
+                                  child:       Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+
+                                      Text("거리 할증",style: TextStyle(fontSize: 18)
+                                          ,  textAlign: TextAlign.start),
+
+                                      Text(valueFormat.format(order!.deliveryFee - 1000) + "원",
+                                          style: TextStyle(fontSize: 18)
+                                          ,  textAlign: TextAlign.end)
+                                    ],
+                                  ),
+                                ),SizedBox(height:10),
+                                HorizontalDashedDivider(),
+                                SizedBox(height:10),
+                                Container(
+                                  width:300,
+                                  child:       Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+
+                                      Text("총 배달료",style: TextStyle(fontSize: 18)
+                                          ,  textAlign: TextAlign.start),
+
+                                      Text(valueFormat.format(order?.deliveryFee) + "원",
+                                          style: TextStyle(fontSize: 18)
+                                          ,  textAlign: TextAlign.end)
+                                    ],
+                                  ),
+                                ),
+
+
+
+                                SizedBox(height: 20,),
+                              ],
+                            )
+                        ): Text("배달료")
+
+
+
+                        ,
 
                       ],
-                    )   ,
-                  ):Text("요청사항")
-             ,
-                  SizedBox(height: 20,),
-                  Container(
-                    color: Colors.grey[200],
-                    height: 20,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-
-                      SizedBox(width: 30,),
-                  callOk ?
-                      Container(
-                          margin: EdgeInsets.fromLTRB(30,0,50,50),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("주문 정보",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700)),
-                            SizedBox(height: 10,),
-                            Text(order!.orderInfo,style: TextStyle(fontSize: 18)),
-                            SizedBox(height: 10,),
-                            Container(
-                              width: 350,
-                              child: Divider(color: Colors.grey[400],thickness: 1.0,),),
-                            SizedBox(height: 5,),
-                            Container(
-                                width:300,
-                                child:
-                                Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("메뉴 금액",
-                                    style: TextStyle(fontSize: 18)
-                                    ,  textAlign: TextAlign.start),
-
-                                Text(valueFormat.format(order!.orderValue) + "원",
-                                    style: TextStyle(fontSize: 18),
-                                    textAlign: TextAlign.end),
-                              ],
-
-                            )),
-                            SizedBox(height: 5,),
-                            Container(
-                              width: 350,
-                              child: Divider(color: Colors.grey[400],thickness: 1.0,),),
-                            SizedBox(height:10),
-                              Container(
-                                width:300,
-                                child:       Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-
-                                    Text("기본 배달료",style: TextStyle(fontSize: 18)
-                                        ,  textAlign: TextAlign.start),
-
-                                    Text("1,000원",
-                                        style: TextStyle(fontSize: 18)
-                                        ,  textAlign: TextAlign.end)
-                                  ],
-                                ),
-                              ),
-                            SizedBox(height:5),
-                            Container(
-                              width:300,
-                              child:       Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-
-                                  Text("거리 할증",style: TextStyle(fontSize: 18)
-                                      ,  textAlign: TextAlign.start),
-
-                                  Text(valueFormat.format(order!.deliveryFee - 1000) + "원",
-                                      style: TextStyle(fontSize: 18)
-                                      ,  textAlign: TextAlign.end)
-                                ],
-                              ),
-                            ),SizedBox(height:10),
-                              HorizontalDashedDivider(),
-                            SizedBox(height:10),
-                              Container(
-                                width:300,
-                                child:       Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-
-                                    Text("총 배달료",style: TextStyle(fontSize: 18)
-                                        ,  textAlign: TextAlign.start),
-
-                                    Text(valueFormat.format(order?.deliveryFee) + "원",
-                                        style: TextStyle(fontSize: 18)
-                                        ,  textAlign: TextAlign.end)
-                                  ],
-                                ),
-                              ),
+                    ))
+              ]),
 
 
+            ))
+          , SizedBox(height:10),
+            SizedBox(
+              width: 300,
+           height: 50,
+             child: ElevatedButton(onPressed: (){
+               setOrderState(order?.orderId,order?.state );
+             }, child: Text(ReturnStatusButtonString(),
+             style: TextStyle(fontSize: 25),),
+               style: ElevatedButton.styleFrom(
+               shape: RoundedRectangleBorder(	//모서리를 둥글게
+    borderRadius: BorderRadius.circular(10)),
+               backgroundColor: Color(0xffFF3055)),
 
-                            SizedBox(height: 20,),
-                          ],
-                        )
-                      ): Text("배달료")
+             ),
+           ),
+            SizedBox(height:10)
+          ],
+        )
 
 
+       );
 
-                 ,
-
-                ],
-              ))
-            ])));
-
-    // return  Scaffold(
-    //   body:Center(
-    //     child:  Text(widget.orderId.toString()),
-    //   )
-    // );
   }
 }

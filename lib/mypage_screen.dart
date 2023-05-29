@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speelow/reset_pw.dart';
 import 'package:http/http.dart' as http;
 import 'package:speelow/slider_tickmark_shape.dart';
@@ -26,20 +27,46 @@ class MyPageScreen extends StatefulWidget {
 
 class _MyPageScreenState extends State<MyPageScreen> {
   bool callOk = false;
-  bool isSwitched_helmet = false;
-  bool isSwitched_safety = true;
-  double _voiceSpeedValue = 3;
-  double _voiceVolumeValue = 3;
-  double _deliveryRadius = 3;
+  static bool isSwitched_helmet = false;
+  static bool isSwitched_safety = true;
+  static double _voiceSpeedValue = 3;
+  static double _voiceVolumeValue = 3;
+  static double _deliveryRadius = 3;
+
   double todayIncome=0;
 
   @override
   void initState() {
     // TODO: implement initState
+    getPreferencesData();
     getRider();
     getIncome();
     super.initState();
   }
+
+  static void getPreferencesData() async
+  {
+final SharedPreferences pref = await SharedPreferences.getInstance();
+try{
+  isSwitched_helmet = pref.getBool('isSwitched_helmet')!;
+  isSwitched_safety = pref.getBool('isSwitched_safety')!;
+  _voiceSpeedValue = pref.getDouble('_voiceSpeedValue')!;
+  _voiceVolumeValue = pref.getDouble('_voiceVolumeValue')! ;
+  _deliveryRadius = pref.getDouble('_deliveryRadius')! ;
+
+}catch(e){}
+  }
+
+  static void UpdatePreferences() async
+  {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setBool('isSwitched_helmet',isSwitched_helmet);
+    pref.setBool('isSwitched_safety',isSwitched_safety);
+    pref.setDouble('_voiceSpeedValue',_voiceSpeedValue );
+    pref.setDouble('_voiceVolumeValue',_voiceVolumeValue );
+    pref.setDouble('_deliveryRadius',_deliveryRadius );
+  }
+
 
   getIncome() async{
     try {
@@ -209,6 +236,8 @@ class _MyPageScreenState extends State<MyPageScreen> {
                             Text("내 AR 헬멧", style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)),
                            FlutterSwitch(value: isSwitched_helmet,
                              onToggle: (bool value) {
+                               isSwitched_helmet = value;
+                               UpdatePreferences();
                              setState(() {
                                isSwitched_helmet = value;
                              });
@@ -246,6 +275,8 @@ class _MyPageScreenState extends State<MyPageScreen> {
 //activeColor: Color(0xff4F40FD),
                            thumbColor: Color(0xff4F40FD),
                            onChanged: (dynamic value) {
+                             _voiceSpeedValue = value.toInt().toDouble();
+                             UpdatePreferences();
                            setState(() {
                            _voiceSpeedValue = value.toInt().toDouble();
                            });
@@ -307,6 +338,8 @@ class _MyPageScreenState extends State<MyPageScreen> {
                            thumbColor: Color(0xff4F40FD),
 
                            onChanged: (dynamic value) {
+                             _voiceVolumeValue = value.toInt().toDouble();
+                             UpdatePreferences();
                            setState(() {
                            _voiceVolumeValue = value.toInt().toDouble();
                            });
@@ -349,6 +382,8 @@ class _MyPageScreenState extends State<MyPageScreen> {
                              SizedBox(width:10),
                              FlutterSwitch(value: isSwitched_safety,
                                onToggle: (bool value) {
+                                 isSwitched_safety = value;
+                                 UpdatePreferences();
                                  setState(() {
                                    isSwitched_safety = value;
                                  });
@@ -387,6 +422,8 @@ class _MyPageScreenState extends State<MyPageScreen> {
                            thumbColor: Color(0xff4F40FD),
 
                            onChanged: (dynamic value) {
+                             _deliveryRadius = value.toInt().toDouble();
+                             UpdatePreferences();
                            setState(() {
                            _deliveryRadius = value.toInt().toDouble();
                            });

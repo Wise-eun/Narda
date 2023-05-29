@@ -15,4 +15,5 @@ class API{
   static const afterOrderList = "$hostConnect/afterOrderList.php";
   static const newOrderList = "$hostConnect/newOrderList.php";
   static const calendar = "$hostConnect/calendar.php";
+  static const setOrderState = "$hostConnect/setOrderState.php";
 }
