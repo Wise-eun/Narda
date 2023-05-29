@@ -254,6 +254,7 @@ class MainScreenState extends State<MainScreen> {
 
     //addressToPM();
     getCurrentLocation();
+    orderLocations.clear();
     newOrderList();
 
     super.initState();

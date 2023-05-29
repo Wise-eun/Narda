@@ -250,6 +250,8 @@ getStore() async {
   {
     switch(order!.state)
     {
+      case 1:
+        return "배차하기";
       case 2:
         return "픽업하기";
       case 3:
@@ -284,7 +286,7 @@ getStore() async {
           else if(order?.state == 2) //픽업전인 상태에서, 픽업 버튼을 눌렀을 때
               {
             setState(() {
-              print("픽업커튼 누르셨습니다.");
+              print("픽업 버튼 누르셨습니다.");
               order?.pickupTime = DateTime.now().toString();
               order?.state=3;
             });
