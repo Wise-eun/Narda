@@ -63,7 +63,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         print(selectedDay);
         delivercount=delivercount+1;
         totalDistance = (totalDistance + order[i].deliveryDistance);
-        print('total distance ${totalDistance}');
+        print('total distance ${totalDistance.toStringAsFixed(2)}');
         monthlyFee = (monthlyFee + order[i].deliveryFee);
       }
     }
@@ -210,8 +210,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           )
                       ),
                       Text(valueFormat.format((totalFee/30))+'원\n'
-                          '$totalDistance km\n'
-                          '${(delivercount/30).toStringAsFixed(2)}건',
+                          '${totalDistance.toStringAsFixed(2)} km\n'
+                          '${(delivercount/money.length).toStringAsFixed(2)}건',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
@@ -227,7 +227,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('일일 평균 수입 : '+valueFormat.format(monthlyFee/delivercount) +'원',
+                      Text('일일 평균 수입 : '+valueFormat.format(monthlyFee/money.length) +'원',
                           style: TextStyle(
                             color: Colors.grey[700],
                           )
