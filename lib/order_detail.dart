@@ -110,10 +110,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             double centerlon = (from_longitude + to_longitude);
             print('거리 : ${centerlon*centerlon + centerlat*centerlat}');
             double distance = centerlon*centerlon + centerlat*centerlat;
-
+            double zoomsize = distance>71440?14:10;
             NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
                 target: NLatLng(centerlat/2, centerlon/2),
-                zoom: 10
+                zoom: zoomsize
             );
 
             if (_mapController != null)
@@ -136,7 +136,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     orderDetail();
     //getCurrentLocation();
     //addressToPM();
-    //super.initState();
+    super.initState();
   }
 
 String ReturnPhoneNum(String num)
@@ -309,23 +309,6 @@ getStore() async {
     }catch(e){print(e.toString());}
   }
 
-double ReturnTimeValue()
-{
-  DateTime orderTime = DateTime.parse(order!.orderTime);
-
-  DateTime current = DateTime.now();
-  Duration duration = orderTime.difference(current);
-
-  if(duration.inMinutes<0)
-    return 0;
-
-  int timestamp1 = duration.inMinutes + order!.predictTime;
-  int timestamp2 = order!.predictTime;
-
-  double percent = timestamp1/timestamp2;
-  return percent;
-}
-
   @override
   Widget build(BuildContext context) {
     final ScrollController _scrollController = ScrollController();
@@ -333,22 +316,38 @@ double ReturnTimeValue()
     final mapSize =
         Size(mediaQuery.size.width - 32, mediaQuery.size.height - 72);
     var valueFormat = NumberFormat('###,###,###,###');
+    DateTime orderTime  = DateTime.now();
+    Duration duration;
+    int timestamp1=0, timestamp2= 0;
+    double percent  = 0.0;
 
 
-    DateTime orderTime = DateTime.parse(order!.orderTime);
-    Duration duration = orderTime.difference(DateTime.now());
+        try{
+          orderTime =  DateTime.parse(order!.orderTime);
+          duration = orderTime.difference(DateTime.now());
 
-    int timestamp1 = duration.inMinutes + order!.predictTime;
-    int timestamp2 = order!.predictTime;
+          timestamp1 = duration.inMinutes + order!.predictTime;
+          timestamp2 = order!.predictTime;
 
-    double percent = timestamp1/timestamp2;
-
-    if(order!.deliveryLocationDetail!=""){
-      print(order!.deliveryLocationDetail);
-      storeOk=true;
-      print('쌍따옴표 아님');
+          percent = timestamp1/timestamp2;
+        }
+        catch(e)
+    {
+      print(e);
     }
 
+
+try {
+  if (order!.deliveryLocationDetail != "") {
+    print(order!.deliveryLocationDetail);
+    storeOk = true;
+    print('쌍따옴표 아님');
+  }
+}
+ catch(e)
+    {
+
+    }
     return Scaffold(
 appBar: AppBar(
     leading: IconButton(
