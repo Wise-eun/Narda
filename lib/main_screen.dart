@@ -204,45 +204,19 @@ class MainScreenState extends State<MainScreen> {
   sorting(String sort) async {
 
     if(sort == "deliveryFee"){
-      "SELECT * FROM `order` JOIN `store` ON `order`.`storeId` = `store`.`storeId` ORDER BY `order`.`deliveryFee` DESC";
       orders.sort((a,b)=>b.deliveryFee.compareTo(a.deliveryFee));
       //배달비 높은순
     }
     else if(sort == "deliveryDistance"){
-      "SELECT * FROM `order` JOIN `store` ON `order`.`storeId` = `store`.`storeId` ORDER BY `order`.`deliveryDistance`";
       orders.sort((a,b)=>a.deliveryDistance.compareTo(b.deliveryDistance));
       //거리 가까운순
     }
     else {
-      "SELECT * FROM `order` JOIN `store` ON `order`.`storeId` = `store`.`storeId` ORDER BY (TIMESTAMPDIFF(MINUTE, `order`.`orderTime`, now()) + `order`.`predictTime` )/`order`.`predictTime` DESC";
+      orders.sort((a,b)=>(DateTime.parse(a.orderTime).difference(DateTime.now()).inMinutes+a.predictTime).compareTo(DateTime.parse(b.orderTime).difference(DateTime.now()).inMinutes+b.predictTime));
       //남은 시간순
     }
     setState(() {});
 
-/*    try {
-      var response = await http.post(Uri.parse(API.orderList), body: {
-        'sort': sort,
-      });
-      if (response.statusCode == 200) {
-        newOrders = [];
-        var responseBody = jsonDecode(response.body);
-        if (responseBody['success'] == true) {
-          print("$sort 오더 리스트 불러오기 성공");
-
-          List<dynamic> responseList = responseBody['userData'];
-          for (int i = 0; i < responseList.length; i++) {
-            print(OrderDetail.fromJson(responseList[i]));
-            newOrders.add(OrderDetail.fromJson(responseList[i]));
-          }
-        } else {
-          print("오더 리스트 불러오기 실패");
-        }
-        setState(() {});
-        return newOrders;
-      }
-    } catch (e) {
-      print(e.toString());
-    }*/
   }
 
   void onMapCreated(NaverMapController controller) {
@@ -324,6 +298,8 @@ class MainScreenState extends State<MainScreen> {
 
         DateTime current = DateTime.now();
         Duration duration = orderTime.difference(current);
+
+
 
         int timestamp1 = duration.inMinutes + orders[index].predictTime;
         int timestamp2 = orders[index].predictTime;
