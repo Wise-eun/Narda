@@ -311,8 +311,6 @@ class MainScreenState extends State<MainScreen> {
         DateTime current = DateTime.now();
         Duration duration = orderTime.difference(current);
 
-
-
         int timestamp1 = duration.inMinutes + orders[index].predictTime;
         int timestamp2 = orders[index].predictTime;
 
