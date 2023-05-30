@@ -217,7 +217,7 @@ getStore() async {
     try {
       var response = await http.post(Uri.parse(API.orderDetail), body: {
         'orderId': widget.orderId.toString(),
-        'storeId': widget.storeId
+        'storeId': widget.storeId,
       });
       if (response.statusCode == 200) {
         var responseBody = jsonDecode(response.body);
@@ -267,13 +267,29 @@ getStore() async {
           body:{
             'orderId' : orderId.toString(),
             'newState' : (newState+1).toString(),
+            'riderId' : widget.userId.toString(),
           }
       );
       if(response.statusCode == 200){
         var responseBody = jsonDecode(response.body);
         if(responseBody['success'] == true){
           print("Order update 완료");
-          if(order?.state == 3) //픽업이 이미 된 경우, 완료 버튼을 눌렀을 때
+          if(order?.state == 1)
+            {
+              setState(() {
+                print("배차 버튼 누르셨습니다.");
+                order?.state=2;
+              });
+            }
+          else if(order?.state == 2) //픽업전인 상태에서, 픽업 버튼을 눌렀을 때
+              {
+            setState(() {
+              print("픽업 버튼 누르셨습니다.");
+              order?.pickupTime = DateTime.now().toString();
+              order?.state=3;
+            });
+          }
+          else if(order?.state == 3) //픽업이 이미 된 경우, 완료 버튼을 눌렀을 때
               {
             Navigator.pop(context);
             Navigator.pop(context);
@@ -283,14 +299,7 @@ getStore() async {
             );
             print("완료되었습니다.");
           }
-          else if(order?.state == 2) //픽업전인 상태에서, 픽업 버튼을 눌렀을 때
-              {
-            setState(() {
-              print("픽업 버튼 누르셨습니다.");
-              order?.pickupTime = DateTime.now().toString();
-              order?.state=3;
-            });
-          }
+
         }
         else{
           print("Order update 실패");

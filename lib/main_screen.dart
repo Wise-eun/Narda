@@ -61,6 +61,7 @@ class MainScreenState extends State<MainScreen> {
   }
 
   newOrderList() async {
+    print("열라짱");
     try {
       var response = await http.post(
         Uri.parse(API.newOrderList),
@@ -103,7 +104,9 @@ class MainScreenState extends State<MainScreen> {
         } else {
           print("오더 리스트 불러오기 실패");
         }
-        setState(() {});
+        setState(() {
+          circleCluster();
+        });
         return orderLocations;
       }
     } catch (e) {
@@ -155,6 +158,8 @@ class MainScreenState extends State<MainScreen> {
 
   circleCluster() async {
     //print(orderLocations.length);
+    print('circlecluster');
+    print(orderLocations["경상북도 경산시 대동"]);
     for (MapEntry element in orderLocations.entries) {
       //addressToPM(element.key);
       List<Location> locations = await locationFromAddress(element.key);
@@ -162,10 +167,14 @@ class MainScreenState extends State<MainScreen> {
       circlelongitude = locations[0].longitude.toDouble();
       print("key ${element.key}");
       int count = element.value;
+      print(element.value);
+      print("엘리펀트");
+
 
       final iconImage = await NOverlayImage.fromWidget(
-        widget: Icon(Icons.circle, color: element.value<6?Color(0xB35a4dfd):element.value<16?Color(0xB3ffc800):Color(0xB3ff0084), size: element.value<6?150:element.value<16?200:250,),
-          size: Size(element.value<6?150:element.value<16?200:250, element.value<6?150:element.value<16?200:250,),
+        widget: Icon(Icons.circle, color: element.value<6?Color(0xB35a4dfd):element.value<16?Color(0xB3ffc800):Color(0xB3ff0084),
+          size: element.value<6?50:element.value<16?200:250,),
+          size: Size(element.value<6?50:element.value<16?200:250, element.value<6?150:element.value<16?200:250,),
           context: context);
 
       final marker = NMarker(
@@ -204,45 +213,19 @@ class MainScreenState extends State<MainScreen> {
   sorting(String sort) async {
 
     if(sort == "deliveryFee"){
-      "SELECT * FROM `order` JOIN `store` ON `order`.`storeId` = `store`.`storeId` ORDER BY `order`.`deliveryFee` DESC";
       orders.sort((a,b)=>b.deliveryFee.compareTo(a.deliveryFee));
       //배달비 높은순
     }
     else if(sort == "deliveryDistance"){
-      "SELECT * FROM `order` JOIN `store` ON `order`.`storeId` = `store`.`storeId` ORDER BY `order`.`deliveryDistance`";
       orders.sort((a,b)=>a.deliveryDistance.compareTo(b.deliveryDistance));
       //거리 가까운순
     }
     else {
-      "SELECT * FROM `order` JOIN `store` ON `order`.`storeId` = `store`.`storeId` ORDER BY (TIMESTAMPDIFF(MINUTE, `order`.`orderTime`, now()) + `order`.`predictTime` )/`order`.`predictTime` DESC";
+      orders.sort((a,b)=>(DateTime.parse(a.orderTime).difference(DateTime.now()).inMinutes+a.predictTime).compareTo(DateTime.parse(b.orderTime).difference(DateTime.now()).inMinutes+b.predictTime));
       //남은 시간순
     }
     setState(() {});
 
-/*    try {
-      var response = await http.post(Uri.parse(API.orderList), body: {
-        'sort': sort,
-      });
-      if (response.statusCode == 200) {
-        newOrders = [];
-        var responseBody = jsonDecode(response.body);
-        if (responseBody['success'] == true) {
-          print("$sort 오더 리스트 불러오기 성공");
-
-          List<dynamic> responseList = responseBody['userData'];
-          for (int i = 0; i < responseList.length; i++) {
-            print(OrderDetail.fromJson(responseList[i]));
-            newOrders.add(OrderDetail.fromJson(responseList[i]));
-          }
-        } else {
-          print("오더 리스트 불러오기 실패");
-        }
-        setState(() {});
-        return newOrders;
-      }
-    } catch (e) {
-      print(e.toString());
-    }*/
   }
 
   void onMapCreated(NaverMapController controller) {
@@ -278,15 +261,18 @@ class MainScreenState extends State<MainScreen> {
       } else {}
     });
 
-
-
     //addressToPM();
     newOrders.clear();
     detaillist.clear();
     getCurrentLocation();
+
     orderLocations.clear();
     orders.clear();
+    print('clear');
     newOrderList();
+
+    print("똥");
+    print(orderLocations.length);
     sorting("deliveryFee");
 
     super.initState();
@@ -299,7 +285,7 @@ class MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final pixelRatio = mediaQuery.devicePixelRatio;
-    final mapSize = Size(mediaQuery.size.width, mediaQuery.size.height );
+    final mapSize = Size(mediaQuery.size.width, mediaQuery.size.height-47 );
     final physicalSize =
         Size(mapSize.width * pixelRatio, mapSize.height * pixelRatio);
 
@@ -324,6 +310,8 @@ class MainScreenState extends State<MainScreen> {
 
         DateTime current = DateTime.now();
         Duration duration = orderTime.difference(current);
+
+
 
         int timestamp1 = duration.inMinutes + orders[index].predictTime;
         int timestamp2 = orders[index].predictTime;
@@ -412,7 +400,7 @@ class MainScreenState extends State<MainScreen> {
         return Divider();
       },
     );
-
+    print("내가먼저?");
     return Scaffold(
       resizeToAvoidBottomInset: false,
         appBar:  AppBar(
@@ -454,19 +442,21 @@ class MainScreenState extends State<MainScreen> {
                           // color: Colors.greenAccent,
                           child: NaverMap(
                             options: NaverMapViewOptions(
+                                maxZoom:13,
+                                minZoom: 13,
                                 locationButtonEnable: true,
                                 initialCameraPosition: NCameraPosition(
                                     target: NLatLng(latitudes, longitudes),
                                     zoom: 10,
                                     bearing: 0,
-                                    tilt: 0)),
+                                    tilt: 0)
+                            ),
                             onMapReady: (controller) {
                               _mapController = controller;
-                              circleCluster();
+                              //circleCluster();
                             },
-
-                            //onCameraChange: onChanged(LatLng(latitude, longitude), CameraChangeReason.location, true),
-                          )),
+                          )
+                      ),
                     ],
                   )),
             ),
