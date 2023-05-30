@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
 import 'package:http/http.dart' as http;
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import 'api/api.dart';
 import 'model/orderDetail.dart';
@@ -98,9 +99,12 @@ class _OrderListScreenState extends State<OrderListScreen> {
         DateTime orderTime = DateTime.parse(orders[index].orderTime);
 
         DateTime current = DateTime.now();
-        Duration duration = current.difference(orderTime);
-        double percent =
-            (duration.inMinutes / orders[index].predictTime).toDouble();
+        Duration duration = orderTime.difference(current);
+
+        int timestamp1 = duration.inMinutes + orders[index].predictTime;
+        int timestamp2 = orders[index].predictTime;
+
+        double percent = timestamp1/timestamp2;
 
         return GestureDetector(
           child: Container(
@@ -147,11 +151,12 @@ class _OrderListScreenState extends State<OrderListScreen> {
                 ),
                 Stack(
                   children: [
-                    LinearProgressIndicator(
-                      backgroundColor: Color(0xfff1f2f3),
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                      value: 0.2,
-                      minHeight: 20,
+                    LinearPercentIndicator(
+                      lineHeight: 12,
+                      percent: percent<0?0:percent,
+                      barRadius: const Radius.circular(16),
+                      progressColor: percent<0.33?Colors.red:percent<0.66?Colors.yellow:Colors.green,
+                      backgroundColor: Colors.grey[300],
                     ),
                     Container(
                         alignment: Alignment.centerRight,

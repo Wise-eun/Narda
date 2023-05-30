@@ -176,10 +176,13 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
         DateTime orderTime = DateTime.parse(proceedingOrders[index].orderTime);
 
         DateTime current = DateTime.now();
-        Duration duration = current.difference(orderTime);
-        double _percent =
-            (duration.inMinutes / proceedingOrders[index].predictTime).toDouble();
-        if (_percent >= 1) _percent = 1;
+        Duration duration = orderTime.difference(current);
+
+        int timestamp1 = duration.inMinutes + proceedingOrders[index].predictTime;
+        int timestamp2 = proceedingOrders[index].predictTime;
+
+        double percent = timestamp1/timestamp2;
+
 
         //(duration.inMinutes.toString() + " // " + orders[index].predictTime.toString());
         //print(orders[index].orderId);
@@ -256,8 +259,11 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                             ,
                             Container(
                                 alignment: Alignment.centerRight,
-                                child: Text(
-                                  "${duration.inMinutes}분",
+                                child: timestamp1>0?Text(
+                                  "${timestamp1}분",
+                                  style: TextStyle(color: Colors.grey, fontSize: 19),
+                                ):Text(
+                                  "+${timestamp1.abs()}분",
                                   style: TextStyle(color: Colors.grey, fontSize: 19),
                                 ))
                           ],
@@ -273,11 +279,12 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
               ),
               Stack(
                 children: [
-                  LinearProgressIndicator(
-                    backgroundColor: Color(0xfff1f2f3),
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                    value: 0.2,
-                    minHeight: 20,
+                  LinearPercentIndicator(
+                    lineHeight: 12,
+                    percent: percent<0?0:percent,
+                    barRadius: const Radius.circular(16),
+                    progressColor: percent<0.33?Colors.red:percent<0.66?Colors.yellow:Colors.green,
+                    backgroundColor: Colors.grey[300],
                   ),
 
                 ],
