@@ -201,17 +201,33 @@ class _LoginscreenState extends State<Loginscreen> {
                       height: 40,
                       child: TextButton(
                           style: TextButton.styleFrom(
-                              backgroundColor: Color(0xfff9d94b),
+                              backgroundColor: Color(0xff3478F6),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.all(Radius.circular(10)))),
                           onPressed: () async {
                             login();
                           },
-                          child: Text('로그인', style: TextStyle(color: Colors.black))),
+                          child: Text('로그인',
+                              style: TextStyle(color: Colors.white, fontSize: 20))),
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => SignupScreen()),
+                              );
+                            },
+                            child: Text('회원가입', style: TextStyle(color: Colors.black))),
+                        const SizedBox(
+                          width: 3,
+                          height: 20,
+                          child: const DecoratedBox(
+                            decoration: BoxDecoration(color: Color(0xfff1f2f3)),
+                          ),
+                        ),
                         TextButton(
                             onPressed: () {
                               Navigator.push(
@@ -240,22 +256,6 @@ class _LoginscreenState extends State<Loginscreen> {
                             child: Text('비밀번호 찾기',
                                 style: TextStyle(fontSize: 13, color: Colors.black))),
                       ],
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: 40,
-                      child: TextButton(
-                          style: TextButton.styleFrom(
-                              backgroundColor: Color(0xfff1f2f3),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(10)))),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => SignupScreen()),
-                            );
-                          },
-                          child: Text('회원가입', style: TextStyle(color: Colors.black))),
                     ),
                     Spacer(),
                   ],

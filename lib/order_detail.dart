@@ -13,6 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:speelow/HorizontalDashedDivider.dart';
 import 'package:http/http.dart' as http;
 import 'package:speelow/calendar_screen.dart';
+import 'package:speelow/main_screen.dart';
 import 'after_order_list.dart';
 import 'api/api.dart';
 import 'model/getstore.dart';
@@ -308,6 +309,23 @@ getStore() async {
     }catch(e){print(e.toString());}
   }
 
+double ReturnTimeValue()
+{
+  DateTime orderTime = DateTime.parse(order!.orderTime);
+
+  DateTime current = DateTime.now();
+  Duration duration = orderTime.difference(current);
+
+  if(duration.inMinutes<0)
+    return 0;
+
+  int timestamp1 = duration.inMinutes + order!.predictTime;
+  int timestamp2 = order!.predictTime;
+
+  double percent = timestamp1/timestamp2;
+  return percent;
+}
+
   @override
   Widget build(BuildContext context) {
     final ScrollController _scrollController = ScrollController();
@@ -315,10 +333,16 @@ getStore() async {
     final mapSize =
         Size(mediaQuery.size.width - 32, mediaQuery.size.height - 72);
     var valueFormat = NumberFormat('###,###,###,###');
-    DateTime current = DateTime.now();
+
+
     DateTime orderTime = DateTime.parse(order!.orderTime);
-    Duration duration = current.difference(orderTime);
-    double percent = (duration.inMinutes / order!.predictTime).toDouble();
+    Duration duration = orderTime.difference(DateTime.now());
+
+    int timestamp1 = duration.inMinutes + order!.predictTime;
+    int timestamp2 = order!.predictTime;
+
+    double percent = timestamp1/timestamp2;
+
     if(order!.deliveryLocationDetail!=""){
       print(order!.deliveryLocationDetail);
       storeOk=true;
@@ -331,12 +355,25 @@ appBar: AppBar(
       icon: Icon(CupertinoIcons.chevron_left,
         color: Colors.grey[400],
         size: 30,), onPressed: () {
-      Navigator.pop(context);
-      Navigator.pop(context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) =>  AfterOrderListScreen(userId: widget.userId)),
-      );
+        if(order?.state == 1 )
+          {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>  MainScreen(userId: widget.userId)),
+            );
+
+          }
+   else
+     {
+       Navigator.pop(context);
+       Navigator.pop(context);
+       Navigator.push(
+         context,
+         MaterialPageRoute(builder: (context) =>  AfterOrderListScreen(userId: widget.userId)),
+       );
+     }
 
     },
     ),
@@ -352,9 +389,9 @@ appBar: AppBar(
   backgroundColor: Colors.white,
   elevation: 0,
 ),
-        body:Column(
+        body: callOk?Column(
           children: [
-            Expanded(child: Scrollbar(
+            callOk?Expanded(child: Scrollbar(
               controller: _scrollController,
               isAlwaysShown: true,
               thickness: 10,
@@ -396,29 +433,37 @@ appBar: AppBar(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(ReturnStatusString(),style: TextStyle(fontSize: 25, color: Color(0xffFF3055)),),
-                                          Text(
-                                            '${duration.inMinutes}분',
-                                            style: TextStyle(fontSize:17)
+                                          timestamp1>0?Text(
+                                            "${timestamp1}분",
+                                            style: TextStyle(fontSize: 20,color: Colors.grey),
+                                          ):Text(
+                                            "+${timestamp1.abs()}분",
+                                            style: TextStyle(fontSize: 20,color: Colors.red),
                                           ),
                                         ]
                                       ),
                                     ),
+
+
                                   ],
                                 ),
                               ),
                             ],),)  : Text('배달상태'),
-
                         SizedBox(
                           height: 5,
                         ),
-                        LinearPercentIndicator(
-                          width: mediaQuery.size.width-10,
-                          lineHeight: 10,
-                          percent: percent>1?1:percent,
-                          barRadius: const Radius.circular(16),
-                          progressColor: Colors.orange[400],
-                          backgroundColor: Colors.grey[300],
-                        ),
+                        callOk?Container(
+                          margin: EdgeInsets.fromLTRB(10,0,10,0),
+                          child:  LinearPercentIndicator(
+                            lineHeight: 12,
+                            percent: percent<0?0:percent,
+                            barRadius: const Radius.circular(16),
+                            progressColor: percent<0.33?Colors.red:percent<0.66?Colors.yellow:Colors.green,
+                            backgroundColor: Colors.grey[300],
+                          ),
+                        ) : Text(''),
+
+
 
                         SizedBox(
                           height: 30,
@@ -689,7 +734,7 @@ appBar: AppBar(
               ]),
 
 
-            ))
+            )):Text("")
           , SizedBox(height:10),
             SizedBox(
               width: 300,
@@ -707,7 +752,7 @@ appBar: AppBar(
            ),
             SizedBox(height:10)
           ],
-        )
+        ): Text("로드중")
 
 
        );
