@@ -60,7 +60,7 @@ class _FindIdScreenState extends State<FindIdScreen> {
         child: TextFormField(
             controller: _phoneNumController,
             keyboardType: TextInputType.phone,
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 13),
             decoration: const InputDecoration(
               labelText: '전화번호',
               border: OutlineInputBorder(
@@ -80,7 +80,7 @@ class _FindIdScreenState extends State<FindIdScreen> {
         child: TextFormField(
           controller: _nameController,
           keyboardType: TextInputType.text,
-          style: TextStyle(fontSize: 14),
+          style: TextStyle(fontSize: 13),
           decoration: const InputDecoration(
             labelText: '이름',
             border: OutlineInputBorder(
@@ -107,7 +107,7 @@ class _FindIdScreenState extends State<FindIdScreen> {
               width: 2,
             )),
             title: Text('아이디 찾기',
-                style: TextStyle(color: Colors.black, fontSize: 18)),
+                style: TextStyle(color: Colors.black, fontSize: 17)),
             automaticallyImplyLeading: false,
             centerTitle: true,
             backgroundColor: Colors.white,
@@ -119,20 +119,27 @@ class _FindIdScreenState extends State<FindIdScreen> {
           child: Container(
           margin: const EdgeInsets.only(left: 45, right: 45),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            //mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(
+                height: 200,
+              ),
               _phoneNumWidget(),
               const SizedBox(height: 10),
               _nameWidget(),
               const SizedBox(height: 20),
-              TextButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: Color(0xfff9d94b),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                ),
-                onPressed: () async {findId();},
-                child: Text('아이디 찾기', style: TextStyle(color: Colors.black),)),
+              SizedBox(
+                width: 200,
+                height: 45,
+                child:TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color(0xFF3478F6),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                    ),
+                    onPressed: () async {findId();},
+                    child: Text('아이디 찾기', style: TextStyle(color: Colors.white, fontSize: 20))),
+              ),
               const SizedBox(height: 10),
               Text(showIdText),
             ],)

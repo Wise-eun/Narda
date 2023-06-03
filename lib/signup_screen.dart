@@ -83,7 +83,8 @@ class _SignupScreenState extends State<SignupScreen> {
       var response = await http.post(
           Uri.parse(API.validateId),
           body:{
-            'userId' : id //오른쪽에 validate 확인할 id 입력
+              'userId' : id
+            //오른쪽에 validate 확인할 id 입력
           }
       );
       if(response.statusCode == 200){
@@ -201,7 +202,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 child: Text("이름 *")),
                           ],
                         ),
-                        SizedBox(height:5,),
+                        SizedBox(height:10,),
                         Row(
                           children: [
                             Expanded(
@@ -209,7 +210,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               child: Container(
                                 child: TextFormField(
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 13,
                                   ),
                                   decoration: const InputDecoration(
                                       labelText: '이름 입력',
@@ -231,7 +232,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(height: 15,),
                         Row(
                           children: [
                             Expanded(
@@ -239,9 +240,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                 child: Text("아이디 *")),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(height: 10,),
                         Container(
-                          color: Color(0xfff1f2f3),
+                          color: Color(0xffffffff),
                           child:  Row(
                             children:[
                               Expanded(
@@ -250,7 +251,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   child: TextFormField(
                                     enabled: idcheckOk?false:true,
                                     style: TextStyle(
-                                      fontSize: 12,
+                                      fontSize: 13,
                                     ),
                                     decoration: const InputDecoration(
                                         labelText: '아이디 입력',
@@ -270,17 +271,21 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 5,),
+
+                              SizedBox(width: 10,),
                               TextButton(
-                                onPressed: ()async {
-                                  validateId(_idController.text);
-                                }, child: Text("중복확인"),
+                                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xffffffff)),
+                                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color:Color(0xFF3478F6)))),
+                                      padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0))),
+                                    onPressed: ()async {
+                                    if(_idController.text!="") validateId(_idController.text);
+                                    }, child: Text(" 중복확인 ",style: TextStyle(fontSize: 14, color: Color(0xff000000))),
                               )
                             ],
                           ),
-                        ),
+                          ),
 
-                        SizedBox(height: 10,),
+                        SizedBox(height: 15,),
                         Row(
                           children: [
                             Expanded(
@@ -288,9 +293,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                 child: Text("비밀번호 *")),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(height: 10,),
                         Container(
-                          color: Color(0xfff1f2f3),
+                          //color: Color(0xfff1f2f3),
                           child:
                           Row(
                             children: [
@@ -299,7 +304,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 child: Container(
                                   child: TextFormField(
                                     style: TextStyle(
-                                      fontSize: 12,
+                                      fontSize: 13,
                                     ),
                                     decoration: const InputDecoration(
                                         labelText: '비밀번호 (8자 이상의 영문자+숫자)',
@@ -329,9 +334,9 @@ class _SignupScreenState extends State<SignupScreen> {
                             ],
                           ),
                         ),
-                        Divider(thickness: 1,height: 1,color: Colors.white,),
+                        Divider(thickness: 1,height: 3,color: Colors.white,),
                         Container(
-                            color: Color(0xfff1f2f3),
+                            //color: Color(0xfff1f2f3),
                             child:
                             Row(
                               children: [
@@ -340,7 +345,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   child: Container(
                                     child: TextFormField(
                                       style: TextStyle(
-                                        fontSize: 12,
+                                        fontSize: 13,
                                       ),
                                       decoration: const InputDecoration(
                                           labelText: '비밀번호 확인',
@@ -350,7 +355,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                           ),
                                           filled: true,
                                           fillColor: Color(0xfff1f2f3),
-                                          contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5)
+                                          contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5),
+
                                       ),
                                       textInputAction: TextInputAction.done,
                                       keyboardType: TextInputType.visiblePassword,
@@ -364,7 +370,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                               ],
                             )),
-                        SizedBox(height: 10,),
+                        SizedBox(height: 15,),
                         Row(
                           children: [
                             Expanded(
@@ -372,7 +378,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 child: Text("전화번호 *")),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(height: 10,),
                         Row(
                           children: [
                             Expanded(
@@ -383,7 +389,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                 children: [
                                   Expanded(
                                       child:   Container(
-                                          color: Color(0xfff1f2f3),
+                                        height: 50,
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)),color: Color(0xfff1f2f3)),
                                           child:
                                           Row(
                                             children: [
@@ -427,14 +434,18 @@ class _SignupScreenState extends State<SignupScreen> {
                                                   maxLegnth: 4, widgetFunction: null,
                                                 ),
                                               ),
+                                              SizedBox(width: 3,),
                                             ],
                                           ))
                                   ),
-                                  SizedBox(width: 20,),
+                                  SizedBox(width: 10,),
                                   authOk?TextButton(
-
+                                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xffffffff)),
+                                        shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color:Color(0xFF3478F6)))),
+                                        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0)),
+                                      ),
                                       onPressed:null,
-                                      child:Text("인증완료")):
+                                      child:Text(" 인증완료 ",style: TextStyle(fontSize: 14, color: Color(0xff000000)))):
                                   _phoneNumberController1.text.length==4&&_phoneNumberController2.text.length==4
                                       ?
                                   ElevatedButton(
@@ -466,7 +477,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                                 toastLength: Toast.LENGTH_SHORT,
                                                 timeInSecForIosWeb: 1,
                                                 backgroundColor: Colors.green,
-                                                fontSize: 12.0
+                                                fontSize: 15.0
                                             );
                                             setState(() {
                                               requestedAuth=true;
@@ -478,11 +489,18 @@ class _SignupScreenState extends State<SignupScreen> {
                                         );
 
                                       },
-                                      child:Text("인증요청"))
+                                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xff3478F6)),
+                                        shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color:Color(0xFF3478F6)))),
+                                        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0)),
+                                      ),
+                                      child:Text(" 인증요청 ",style: TextStyle(fontSize: 14,color: Color(0xffffffff))))
                                       :TextButton(
-                                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xfff1f2f3))),
+                                          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xffffffff)),
+                                          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color:Color(0xFF3478F6)))),
+                                          padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0)),
+                                      ),
                                       onPressed: (){},
-                                      child:Text("인증요청")),
+                                      child:Text(" 인증요청 ",style: TextStyle(fontSize: 14, color: Color(0xff000000)))),
                                 ],
                               ),
                             ),
@@ -494,15 +512,13 @@ class _SignupScreenState extends State<SignupScreen> {
                         authOk?SizedBox():Visibility(
                           visible: requestedAuth,
                           child: Row(
-
                             children: [
                               Expanded(
-                                  flex: 1,
+                                  flex: 2,
                                   child: Text("")),
                               Expanded(
-                                flex: 3,
+                                flex: 2,
                                 child:Row(
-
                                   children: [
                                     Expanded(
                                       child:
@@ -516,35 +532,45 @@ class _SignupScreenState extends State<SignupScreen> {
 
                                       ),
                                     ),
-                                    SizedBox(width: 5,),
+                                    SizedBox(width: 10,),
                                     ElevatedButton(
                                         onPressed: (){
                                           PhoneAuthCredential phoneAuthCredential =
                                           PhoneAuthProvider.credential(
                                               verificationId: verificationId, smsCode: _otpController.text);
-
                                           signInWithPhoneAuthCredential(phoneAuthCredential);
                                         },
-                                        child: Text("확인")),
+                                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xffffffff)),
+                                          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color:Color(0xFF3478F6)))),
+                                          padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0)),
+                                        ),
+                                        child:Text(" 확인 ",style: TextStyle(fontSize: 14,color: Color(0xff000000)))),
+                                    Container(
+                                        width: 13,
+                                        child: Text("")),
+                                    SizedBox(height: 20,),
                                   ],
                                 ),
                               ),
 
                             ],
                           ),
-                        ),    Row(
+
+                        ),
+                        SizedBox(height: 15,),
+                        Row(
                           children: [
                             Expanded(
                                 flex: 1,
                                 child: Text("*는 필수입력사항입니다.")),
                           ],
                         ),
-                        SizedBox(height: 50),
+                        SizedBox(height: 40),
                         SizedBox(
                             width: 200,
-                            height: 40,
+                            height: 45,
                             child: ElevatedButton(
-                              child: Text('회원가입', style: TextStyle(color: Colors.black)),
+                              child: Text('회원가입', style: TextStyle(color: Colors.white, fontSize: 20)),
                               onPressed: ()async {
                                 if (_nameController.text.length > 0) {
                                   if (_idController.text.length > 0 &&
@@ -575,7 +601,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                               toastLength: Toast.LENGTH_SHORT,
                                               timeInSecForIosWeb: 1,
                                               backgroundColor: Colors.red,
-                                              fontSize: 16.0
+                                              fontSize: 15.0
                                           );
                                         }
                                       }
@@ -585,7 +611,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                             toastLength: Toast.LENGTH_SHORT,
                                             timeInSecForIosWeb: 1,
                                             backgroundColor: Colors.red,
-                                            fontSize: 16.0
+                                            fontSize: 15.0
                                         );
                                       }
                                     }
@@ -595,7 +621,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                           toastLength: Toast.LENGTH_SHORT,
                                           timeInSecForIosWeb: 1,
                                           backgroundColor: Colors.red,
-                                          fontSize: 16.0
+                                          fontSize: 15.0
                                       );
                                     }
                                   }
@@ -605,7 +631,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                         toastLength: Toast.LENGTH_SHORT,
                                         timeInSecForIosWeb: 1,
                                         backgroundColor: Colors.red,
-                                        fontSize: 16.0
+                                        fontSize: 15.0
                                     );
                                   }
                                 }
@@ -615,25 +641,20 @@ class _SignupScreenState extends State<SignupScreen> {
                                       toastLength: Toast.LENGTH_SHORT,
                                       timeInSecForIosWeb: 1,
                                       backgroundColor: Colors.red,
-                                      fontSize: 16.0
+                                      fontSize: 15.0
                                   );
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xfff9d94b),
+                                  backgroundColor: Color(0xFF3478F6),
                                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                                   minimumSize: Size(double.infinity,0),
                                   elevation: 0,
-
-
-
-                                  textStyle: TextStyle(
-
-                                      fontWeight: FontWeight.bold)),
+                              ),
                             )
                         )
                         ,
-                        SizedBox(height: 30,),
+                        SizedBox(height: 40,),
                       ],
                     ),
                   ),
@@ -696,22 +717,25 @@ class _SignupScreenState extends State<SignupScreen> {
       enabled: editAble,
       textAlign: TextAlign.center,
       style: TextStyle(
-        fontSize: 12,
+        fontSize: 13,
 
       ),
       decoration: InputDecoration(
-        contentPadding: new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+        contentPadding: new EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
         isDense: true,
         counterText: "",
         hintText: hintText,
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Color(0xfff1f2f3)),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
+          borderSide: BorderSide(color: Color(0xFF3478F6)),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
         disabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Color(0xfff1f2f3)),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
       ),
 
