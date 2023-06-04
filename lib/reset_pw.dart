@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'api/api.dart';
 import 'model/user.dart';
 import 'package:http/http.dart' as http;
@@ -33,6 +34,13 @@ class _ResetPwScreenState extends State<ResetPwScreen> {
           var responseBody = jsonDecode(response.body);
           if(responseBody['success'] == true){
             print("비밀번호 변경 완료");
+            Fluttertoast.showToast(
+                msg: "비밀번호 변경이 완료되었습니다.",
+                toastLength: Toast.LENGTH_SHORT,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.green,
+                fontSize: 15.0
+            );
             Navigator.pop(context);
           }
           else{
@@ -45,7 +53,6 @@ class _ResetPwScreenState extends State<ResetPwScreen> {
   Widget _currentPwWidget() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: 40,
         child: TextFormField(
           controller: _currentPwController,
           keyboardType: TextInputType.text,
@@ -58,6 +65,7 @@ class _ResetPwScreenState extends State<ResetPwScreen> {
             ),
             filled: true,
             fillColor: Color(0xfff1f2f3),
+            contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5),
           ),
           autovalidateMode: AutovalidateMode.onUserInteraction,
         ));
@@ -66,7 +74,6 @@ class _ResetPwScreenState extends State<ResetPwScreen> {
   Widget _newPwWidget() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: 40,
         child: TextFormField(
           controller: _newPwController,
           keyboardType: TextInputType.text,
@@ -79,6 +86,7 @@ class _ResetPwScreenState extends State<ResetPwScreen> {
             ),
             filled: true,
             fillColor: Color(0xfff1f2f3),
+            contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5),
           ),
           autovalidateMode: AutovalidateMode.onUserInteraction,
         ));
@@ -87,7 +95,6 @@ class _ResetPwScreenState extends State<ResetPwScreen> {
   Widget _newPwCheckWidget() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: 40,
         child: TextFormField(
           controller: _newPwCheckController,
           keyboardType: TextInputType.text,
@@ -100,6 +107,7 @@ class _ResetPwScreenState extends State<ResetPwScreen> {
             ),
             filled: true,
             fillColor: Color(0xfff1f2f3),
+            contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5),
           ),
           autovalidateMode: AutovalidateMode.onUserInteraction,
         ));
@@ -142,10 +150,13 @@ class _ResetPwScreenState extends State<ResetPwScreen> {
                       _newPwWidget(),
                       const SizedBox(height: 10),
                       _newPwCheckWidget(),
-                      const SizedBox(height: 20),
-                      TextButton(
+                      const SizedBox(height: 40),
+                      SizedBox(
+                      width: 200,
+                      height: 45,
+                      child: TextButton(
                           style: TextButton.styleFrom(
-                            backgroundColor: Color(0xfff9d94b),
+                            backgroundColor: Color(0xFF3478F6),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10))),
                           ),
@@ -153,18 +164,34 @@ class _ResetPwScreenState extends State<ResetPwScreen> {
                         if(widget.user.userPw == _currentPwController.text.trim()){
                           if(_newPwController.text.trim() == _newPwCheckController.text.trim()){
                             resetPw(widget.user.userId ,_newPwController.text.trim());
+                            print("비밀번호 변경 완료");
+
                           }
                           else{
                             print("새로운 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+                            Fluttertoast.showToast(
+                                msg: "새로운 비밀번호와 비밀번호 확인이 일치하지 않습니다.",
+                                toastLength: Toast.LENGTH_SHORT,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                fontSize: 15.0
+                            );
                           }
                         }
                         else{
                           //팝업 띄워야됨
                           print("현재 비밀번호가 틀렸습니다.");
+                          Fluttertoast.showToast(
+                              msg: "현재 비밀번호가 틀렸습니다.",
+                              toastLength: Toast.LENGTH_SHORT,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              fontSize: 15.0
+                          );
                         }
-                      }, child: Text("비밀번호 변경", style: TextStyle(color: Colors.black),)),
+                      }, child: Text("비밀번호 변경", style: TextStyle(color: Colors.white, fontSize: 20),)),
 
-                    ]))
+                      )]))
 
 
             /*child: Container(

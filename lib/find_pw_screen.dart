@@ -23,6 +23,11 @@ class _FindPwScreenState extends State<FindPwScreen> {
   TextEditingController _phoneNumberController2 = TextEditingController();
   TextEditingController _otpController = TextEditingController();
 
+  FocusNode idFocusNode=FocusNode();
+  FocusNode phoneNumberFocusNode1=FocusNode();
+  FocusNode phoneNumberFocusNode2=FocusNode();
+  FocusNode otpFocusNode=FocusNode();
+
   bool authOk = false; //폰인증이 정상적으로 완료됐는지 안됐는지 여부
   bool requestedAuth =
       false; //폰인증 요청을 보냈는지 여부. 인증 코드(OTP 6자리) 를 칠 수 있는 컨테이너의 visible 결정
@@ -140,20 +145,19 @@ class _FindPwScreenState extends State<FindPwScreen> {
   Widget _idWidget() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: 40,
         child: TextFormField(
           controller: _idController,
           keyboardType: TextInputType.text,
           style: TextStyle(fontSize: 14),
           decoration: const InputDecoration(
-            labelText: '아이디',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              borderSide: BorderSide.none,
-            ),
-            filled: true,
-            fillColor: Color(0xfff1f2f3),
-          ),
+              labelText: '아이디',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+              fillColor: Color(0xfff1f2f3),
+              contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5)),
           autovalidateMode: AutovalidateMode.onUserInteraction,
         ));
   }
@@ -170,13 +174,23 @@ class _FindPwScreenState extends State<FindPwScreen> {
     return TextFormField(
       enabled: editAble,
       style: TextStyle(
-        fontSize: 12,
+        fontSize: 13,
       ),
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
+        contentPadding: new EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
         isDense: true,
-        border: OutlineInputBorder(
+        hintText: hintText,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Color(0xfff1f2f3)),
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFF3478F6)),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Color(0xfff1f2f3)),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
         counterText: '',
         filled: true,
@@ -239,69 +253,187 @@ class _FindPwScreenState extends State<FindPwScreen> {
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               _idWidget(),
               const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text("010"),
-                  SizedBox(width: 5,),
-                  Container(
-                    width: 70,
-                    height: 40,
-                    child: numberInsert(
-                      controller: _phoneNumberController1,
-                      maxLegnth: 4,
-                    ),
-                  ),
-                  SizedBox(width: 5,),
-                  Container(
-                    width: 70,
-                    height: 40,
-                    child: numberInsert(
-                      controller: _phoneNumberController2,
-                      maxLegnth: 4,
-                    ),
-                  ),
-                  SizedBox(width: 10,),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child:
 
-                  authOk
-                      ? ElevatedButton(onPressed: null, child: Text("인증완료"))
-                      : _phoneNumberController1.text.length == 4 &&
-                              _phoneNumberController2.text.length == 4
-                          ? TextButton(
-                              style: TextButton.styleFrom(
-                                backgroundColor: Color(0xfff9d94b),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                              ),
-                              onPressed: () async {
-                                checkIdPhoneNum();
-                                if (checkValidation) {
+                        Row(
+                          children: [
+                            Expanded(
+                                child:   Container(
+                                    height: 49,
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)),color: Color(0xfff1f2f3)),
+                                    child:
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            flex: 1,
+                                            child:
+                                            numberInsert(
+                                              editAble: false,
+                                              hintText: "010", maxLegnth: 3,
+
+                                            )),
+                                        SizedBox(width: 5,),
+                                        Text('-',style: TextStyle(fontSize: 15),),
+                                        SizedBox(width: 5,),
+                                        Expanded(
+                                          flex: 1,
+                                          child: numberInsert(
+                                            editAble: authOk?false:true,
+                                            hintText: "0000",
+                                            //focusNode: phoneNumberFocusNode1,
+                                            controller: _phoneNumberController1,
+                                            textInputAction: TextInputAction.next,
+                                            maxLegnth: 4,
+                                            widgetFunction: (){
+                                            FocusScope.of(context).requestFocus(phoneNumberFocusNode2);
+                                            },
+
+                                          ),
+                                        ),
+                                        SizedBox(width: 5,),
+                                        Text('-',style: TextStyle(fontSize: 15),),
+                                        SizedBox(width: 5,),
+                                        Expanded(
+                                          flex: 1,
+                                          child: numberInsert(
+                                            editAble: authOk?false:true,
+                                            hintText: "",
+                                            focusNode: phoneNumberFocusNode2,
+                                            controller: _phoneNumberController2,
+                                            textInputAction: TextInputAction.done,
+                                            maxLegnth: 4, widgetFunction: null,
+                                          ),
+                                        ),
+                                        SizedBox(width: 3,),
+                                      ],
+                                    ))
+                            ),
+                            SizedBox(width: 10,),
+                            authOk?TextButton(
+                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xffffffff)),
+                                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color:Color(0xFF3478F6)))),
+                                  padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0)),
+                                ),
+                                onPressed:null,
+                                child:Text(" 인증완료 ",style: TextStyle(fontSize: 14, color: Color(0xff000000)))):
+                            _phoneNumberController1.text.length==4&&_phoneNumberController2.text.length==4
+                                ?
+                            ElevatedButton(
+                                onPressed: ()async{
                                   setState(() {
                                     showLoading = true;
                                   });
-                                } else {
-                                  //해당 정보가 존재하지 않습니다. toast 띄우기
-                                  print('해당 정보가 존재하지 않습니다.');
-                                }
-                              },
-                              child: Text("인증요청",
-                                  style: TextStyle(color: Colors.black)))
-                          : TextButton(
-                              style: TextButton.styleFrom(
-                                backgroundColor: Color(0xfff9d94b),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                              ),
-                              onPressed: () {},
-                              child: Text("인증요청",
-                                  style: TextStyle(color: Colors.black))),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
+                                  await _auth.verifyPhoneNumber(
+                                    timeout: const Duration(seconds: 60),
+                                    codeAutoRetrievalTimeout: (String verificationId) {
+                                      // Auto-resolution timed out...
+                                    },
+                                    phoneNumber: "+8210"+_phoneNumberController1.text.trim()+_phoneNumberController2.text.trim(),
+                                    verificationCompleted: (phoneAuthCredential) async {
+                                      print("otp 문자옴");
+                                    },
+                                    verificationFailed: (verificationFailed) async {
+                                      print(verificationFailed.code);
+
+                                      print("코드발송실패");
+                                      setState(() {
+                                        showLoading = false;
+                                      });
+                                    },
+                                    codeSent: (verificationId, resendingToken) async {
+                                      print("코드보냄");
+                                      Fluttertoast.showToast(
+                                          msg: "010-${_phoneNumberController1.text}-${_phoneNumberController2.text} 로 인증코드를 발송하였습니다. 문자가 올때까지 잠시만 기다려 주세요.",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.green,
+                                          fontSize: 15.0
+                                      );
+                                      setState(() {
+                                        requestedAuth=true;
+                                        FocusScope.of(context).requestFocus(otpFocusNode);
+                                        showLoading = false;
+                                        this.verificationId = verificationId;
+                                      });
+                                    },
+                                  );
+
+                                },
+                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xff3478F6)),
+                                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color:Color(0xFF3478F6)))),
+                                  padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0)),
+                                ),
+                                child:Text(" 인증요청 ",style: TextStyle(fontSize: 14,color: Color(0xffffffff))))
+                                :TextButton(
+                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xffffffff)),
+                                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color:Color(0xFF3478F6)))),
+                                  padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0)),
+                                ),
+                                onPressed: (){},
+                                child:Text(" 인증요청 ",style: TextStyle(fontSize: 14, color: Color(0xff000000)))),
+                          ],
+                        ),
+                      ),
+
+
+                    ],
+                  ),
+          SizedBox(height: 5,),
+          authOk?SizedBox():Visibility(
+            visible: requestedAuth,
+            child: Row(
+              children: [
+                Expanded(
+                    flex: 1,
+                    child: Text("")),
+                Expanded(
+                  flex: 2,
+                  child:Row(
+                    children: [
+                      Expanded(
+                        child:
+                        numberInsert(
+                          editAble: true,
+                          hintText: "6자리 입력",
+                          focusNode: otpFocusNode,
+                          controller: _otpController,
+                          textInputAction: TextInputAction.done,
+                          maxLegnth: 6, widgetFunction: null,
+
+                        ),
+                      ),
+                      SizedBox(width: 10,),
+                      ElevatedButton(
+                          onPressed: () {
+                            PhoneAuthCredential phoneAuthCredential =
+                            PhoneAuthProvider.credential(
+                                verificationId: verificationId,
+                                smsCode: _otpController.text);
+                            phoneAuth(phoneAuthCredential);
+                          },
+                          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xffffffff)),
+                            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color:Color(0xFF3478F6)))),
+                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0)),
+                          ),
+                          child:Text(" 확인 ",style: TextStyle(fontSize: 14,color: Color(0xff000000)))),
+                      Container(
+                          width: 13,
+                          child: Text("")),
+                      SizedBox(height: 20,),
+                    ],
+                  ),
+                ),
+
+              ],
+            ),
+
+          ),
+                //mainAxisAlignment: MainAxisAlignment.end,
+                /*children: [
                   Container(
                     width: 70,
                     height: 40,
@@ -310,7 +442,9 @@ class _FindPwScreenState extends State<FindPwScreen> {
                       maxLegnth: 6,
                     ),
                   ),
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 10,
+                  ),
                   TextButton(
                       style: TextButton.styleFrom(
                         backgroundColor: Color(0xfff9d94b),
@@ -329,8 +463,7 @@ class _FindPwScreenState extends State<FindPwScreen> {
                         "확인",
                         style: TextStyle(color: Colors.black),
                       )),
-                ],
-              )
+                ],*/
             ])));
   }
 }

@@ -56,11 +56,10 @@ class _FindIdScreenState extends State<FindIdScreen> {
   Widget _phoneNumWidget() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: 40,
         child: TextFormField(
             controller: _phoneNumController,
             keyboardType: TextInputType.phone,
-            style: TextStyle(fontSize: 13),
+            style: TextStyle(fontSize: 14),
             decoration: const InputDecoration(
               labelText: '전화번호',
               border: OutlineInputBorder(
@@ -69,6 +68,7 @@ class _FindIdScreenState extends State<FindIdScreen> {
               ),
               filled: true,
               fillColor: Color(0xfff1f2f3),
+              contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5)
             ),
             ));
   }
@@ -76,11 +76,10 @@ class _FindIdScreenState extends State<FindIdScreen> {
   Widget _nameWidget() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: 40,
         child: TextFormField(
           controller: _nameController,
           keyboardType: TextInputType.text,
-          style: TextStyle(fontSize: 13),
+          style: TextStyle(fontSize: 14),
           decoration: const InputDecoration(
             labelText: '이름',
             border: OutlineInputBorder(
@@ -89,6 +88,7 @@ class _FindIdScreenState extends State<FindIdScreen> {
             ),
             filled: true,
             fillColor: Color(0xfff1f2f3),
+            contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5)
           ),
           autovalidateMode: AutovalidateMode.onUserInteraction,
         ));
@@ -107,7 +107,7 @@ class _FindIdScreenState extends State<FindIdScreen> {
               width: 2,
             )),
             title: Text('아이디 찾기',
-                style: TextStyle(color: Colors.black, fontSize: 17)),
+                style: TextStyle(color: Colors.black, fontSize: 18)),
             automaticallyImplyLeading: false,
             centerTitle: true,
             backgroundColor: Colors.white,
@@ -119,15 +119,12 @@ class _FindIdScreenState extends State<FindIdScreen> {
           child: Container(
           margin: const EdgeInsets.only(left: 45, right: 45),
           child: Column(
-            //mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                height: 200,
-              ),
               _phoneNumWidget(),
               const SizedBox(height: 10),
               _nameWidget(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 45),
               SizedBox(
                 width: 200,
                 height: 45,
@@ -140,7 +137,7 @@ class _FindIdScreenState extends State<FindIdScreen> {
                     onPressed: () async {findId();},
                     child: Text('아이디 찾기', style: TextStyle(color: Colors.white, fontSize: 20))),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 30),
               Text(showIdText),
             ],)
           )

@@ -46,7 +46,7 @@ class _AfterFindPwScreenScreenState extends State<AfterFindPwScreen> {
   Widget _newPwWidget() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: 40,
+        //height: 40,
         child: TextFormField(
           controller: _newPwController,
           keyboardType: TextInputType.text,
@@ -59,6 +59,7 @@ class _AfterFindPwScreenScreenState extends State<AfterFindPwScreen> {
             ),
             filled: true,
             fillColor: Color(0xfff1f2f3),
+            contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5),
           ),
           autovalidateMode: AutovalidateMode.onUserInteraction,
         ));
@@ -66,7 +67,7 @@ class _AfterFindPwScreenScreenState extends State<AfterFindPwScreen> {
   Widget _newPwCheckWidget() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: 40,
+        //height: 40,
         child: TextFormField(
           controller: _newPwCheckController,
           keyboardType: TextInputType.text,
@@ -79,6 +80,7 @@ class _AfterFindPwScreenScreenState extends State<AfterFindPwScreen> {
             ),
             filled: true,
             fillColor: Color(0xfff1f2f3),
+            contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5),
           ),
           autovalidateMode: AutovalidateMode.onUserInteraction,
         ));
@@ -117,21 +119,25 @@ class _AfterFindPwScreenScreenState extends State<AfterFindPwScreen> {
                       _newPwWidget(),
                       const SizedBox(height: 10),
                       _newPwCheckWidget(),
-                      const SizedBox(height: 20),
-                      TextButton(
-                          style: TextButton.styleFrom(
-                            backgroundColor: Color(0xfff9d94b),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10))),
-                          ),
-                          onPressed: () {
-                        if(_newPwController.text.trim() == _newPwCheckController.text.trim()){
-                          resetPw(_newPwController.text.trim());
-                        }
-                        else{
-                          print("새로운 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-                        }
-                      }, child: Text("비밀번호 변경", style: TextStyle(color: Colors.black),)),
+                      const SizedBox(height: 40),
+                      SizedBox(
+                        width: 200,
+                        height: 45,
+                          child: TextButton(
+                              style: TextButton.styleFrom(
+                                backgroundColor: Color(0xFF3478F6),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                              ),
+                              onPressed: () {
+                                if(_newPwController.text.trim() == _newPwCheckController.text.trim()){
+                                  resetPw(_newPwController.text.trim());
+                                }
+                                else{
+                                  print("새로운 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+                                }
+                              }, child: Text("비밀번호 변경", style: TextStyle(color: Colors.white, fontSize: 20),))
+                      ),
                     ]))));
   }
 }

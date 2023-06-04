@@ -701,8 +701,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
     );
   }
-  Widget numberInsert(
-      {
+  Widget numberInsert({
         bool? editAble,
         String? hintText,
         FocusNode? focusNode,
@@ -711,11 +710,9 @@ class _SignupScreenState extends State<SignupScreen> {
         TextInputAction? textInputAction,
         Function? widgetFunction,
         required int maxLegnth,
-
-      }){
+  }){
     return TextFormField(
       enabled: editAble,
-      textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 13,
 
@@ -726,9 +723,9 @@ class _SignupScreenState extends State<SignupScreen> {
         counterText: "",
         hintText: hintText,
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xfff1f2f3)),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
+        borderSide: BorderSide(color: Color(0xfff1f2f3)),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Color(0xFF3478F6)),
           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -737,6 +734,7 @@ class _SignupScreenState extends State<SignupScreen> {
           borderSide: BorderSide(color: Color(0xfff1f2f3)),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
+
       ),
 
       textInputAction: textInputAction,
@@ -746,7 +744,6 @@ class _SignupScreenState extends State<SignupScreen> {
       controller: controller,
       maxLength: maxLegnth,
       onChanged: (value){
-
         if(value.length>=maxLegnth){
           if(widgetFunction==null){
             print("noFunction");
@@ -758,7 +755,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
         });
       },
-
 
       onEditingComplete: (){
         if(widgetFunction==null){
