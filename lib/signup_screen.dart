@@ -8,6 +8,7 @@ import 'package:speelow/initial_setting_screen.dart';
 import 'package:speelow/main_screen.dart';
 import 'package:http/http.dart' as http;
 import 'api/api.dart';
+import 'main.dart';
 
 
 class SignupScreen extends StatefulWidget {
@@ -592,7 +593,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                           setState(() {
                                             showLoading = false;
                                             Navigator.push(context, MaterialPageRoute(
-                                                builder: (context) => InitialSettingScreen()),);
+                                                builder: (context) => InitialSettingScreen(userId:_idController.text ,)),);
                                           });
                                         }
                                         else {
