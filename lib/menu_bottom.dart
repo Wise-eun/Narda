@@ -56,10 +56,11 @@ class _MenuBottomState extends State<MenuBottom> {
   Widget build(BuildContext context) {
     _selectedIndex = widget.tabItem.index;
     return BottomNavigationBar(
+
       iconSize: 40 ,
-      selectedItemColor: Color(0xff5a4dfd),
-      unselectedLabelStyle: TextStyle(color:Colors.red, fontSize: 20),
-      //selectedLabelStyle: TextStyle(color:Colors.red),
+      selectedItemColor: Color(0xff323553),
+      unselectedIconTheme: IconThemeData(color: Color(0xffCCD1DB)),
+      unselectedLabelStyle: TextStyle(color: Color(0xff323553), fontSize: 14),
       items: [
         _buildItem(TabItem.home,),
         _buildItem(TabItem.list),
