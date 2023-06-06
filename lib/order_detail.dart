@@ -398,18 +398,21 @@ appBar: AppBar(
 
               ListView(controller: _scrollController, children: [
                 Container(
+                    color: Colors.white,
                     child: Column(
                       children: [
                         const SizedBox(
                           height: 20,
                         ),
                         callOk?Container(
+                          color: Colors.white,
                           margin: EdgeInsets.fromLTRB(15,0,15,0),
                           child:
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Container(
+                                color: Colors.white,
                                 child:Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -427,6 +430,7 @@ appBar: AppBar(
                                       height: 15,
                                     ),
                                     Container(
+                                      color: Colors.white,
                                       width: mediaQuery.size.width-30, //위의 패딩값 뺌
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -452,6 +456,7 @@ appBar: AppBar(
                           height: 5,
                         ),
                         callOk?Container(
+                          color: Colors.white,
                           margin: EdgeInsets.fromLTRB(10,0,10,0),
                           child:  LinearPercentIndicator(
                             lineHeight: 12,
@@ -469,10 +474,12 @@ appBar: AppBar(
                         ),
 
                         Container(
+                          color: Colors.white,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
+                                  color: Colors.white,
                                 height: 100,
                                 width: mediaQuery.size.width-350,
                                 child: const Column(
@@ -489,6 +496,7 @@ appBar: AppBar(
                                 )
                               ),
                               Container(
+                                color: Colors.white,
                                 child: Column(
                                   crossAxisAlignment:  CrossAxisAlignment.start,
                                   children: [
@@ -583,6 +591,7 @@ appBar: AppBar(
                         SizedBox(height: 20,),
                         callOk ?
                         Container(
+                          color: Colors.white,
                           alignment: Alignment.centerLeft,
                           child:  Row(
                             children: [
@@ -628,6 +637,7 @@ appBar: AppBar(
                         ,
                         SizedBox(height: 20,),
                         Container(
+
                           color: Colors.grey[200],
                           height: 20,
                         ),
@@ -638,6 +648,7 @@ appBar: AppBar(
                         SizedBox(width: 30,),
                         callOk ?
                         Container(
+                            color: Colors.white,
                             margin: EdgeInsets.fromLTRB(30,0,50,50),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -647,10 +658,12 @@ appBar: AppBar(
                                 Text(order!.orderInfo,style: TextStyle(fontSize: 18)),
                                 SizedBox(height: 10,),
                                 Container(
+                                  color: Colors.white,
                                   width: 350,
                                   child: Divider(color: Colors.grey[400],thickness: 1.0,),),
                                 SizedBox(height: 5,),
                                 Container(
+                                    color: Colors.white,
                                     width:300,
                                     child:
                                     Row(
@@ -668,6 +681,7 @@ appBar: AppBar(
                                     )),
                                 SizedBox(height: 5,),
                                 Container(
+                                  color: Colors.white,
                                   width: 350,
                                   child: Divider(color: Colors.grey[400],thickness: 1.0,),),
                                 SizedBox(height:10),
@@ -688,6 +702,7 @@ appBar: AppBar(
                                 ),
                                 SizedBox(height:5),
                                 Container(
+                                  color: Colors.white,
                                   width:300,
                                   child:       Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -705,6 +720,7 @@ appBar: AppBar(
                                 HorizontalDashedDivider(),
                                 SizedBox(height:10),
                                 Container(
+                                  color: Colors.white,
                                   width:300,
                                   child:       Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
