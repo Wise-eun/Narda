@@ -20,7 +20,7 @@ List<BottomNavigationBarItem> navbarItems = [
 
   ),
   BottomNavigationBarItem(
-icon:Icon(Icons.list),
+    icon:Icon(Icons.list),
     label: '오더리스트',
   ),
   BottomNavigationBarItem(
@@ -99,5 +99,4 @@ class _MenuBottomState extends State<MenuBottom> {
   }
 
 }
-
 

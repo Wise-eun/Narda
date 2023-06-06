@@ -433,38 +433,6 @@ class _FindPwScreenState extends State<FindPwScreen> {
             ),
 
           ),
-                //mainAxisAlignment: MainAxisAlignment.end,
-                /*children: [
-                  Container(
-                    width: 70,
-                    height: 40,
-                    child: numberInsert(
-                      controller: _otpController,
-                      maxLegnth: 6,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Color(0xfff9d94b),
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                      ),
-                      onPressed: () {
-                        PhoneAuthCredential phoneAuthCredential =
-                            PhoneAuthProvider.credential(
-                                verificationId: verificationId,
-                                smsCode: _otpController.text);
-                        phoneAuth(phoneAuthCredential);
-                      },
-                      child: Text(
-                        "확인",
-                        style: TextStyle(color: Colors.black),
-                      )),
-                ],*/
             ])));
   }
 }

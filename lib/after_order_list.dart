@@ -17,12 +17,6 @@ import 'order_detail.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-//import 'package:flutter_hooks/flutter_hooks.dart';
-
-const kPageTitle = 'Settings';
-const kLabels = ["Edit Profile", "Accounts"];
-const kTabBgColor = Color(0xFF8F32A9);
-const kTabFgColor = Colors.white;
 
 List<OrderDetail> proceedingOrders = [];
 List<OrderDetail> completeOrders = [];
@@ -234,7 +228,7 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                               child:  Text(
                                 state,
                                 style: TextStyle(
-                                    color:(proceedingOrders[index].state == 3 && timestamp1 > 0)?Colors.red:Colors.grey,
+                                    color:(proceedingOrders[index].state == 3 && timestamp1 > 0)?Color(0xffFF4E17):Color(0xff797979),
                                     fontSize: 21),
                                 textAlign: TextAlign.end
                               ),
@@ -256,10 +250,10 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                                 alignment: Alignment.centerRight,
                                 child: timestamp1>0?Text(
                                   "${timestamp1}분",
-                                  style: TextStyle(color: Colors.grey, fontSize: 16),
+                                  style: TextStyle(color: Color(0xff797979), fontSize: 16),
                                 ):Text(
                                   "${timestamp1.abs()}분 초과",
-                                  style: TextStyle(color: Colors.red, fontSize: 16),
+                                  style: TextStyle(color: Color(0xffFF4E17), fontSize: 16),
                                 ))
                           ],
                         )
@@ -278,8 +272,8 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                     lineHeight: 12,
                     percent: percent<0?1:percent,
                     barRadius: const Radius.circular(16),
-                    progressColor: percent<0?Colors.black45:percent<0.33?Colors.red:percent<0.66?Colors.yellow:Colors.green,
-                    backgroundColor: Colors.grey[300],
+                    progressColor: percent<0?Color(0xff686A70):percent<0.33?Color(0xffFF4E17):percent<0.66?Color(0xffFFBB0B):Color(0xff65C466),
+                    backgroundColor: Color(0xffE3E5EA),
                   ),
 
                 ],
@@ -459,7 +453,7 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                           topLeft: Radius.circular(20.0),
                           topRight: Radius.circular(20.0)
                       ),
-                      color:  Color(0xfff1f2f3),
+                      color:  Color(0xffE3E5EA),
                     ),
                     child:
                     Column(

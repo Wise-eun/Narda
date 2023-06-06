@@ -110,7 +110,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             );
             path.setPatternInterval(18);
             path.setWidth(13);
-            path.setColor(Color(0xFF475095));
+            path.setColor(Color(0xFF4848C7));
             _mapController.addOverlay(path);
 
             double centerlat = (from_latitude + to_latitude);
@@ -374,19 +374,19 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
     }
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(CupertinoIcons.chevron_left,
-              color: Colors.grey[400],
-              size: 30,), onPressed: () {
-            if(order?.state == 1 )
-            {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) =>  MainScreen(userId: widget.userId)),
-              );
+appBar: AppBar(
+    leading: IconButton(
+      icon: Icon(CupertinoIcons.chevron_left,
+        color: Color(0xffB7C1CF),
+        size: 30,), onPressed: () {
+        if(order?.state == 1 )
+          {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>  MainScreen(userId: widget.userId)),
+            );
 
             }
             else
@@ -442,14 +442,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text("주문일시 ${order?.orderTime.substring(0,16).replaceAll('-', '.')} ",
-                                      style: TextStyle( color: Colors.grey[400]),
+                                      style: TextStyle( color: Color(0xffB7B7B7)),
                                       textAlign: TextAlign.left,),
                                     order?.pickupTime!=null? Text("픽업시간 ${order?.pickupTime?.substring(0,16).replaceAll('-', '.')}",
-                                        style: TextStyle( color: Colors.grey[400]),
+                                        style: TextStyle( color: Color(0xffB7B7B7)),
                                         textAlign: TextAlign.left)
                                         :Text("픽업시간 ",
                                       textAlign: TextAlign.left,
-                                      style: TextStyle( color: Colors.grey[400]),
+                                      style: TextStyle( color: Color(0xffB7B7B7)),
                                     ),
                                     SizedBox(
                                       height: 15,
@@ -458,17 +458,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                       color: Colors.white,
                                       width: mediaQuery.size.width-30, //위의 패딩값 뺌
                                       child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(ReturnStatusString(),style: TextStyle(fontSize: 25, color: Color(0xffFF3055)),),
-                                            timestamp1>0?Text(
-                                              "${timestamp1}분",
-                                              style: TextStyle(fontSize: 20,color: Colors.grey),
-                                            ):Text(
-                                              "+${timestamp1.abs()}분",
-                                              style: TextStyle(fontSize: 20,color: Colors.red),
-                                            ),
-                                          ]
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(ReturnStatusString(),style: TextStyle(fontSize: 25, color: Color(0xffFF4E17)),),
+                                          timestamp1>0?Text(
+                                            "${timestamp1}분",
+                                            style: TextStyle(fontSize: 20,color: Color(0xff2A274E)),
+                                          ):Text(
+                                            "${timestamp1.abs()}분 초과",
+                                            style: TextStyle(fontSize: 20,color: Color(0xffFF4E17)),
+                                          ),
+                                        ]
                                       ),
                                     ),
 
@@ -485,14 +485,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           margin: EdgeInsets.fromLTRB(10,0,10,0),
                           child:  LinearPercentIndicator(
                             lineHeight: 12,
-                            percent: percent<0?0:percent,
+                            percent: percent<0?1:percent,
                             barRadius: const Radius.circular(16),
-                            progressColor: percent<0.33?Colors.red:percent<0.66?Colors.yellow:Colors.green,
-                            backgroundColor: Colors.grey[300],
+                            progressColor: percent<0?Color(0xff686A70):percent<0.33?Color(0xffFF4E17):percent<0.66?Color(0xffFFBB0B):Color(0xff65C466),
+                            backgroundColor: Color(0xffF1F2F3),
                           ),
                         ) : Text(''),
-
-
 
                         SizedBox(
                           height: 30,
@@ -610,7 +608,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         ):Text('주문번호/결제수단/가게번호'),
                         SizedBox(height: 20,),
                         Container(
-                          color: Colors.grey[200],
+                          color: Color(0xffF1F2F3),
                           height: 20,
                         ),
                         SizedBox(height: 20,),
@@ -663,7 +661,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         SizedBox(height: 20,),
                         Container(
 
-                          color: Colors.grey[200],
+                          color: Color(0xffF1F2F3),
                           height: 20,
                         ),
                         const SizedBox(
@@ -685,7 +683,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                 Container(
                                   color: Colors.white,
                                   width: 350,
-                                  child: Divider(color: Colors.grey[400],thickness: 1.0,),),
+                                  child: Divider(color: Color(0xffB7C1CF),thickness: 1.0,),),
                                 SizedBox(height: 5,),
                                 Container(
                                     color: Colors.white,
@@ -708,7 +706,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                 Container(
                                   color: Colors.white,
                                   width: 350,
-                                  child: Divider(color: Colors.grey[400],thickness: 1.0,),),
+                                  child: Divider(color: Color(0xffB7C1CF),thickness: 1.0,),),
                                 SizedBox(height:10),
                                 Container(
                                   width:300,
@@ -786,7 +784,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(	//모서리를 둥글게
                         borderRadius: BorderRadius.circular(10)),
-                    backgroundColor: Colors.blue[700]),
+                    backgroundColor: Color(0xff3478F6)),
 
               ),
             ),

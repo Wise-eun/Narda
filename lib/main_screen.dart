@@ -52,7 +52,7 @@ late Color overlayColor;
   TextStyle distanceTextStyle = TextStyle(color: Colors.black);
   TextStyle timeTextStyle = TextStyle(color: Colors.black);
 
-  Color feeColor = Colors.blue;
+  Color feeColor = Color(0xff3478F6);
   Color distanceColor = Colors.white;
   Color timeColor = Colors.white;
 
@@ -68,12 +68,12 @@ late Color overlayColor;
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(
         border: Border.all(
-          color:Colors.blue
+          color:Color(0xff3478F6),
         ),
         borderRadius: BorderRadius.circular(25),
         color: Colors.white,
       ),
-      child: Text(msg,style: TextStyle(fontSize: 18, color: Colors.blue)),
+      child: Text(msg,style: TextStyle(fontSize: 18, color: Color(0xff3478F6))),
     );
 
     fToast.showToast(
@@ -406,10 +406,10 @@ late Color overlayColor;
                             ),
                             timestamp1>0?Text(
                               "${timestamp1}분",
-                              style: TextStyle(color: Colors.grey, fontSize: 16),
+                              style: TextStyle(color: Color(0xff797979), fontSize: 16),
                             ):Text(
                               "${timestamp1.abs()}분 초과",
-                              style: TextStyle(color: Colors.red, fontSize: 16),
+                              style: TextStyle(color: Color(0xffFF4E17), fontSize: 16),
                             )
                           ],
                         ),
@@ -423,8 +423,8 @@ late Color overlayColor;
                       lineHeight: 12,
                       percent: percent<0?1:percent,
                       barRadius: const Radius.circular(16),
-                      progressColor: percent<0?Colors.black45:percent<0.33?Colors.red:percent<0.66?Colors.yellow:Colors.green,
-                      backgroundColor: Colors.grey[300],
+                      progressColor: percent<0?Color(0xff686A70):percent<0.33?Color(0xffFF4E17):percent<0.66?Color(0xffFFBB0B):Color(0xff65C466),
+                      backgroundColor: Color(0xffE3E5EA),
                     ),
               ])),
           onTap: () {
@@ -576,8 +576,8 @@ late Color overlayColor;
                         panelController.collapse();},
                       label: Container(child:Row(
                           children:[
-                            Icon(Icons.map_outlined, color: Colors.blue,),
-                            Text(" 지도보기", style: TextStyle(color: Colors.blue),)])),),
+                            Icon(Icons.map_outlined, color: Color(0xff3478F6)),
+                            Text(" 지도보기", style: TextStyle(color: Color(0xff3478F6)),)])),),
                     body:Container(
                       //margin: EdgeInsets.symmetric(horizontal: 15.0),
                       decoration: BoxDecoration(
@@ -601,7 +601,7 @@ late Color overlayColor;
                                         state = 0;
                                         sorting("deliveryFee");
                                         feeTextStyle = TextStyle(color: Colors.white);
-                                        feeColor = Colors.blue;
+                                        feeColor = Color(0xff3478F6);
                                         distanceTextStyle =
                                             TextStyle(color: Colors.black);
                                         distanceColor = Colors.white;
@@ -633,7 +633,7 @@ late Color overlayColor;
                                       feeColor = Colors.white;
                                       distanceTextStyle =
                                           TextStyle(color: Colors.white);
-                                      distanceColor = Colors.blue;
+                                      distanceColor = Color(0xff3478F6);
                                       timeTextStyle = TextStyle(color: Colors.black);
                                       timeColor = Colors.white;
                                     },
@@ -665,7 +665,7 @@ late Color overlayColor;
                                         distanceColor = Colors.white;
                                         timeTextStyle =
                                             TextStyle(color: Colors.white);
-                                        timeColor = Colors.blue;
+                                        timeColor = Color(0xff3478F6);
                                       },
                                       child: Text(
                                         "남은 시간",

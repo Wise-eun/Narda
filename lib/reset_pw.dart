@@ -194,66 +194,6 @@ class _ResetPwScreenState extends State<ResetPwScreen> {
 
                       )]))
 
-
-            /*child: Container(
-                padding: EdgeInsets.all(15),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("현재 비밀번호", style: TextStyle(fontSize: 18),),
-                      SizedBox(
-                        height: 45,
-                        child: TextFormField(
-                          controller: _currentPwController,
-                          keyboardType: TextInputType.text,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (String? value) {
-                            if (value!.isEmpty) {
-                              // == null or isEmpty
-                              return '현재 비밀번호를 입력해주세요.';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      SizedBox(height: 15,),
-
-                      Text("새 비밀번호", style: TextStyle(fontSize: 18),),
-                SizedBox(
-                    height: 45,
-                    child: TextFormField(
-                        controller: _newPwController,
-                        keyboardType: TextInputType.text,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (String? value) {
-                          if (value!.isEmpty) {
-                            // == null or isEmpty
-                            return '새 비밀번호를 입력해주세요.';
-                          }
-                          return null;
-                        },
-                      )),
-                      SizedBox(height: 15,),
-
-                      Text("새 비밀번호 확인", style: TextStyle(fontSize: 18)),
-
-                SizedBox(
-                    height: 45,
-                    child: TextFormField(
-                        controller: _newPwCheckController,
-                        keyboardType: TextInputType.text,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (String? value) {
-                          if (value!.isEmpty) {
-                            // == null or isEmpty
-                            return '새 비밀번호 확인을 입력해주세요.';
-                          }
-                          return null;
-                        },
-                      )),
-
-                    ]))*/
-
     ));
   }
 }

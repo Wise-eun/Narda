@@ -47,15 +47,15 @@ class _MyPageScreenState extends State<MyPageScreen> {
 
   static void getPreferencesData() async
   {
-final SharedPreferences pref = await SharedPreferences.getInstance();
-try{
-  isSwitched_helmet = pref.getBool('isSwitched_helmet')!;
-  isSwitched_safety = pref.getBool('isSwitched_safety')!;
-  _voiceSpeedValue = pref.getDouble('_voiceSpeedValue')!;
-  _voiceVolumeValue = pref.getDouble('_voiceVolumeValue')! ;
-  _deliveryRadius = pref.getDouble('_deliveryRadius')! ;
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    try{
+      isSwitched_helmet = pref.getBool('isSwitched_helmet')!;
+      isSwitched_safety = pref.getBool('isSwitched_safety')!;
+      _voiceSpeedValue = pref.getDouble('_voiceSpeedValue')!;
+      _voiceVolumeValue = pref.getDouble('_voiceVolumeValue')! ;
+      _deliveryRadius = pref.getDouble('_deliveryRadius')! ;
 
-}catch(e){}
+    }catch(e){}
   }
 
   static void UpdatePreferences() async
@@ -201,7 +201,7 @@ try{
                                           builder: (context) => CalendarScreen(userId: userInfo.userId,)),
                                     );
                                   },
-                                  child: Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey,
+                                  child: Icon(Icons.arrow_forward_ios_rounded, color: Color(0xff222B45),
                                   )
                               ),
                             ],
@@ -266,8 +266,8 @@ try{
                         children: [
                           SliderTheme(
                               data: const SliderThemeData(
-                                  inactiveTickMarkColor: Colors.grey,
-                                  inactiveTrackColor: Color(0xfff1f2f3),
+                                  inactiveTickMarkColor: Color(0xffB7C1CF),
+                                  inactiveTrackColor: Color(0xffE3E5EA),
                                   activeTickMarkColor: Color(0xff3478F6),
                                   activeTrackColor: Color(0xff3478F6),
                                   //   valueIndicatorColor: Colors.black,
@@ -330,8 +330,8 @@ try{
                         children: [
                           SliderTheme(
                               data: const SliderThemeData(
-                                  inactiveTickMarkColor: Colors.grey,
-                                  inactiveTrackColor: Color(0xfff1f2f3),
+                                  inactiveTickMarkColor: Color(0xffB7C1CF),
+                                  inactiveTrackColor: Color(0xffE3E5EA),
                                   activeTickMarkColor: Color(0xff3478F6),
                                   activeTrackColor: Color(0xff3478F6),
                                   //   valueIndicatorColor: Colors.black,
@@ -416,8 +416,8 @@ try{
                         children: [
                           SliderTheme(
                               data: const SliderThemeData(
-                                  inactiveTickMarkColor: Colors.grey,
-                                  inactiveTrackColor: Color(0xfff1f2f3),
+                                  inactiveTickMarkColor: Color(0xffB7C1CF),
+                                  inactiveTrackColor: Color(0xffE3E5EA),
                                   activeTickMarkColor: Color(0xff3478F6),
                                   activeTrackColor: Color(0xff3478F6),
                                   //   valueIndicatorColor: Colors.black,
@@ -514,8 +514,7 @@ try{
               ],
             ),
           ),
-                           )
+        )
     );
-                           }
-                           }
-
+  }
+}

@@ -196,7 +196,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           style : TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
-                            color : Color(0xff475DFE),
+                            color : Color(0xff3478F6),
                           ),
                         ),
                       ],
@@ -257,19 +257,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                       Row(
                         children: [
-                          Icon(CupertinoIcons.circle_fill,color:Color(0xff475DFE) ,size: 10,),
+                          Icon(CupertinoIcons.circle_fill,color:Color(0xff4F40FD) ,size: 10,),
                           SizedBox(width: 5,),
                           Text('평균이상',
                               style: TextStyle(
-                                color:Color(0xff475DFE),
+                                color:Color(0xff4F40FD),
                               )
                           ),
                           SizedBox(width: 10,),
-                          Icon(CupertinoIcons.circle_fill,color:Color(0xffFF3055) ,size: 10,),
+                          Icon(CupertinoIcons.circle_fill,color:Color(0xffFF375B) ,size: 10,),
                           SizedBox(width: 5,),
                           Text('평균이하',
                               style: TextStyle(
-                                color: Color(0xffFF3055),
+                                color: Color(0xffFF375B),
                               )
                           )
                          ,
@@ -336,12 +336,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     SizedBox(height: 10,),
-                                    Icon(CupertinoIcons.circle_fill,color:Color(0xff475DFE) ,size: 6,),
+                                    Icon(CupertinoIcons.circle_fill,color:Color(0xff4F40FD) ,size: 6,),
                                     SizedBox(height: 20,),
                                     Text(
                                       '${money?[DateTime.parse(date.toString().substring(0,10))]}',
                                       style: TextStyle(
-                                        color: Color(0xff475DFE),
+                                        color: Color(0xff4F40FD),
                                         fontSize: 12,
                                       ),
                                     ),
@@ -356,12 +356,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     SizedBox(height: 10,),
-                                    Icon(CupertinoIcons.circle_fill,color:Color(0xffFF3055) ,size: 6,),
+                                    Icon(CupertinoIcons.circle_fill,color:Color(0xffFF375B) ,size: 6,),
                                     SizedBox(height: 20,),
                                     Text(
                                       '${money?[DateTime.parse(date.toString().substring(0,10))]}',
                                       style: TextStyle(
-                                        color: Color(0xffFF3055),
+                                        color: Color(0xffFF375B),
                                         fontSize: 12,
                                       ),
                                     ),
@@ -384,12 +384,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       leftChevronIcon: Icon(
                         Icons.keyboard_arrow_left,
                         size: 30,
-                        color: Colors.grey,
+                        color: Color(0xff222B45),
                       ),
                       rightChevronIcon: Icon(
                         Icons.keyboard_arrow_right,
                         size: 30,
-                        color: Colors.grey,
+                        color: Color(0xff222B45),
                       ),
                     ),
 
@@ -410,7 +410,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         shape: BoxShape.rectangle,
                         backgroundBlendMode: BlendMode.darken,
-                        color: Colors.grey[200],
+                        color: Color(0xffF1F2F3),
                       ),
                       todayTextStyle: TextStyle(color: Colors.black),
                       outsideDaysVisible: true, //다른 달 날짜 노출
@@ -437,7 +437,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 Container(
                   width: mediaQuery.size.width,
                   height: 1,
-                  color: Colors.grey[300],
+                  color: Color(0xffE3E5EA),
                 ),
                 SizedBox(
                   height: 20,
@@ -452,12 +452,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           fontSize: 18,
                         )
                       ),
+                      SizedBox(height: 2,),
                       Text(
                         '$todayFee원',
                         style: TextStyle(
                           fontSize: 28,
-                          color: Colors.blue[600],
-                          fontWeight: FontWeight.w600,
+                          color: Color(0xff3478F6),
+                          //fontWeight: FontWeight.w600,
                         )
                       )
                     ],
@@ -466,7 +467,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 Container(
                   height: 1,
                   margin: EdgeInsets.only(left: 30, right: 30, top: 10),
-                  color: Colors.grey[300],
+                  color: Color(0xffE3E5EA),
                 ),
                 Container(
                   height: 40,
@@ -496,7 +497,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         margin: EdgeInsets.only(left: 10, right: 10),
                         height: 30,
                         width: 1,
-                        color:Colors.grey[300],
+                        color:Color(0xffE3E5EA),
                       ),
 
                       SizedBox(

@@ -65,8 +65,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'NARDA',
-      theme: ThemeData(primarySwatch: Colors.blue),
-    //  home: InitialSettingScreen(),
     home: Loginscreen(),
     );
   }

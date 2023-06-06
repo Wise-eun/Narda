@@ -111,8 +111,8 @@ class _InitialSettingScreenState extends State<InitialSettingScreen> {
                     children: [
                       SliderTheme(
                           data: const SliderThemeData(
-                              inactiveTickMarkColor: Colors.grey,
-                              inactiveTrackColor: Color(0xfff1f2f3),
+                              inactiveTickMarkColor: Color(0xffB7C1CF),
+                              inactiveTrackColor: Color(0xffE3E5EA),
                               activeTickMarkColor: Color(0xff3478F6),
                               activeTrackColor: Color(0xff3478F6),
                               //   valueIndicatorColor: Colors.black,
@@ -173,8 +173,8 @@ class _InitialSettingScreenState extends State<InitialSettingScreen> {
                     children: [
                       SliderTheme(
                           data: const SliderThemeData(
-                              inactiveTickMarkColor: Colors.grey,
-                              inactiveTrackColor: Color(0xfff1f2f3),
+                              inactiveTickMarkColor: Color(0xffB7C1CF),
+                              inactiveTrackColor: Color(0xffE3E5EA),
                               activeTickMarkColor: Color(0xff3478F6),
                               activeTrackColor: Color(0xff3478F6),
                               //   valueIndicatorColor: Colors.black,
@@ -257,8 +257,8 @@ class _InitialSettingScreenState extends State<InitialSettingScreen> {
                     children: [
                       SliderTheme(
                           data: const SliderThemeData(
-                              inactiveTickMarkColor: Colors.grey,
-                              inactiveTrackColor: Color(0xfff1f2f3),
+                              inactiveTickMarkColor: Color(0xffB7C1CF),
+                              inactiveTrackColor: Color(0xffE3E5EA),
                               activeTickMarkColor: Color(0xff3478F6),
                               activeTrackColor: Color(0xff3478F6),
                               //   valueIndicatorColor: Colors.black,
