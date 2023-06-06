@@ -176,6 +176,7 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
         int timestamp2 = proceedingOrders[index].predictTime;
 
         double percent = timestamp1/timestamp2;
+        if(percent>1) percent = 1;
 
         return GestureDetector(
             child:Container(
@@ -271,6 +272,7 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                   LinearPercentIndicator(
                     lineHeight: 12,
                     percent: percent<0?1:percent,
+                    //percent: 1,
                     barRadius: const Radius.circular(16),
                     progressColor: percent<0?Color(0xff686A70):percent<0.33?Color(0xffFF4E17):percent<0.66?Color(0xffFFBB0B):Color(0xff65C466),
                     backgroundColor: Color(0xffE3E5EA),

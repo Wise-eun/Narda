@@ -421,7 +421,8 @@ late Color overlayColor;
                 ),
                     LinearPercentIndicator(
                       lineHeight: 12,
-                      percent: percent<0?1:percent,
+                      //percent: percent<0?1:percent,
+                      percent:1,
                       barRadius: const Radius.circular(16),
                       progressColor: percent<0?Color(0xff686A70):percent<0.33?Color(0xffFF4E17):percent<0.66?Color(0xffFFBB0B):Color(0xff65C466),
                       backgroundColor: Color(0xffE3E5EA),
