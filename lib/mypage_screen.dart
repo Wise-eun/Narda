@@ -128,6 +128,43 @@ class _MyPageScreenState extends State<MyPageScreen> {
     }catch(e){print(e.toString());}
   }
 
+  void FlutterDialog() {
+    showDialog(
+        context: context,
+        //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            contentPadding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: 10,),
+                Text(
+                  "로그아웃 하시겠습니까?",
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('아니오',style: TextStyle(color: Color(0xFF3478F6)),),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('네',style: TextStyle(color: Color(0xFF3478F6)),),
+                onPressed: () {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                },
+              ),
+            ],
+          );
+        });
+  }
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -504,10 +541,8 @@ class _MyPageScreenState extends State<MyPageScreen> {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                             child: Text("로그아웃", style: TextStyle(fontSize: 17, color: Colors.black)),
-                            onPressed: () {
+                            onPressed: () => FlutterDialog(),
                               //로그아웃 할 것인지 여부 확인 팝업 띄우기
-                              Navigator.of(context).popUntil((route) => route.isFirst);
-                            },
                           ),
                           SizedBox(height: 30)
                         ])),
