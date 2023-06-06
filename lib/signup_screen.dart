@@ -410,7 +410,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                                 flex: 1,
                                                 child: numberInsert(
                                                   editAble: authOk?false:true,
-                                                  hintText: "0000",
+                                                  //hintText: "0000",
                                                   focusNode: phoneNumberFocusNode1,
                                                   controller: _phoneNumberController1,
                                                   textInputAction: TextInputAction.next,
@@ -428,7 +428,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                                 flex: 1,
                                                 child: numberInsert(
                                                   editAble: authOk?false:true,
-                                                  hintText: "0000",
+                                                  //hintText: "0000",
                                                   focusNode: phoneNumberFocusNode2,
                                                   controller: _phoneNumberController2,
                                                   textInputAction: TextInputAction.done,
@@ -513,9 +513,10 @@ class _SignupScreenState extends State<SignupScreen> {
                         authOk?SizedBox():Visibility(
                           visible: requestedAuth,
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Expanded(
-                                  flex: 2,
+                                  flex: 1,
                                   child: Text("")),
                               Expanded(
                                 flex: 2,
@@ -545,10 +546,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                           shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color:Color(0xFF3478F6)))),
                                           padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0)),
                                         ),
-                                        child:Text(" 확인 ",style: TextStyle(fontSize: 14,color: Color(0xff000000)))),
-                                    Container(
+                                        child:Text("    확인     ",style: TextStyle(fontSize: 14,color: Color(0xff000000)))),
+                                    /*Container(
                                         width: 13,
-                                        child: Text("")),
+                                        child: Text("")),*/
                                     SizedBox(height: 20,),
                                   ],
                                 ),
@@ -713,6 +714,7 @@ class _SignupScreenState extends State<SignupScreen> {
         required int maxLegnth,
   }){
     return TextFormField(
+      textAlign: TextAlign.center,
       enabled: editAble,
       style: TextStyle(
         fontSize: 13,

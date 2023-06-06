@@ -23,7 +23,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
+import 'package:speelow/ttestt.dart';
 
 import 'api/api.dart';
 import 'menu_bottom.dart';
@@ -127,7 +127,6 @@ class _LoginscreenState extends State<Loginscreen> {
   Widget _userIdWidget() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: 40,
         child: TextFormField(
           controller: _idController,
           keyboardType: TextInputType.text,
@@ -140,6 +139,7 @@ class _LoginscreenState extends State<Loginscreen> {
             ),
             filled: true,
             fillColor: Color(0xfff1f2f3),
+            contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5),
           ),
         ));
   }
@@ -147,7 +147,6 @@ class _LoginscreenState extends State<Loginscreen> {
   Widget _passwordWidget() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: 40,
         child: TextFormField(
           controller: _pwController,
           keyboardType: TextInputType.text,
@@ -160,6 +159,7 @@ class _LoginscreenState extends State<Loginscreen> {
             ),
             filled: true,
             fillColor: Color(0xfff1f2f3),
+            contentPadding: EdgeInsets.fromLTRB(15, 5, 0, 5),
           ),
         ));
   }
@@ -198,7 +198,7 @@ class _LoginscreenState extends State<Loginscreen> {
                     SizedBox(
                       // width: 250,
                       width: MediaQuery.of(context).size.width,
-                      height: 40,
+                      height: 45,
                       child: TextButton(
                           style: TextButton.styleFrom(
                               backgroundColor: Color(0xff3478F6),
@@ -220,7 +220,7 @@ class _LoginscreenState extends State<Loginscreen> {
                                 MaterialPageRoute(builder: (context) => SignupScreen()),
                               );
                             },
-                            child: Text('회원가입', style: TextStyle(color: Colors.black))),
+                            child: Text('회원가입', style: TextStyle(fontSize: 13, color: Colors.black))),
                         const SizedBox(
                           width: 3,
                           height: 20,

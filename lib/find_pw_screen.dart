@@ -173,6 +173,7 @@ class _FindPwScreenState extends State<FindPwScreen> {
   }) {
     return TextFormField(
       enabled: editAble,
+      textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 13,
       ),
@@ -283,8 +284,8 @@ class _FindPwScreenState extends State<FindPwScreen> {
                                           flex: 1,
                                           child: numberInsert(
                                             editAble: authOk?false:true,
-                                            hintText: "0000",
-                                            //focusNode: phoneNumberFocusNode1,
+                                            //hintText: "0000",
+                                            focusNode: phoneNumberFocusNode1,
                                             controller: _phoneNumberController1,
                                             textInputAction: TextInputAction.next,
                                             maxLegnth: 4,
