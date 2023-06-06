@@ -173,7 +173,8 @@ class _SignupScreenState extends State<SignupScreen> {
             backgroundColor: Colors.white,
             elevation: 0,
           ),
-        ),  backgroundColor: Colors.white,
+        ),
+        backgroundColor: Colors.white,
         body:
             SingleChildScrollView(
               scrollDirection: Axis.vertical,

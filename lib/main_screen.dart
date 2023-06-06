@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:speelow/menu_bottom.dart';
 import 'package:geolocator/geolocator.dart';
@@ -60,8 +61,30 @@ class MainScreenState extends State<MainScreen> {
     panelController.dispose();
   }
 
+  void showToastMessage(String msg) {
+    final fToast = FToast();
+    fToast.init(context);
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color:Colors.blue
+        ),
+        borderRadius: BorderRadius.circular(25),
+        color: Colors.white,
+      ),
+      child: Text(msg,style: TextStyle(fontSize: 18, color: Colors.blue)),
+    );
+
+    fToast.showToast(
+        gravity: ToastGravity.CENTER,
+        child: toast,
+        toastDuration: const Duration(seconds: 2),
+    );
+
+  }
+
   newOrderList() async {
-    print("열라짱");
     try {
       var response = await http.post(
         Uri.parse(API.newOrderList),
@@ -148,7 +171,6 @@ class MainScreenState extends State<MainScreen> {
           });
         });
       } else {
-        // 1-3. 권한이 없는 경우
         print("위치 권한이 필요합니다.");
       }
     } catch (e) {
@@ -186,13 +208,6 @@ class MainScreenState extends State<MainScreen> {
       );
       _mapController.addOverlay(marker);
 
-
-/*      final NCircleOverlay overlay = await NCircleOverlay(
-        id: element.key, center: NLatLng(circlelatitude, circlelongitude),
-        radius: element.value<6?400:element.value<16?500:800,
-        color: element.value<6?Color(0xB35a4dfd):element.value<16?Color(0xB3ffc800):Color(0xB3ff0084),
-      );*/
-      //overlay.setOnTapListener((overlay) => )
       marker.setOnTapListener((overlay) {
         orders.clear();
         for(OrderDetail value in detaillist[(element.key)]!){
@@ -244,6 +259,35 @@ class MainScreenState extends State<MainScreen> {
     {
       return "홈";
     }
+  }
+
+  setOrderState(orderId) async{
+    try{
+      var response = await http.post(
+          Uri.parse(API.setOrderState),
+          body:{
+            'orderId' : orderId.toString(),
+            'newState' : '2',
+            'riderId' : widget.userId.toString(),
+          }
+      );
+      if(response.statusCode == 200){
+        var responseBody = jsonDecode(response.body);
+        if(responseBody['success'] == true){
+          print("Order update 완료");
+          if(order?.state == 1)
+          {
+            setState(() {
+              print("배차 버튼 누르셨습니다.");
+              order?.state=2;
+            });
+          }
+        }
+        else{
+          print("Order update 실패");
+        }
+      }
+    }catch(e){print(e.toString());}
   }
 
   @override
@@ -359,12 +403,11 @@ class MainScreenState extends State<MainScreen> {
                             ),
                             timestamp1>0?Text(
                               "${timestamp1}분",
-                              style: TextStyle(color: Colors.grey),
+                              style: TextStyle(color: Colors.grey, fontSize: 16),
                             ):Text(
-                              "+${timestamp1.abs()}분",
-                              style: TextStyle(color: Colors.red),
+                              "${timestamp1.abs()}분 초과",
+                              style: TextStyle(color: Colors.red, fontSize: 16),
                             )
-
                           ],
                         ),
                         SizedBox(
@@ -375,22 +418,20 @@ class MainScreenState extends State<MainScreen> {
                 ),
                     LinearPercentIndicator(
                       lineHeight: 12,
-                      percent: percent<0?0:percent,
+                      percent: percent<0?1:percent,
                       barRadius: const Radius.circular(16),
-                      progressColor: percent<0.33?Colors.red:percent<0.66?Colors.yellow:Colors.green,
+                      progressColor: percent<0?Colors.black45:percent<0.33?Colors.red:percent<0.66?Colors.yellow:Colors.green,
                       backgroundColor: Colors.grey[300],
                     ),
               ])),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => OrderDetailScreen(
-                        orderId: orders[index].orderId,
-                        storeId: orders[index].storeId,
-                    userId: widget.userId,
-                      )),
-            );
+            //toast띄우기 그리고 바로 배차
+            setOrderState(orders[index].orderId);
+            showToastMessage("배차가 완료되었습니다.");
+            setState(() {
+              orders.removeAt(index);
+            });
+
           },
         );
       },
@@ -398,7 +439,7 @@ class MainScreenState extends State<MainScreen> {
         return Divider();
       },
     );
-    print("내가먼저?");
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
         appBar:  AppBar(
@@ -428,12 +469,7 @@ class MainScreenState extends State<MainScreen> {
               body: Center(
                   child: Column(
                     children: [
-                      /*
-                  Text("Lat: $latitude, Lng: $longitude"),
-                  TextButton(
-                    child: Text("Locate Me"),
-                    onPressed: () => getCurrentLocation(),
-                  )*/
+
                       SizedBox(
                           width: mapSize.width,
                           height: (mapSize.height - 158 ), //하단바때문에 오버픽셀 부분 뺌

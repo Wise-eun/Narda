@@ -183,12 +183,6 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
 
         double percent = timestamp1/timestamp2;
 
-
-        //(duration.inMinutes.toString() + " // " + orders[index].predictTime.toString());
-        //print(orders[index].orderId);
-        //print(current.toString() + " " + orderTime.toString());
-        //print("percent : " + _percent.toString());
-
         return GestureDetector(
             child:Container(
                 margin: EdgeInsets.fromLTRB(15,0,15,0),
@@ -236,12 +230,13 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                               ),
                             ),
                             Container(
-
-
                               alignment: Alignment.centerRight,
                               child:  Text(
                                 state,
-                                style: TextStyle(color:SetColorState(index), fontSize: 23),textAlign: TextAlign.end
+                                style: TextStyle(
+                                    color:(proceedingOrders[index].state == 3 && timestamp1 > 0)?Colors.red:Colors.grey,
+                                    fontSize: 21),
+                                textAlign: TextAlign.end
                               ),
                             )
                           ],
@@ -254,17 +249,17 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                           children: [
                             Text(
                               "${proceedingOrders[index].storeName}",
-                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
                             )
                             ,
                             Container(
                                 alignment: Alignment.centerRight,
                                 child: timestamp1>0?Text(
                                   "${timestamp1}분",
-                                  style: TextStyle(color: Colors.grey, fontSize: 19),
+                                  style: TextStyle(color: Colors.grey, fontSize: 16),
                                 ):Text(
-                                  "+${timestamp1.abs()}분",
-                                  style: TextStyle(color: Colors.grey, fontSize: 19),
+                                  "${timestamp1.abs()}분 초과",
+                                  style: TextStyle(color: Colors.red, fontSize: 16),
                                 ))
                           ],
                         )
@@ -281,9 +276,9 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                 children: [
                   LinearPercentIndicator(
                     lineHeight: 12,
-                    percent: percent<0?0:percent,
+                    percent: percent<0?1:percent,
                     barRadius: const Radius.circular(16),
-                    progressColor: percent<0.33?Colors.red:percent<0.66?Colors.yellow:Colors.green,
+                    progressColor: percent<0?Colors.black45:percent<0.33?Colors.red:percent<0.66?Colors.yellow:Colors.green,
                     backgroundColor: Colors.grey[300],
                   ),
 
@@ -306,19 +301,6 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
     );
   }
 
-  Color SetColorState(int index)
-  {
-
-    if(proceedingOrders[index].state == 3)
-      {
-        return Color(0xffFE4B14);
-      }
-    else
-      {
-        return Colors.grey;
-      }
-
-  }
 
   complete() {
     _listView = ListView.separated(
@@ -368,7 +350,7 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
 
         return GestureDetector(
             child:Container(
-            margin: EdgeInsets.all(15),
+            margin: EdgeInsets.only(left:15, right:15, top: 10, bottom: 10),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -378,7 +360,7 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                       Text("${completeOrders[index].deliveryTime?.substring(0, 16)}"),
                       Text(
                         "${completeOrders[index].deliveryFee}원",
-                        style: TextStyle(color: Colors.blue),
+                        style: TextStyle(fontSize: 17),
                       ),
                     ],
                   ),
@@ -392,23 +374,33 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                   SizedBox(
                     height: 5,
                   ),
-                  Text(
-                      "${completeOrders[index].orderInfo.hashCode.toRadixString(16).toUpperCase()}"),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "${completeOrders[index].storeName}",
-                        style: TextStyle(fontSize: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+
+                        children: [
+                          Text(
+                            "${completeOrders[index].orderInfo.hashCode.toRadixString(16).toUpperCase()}",style: TextStyle(fontSize: 17),),
+                          SizedBox(height: 5,),
+                          Text(
+                            "${completeOrders[index].storeName}",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ],
                       ),
-                      Text(
-                          "${completeOrders[index].deliveryDistance.toStringAsFixed(2)}km"),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                              "${completeOrders[index].deliveryDistance.toStringAsFixed(2)}km"),
+                          SizedBox(height: 5,),
+                          Text("총 ${duration.inMinutes}분 소요",style: TextStyle(fontSize: 17),),
+                        ],
+                      )
                     ],
                   ),
-                  Container(
-                    alignment: Alignment.centerRight,
-                    child: Text("총 ${duration.inMinutes}분 소요"),
-                  )
                 ])
         ),
           onTap: (){
@@ -425,7 +417,7 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
         );
       },
       separatorBuilder: (BuildContext context, int index) {
-        return Divider();
+        return Divider(thickness: 4,);
       },
     );
   }
