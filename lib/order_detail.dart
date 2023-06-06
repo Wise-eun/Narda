@@ -44,8 +44,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   bool callOk = false;
   bool clicked = false;
   bool storeOk = false;
-  double from_latitude = 37.588;
-  double from_longitude = 26.356;
+  double from_latitude = 35.830624;
+  double from_longitude = 128.7544595;
   double to_latitude = 30;
   double to_longitude = 20;
   bool pickUped = false;
@@ -103,7 +103,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             );
             path.setPatternInterval(18);
             path.setWidth(13);
-            path.setColor(Color(0xFF2C1FC7));
+            path.setColor(Color(0xFF475095));
             _mapController.addOverlay(path);
 
             double centerlat = (from_latitude + to_latitude);
