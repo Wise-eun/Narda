@@ -14,6 +14,7 @@ import 'firebase_options.dart' hide Order;
 import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'initial_setting_screen.dart';
 import 'model/user.dart';
 import 'model/order.dart';
 import 'order_list.dart';
@@ -23,7 +24,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:speelow/ttestt.dart';
 
 import 'api/api.dart';
 import 'menu_bottom.dart';
@@ -66,8 +66,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'NARDA',
       theme: ThemeData(primarySwatch: Colors.blue),
-      //home: InitialSettingScreen(),
-      home: Loginscreen(),
+    //  home: InitialSettingScreen(),
+    home: Loginscreen(),
     );
   }
 }
@@ -101,7 +101,8 @@ class _LoginscreenState extends State<Loginscreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => MainScreen(userId: _idController.text)),
+         builder: (context) => MainScreen(userId: _idController.text)),
+
           );
         } else {
           showToastMessage("로그인 실패");
@@ -264,3 +265,4 @@ class _LoginscreenState extends State<Loginscreen> {
         ));
   }
 }
+

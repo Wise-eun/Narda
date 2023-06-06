@@ -19,7 +19,7 @@ List<BottomNavigationBarItem> navbarItems = [
     label: '홈',
   ),
   BottomNavigationBarItem(
-icon:ImageIcon(AssetImage('asset/images/orderlisttest.png')),
+icon:Icon(Icons.list),
     label: '오더리스트',
   ),
   BottomNavigationBarItem(

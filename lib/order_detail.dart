@@ -767,7 +767,10 @@ appBar: AppBar(
            ),
             SizedBox(height:10)
           ],
-        ): Text("로드중")
+        ): Container(
+          alignment: Alignment.center,
+          child: CircularProgressIndicator(strokeWidth: 5,),
+        )
 
 
        );
