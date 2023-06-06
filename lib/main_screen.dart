@@ -40,7 +40,7 @@ class MainScreenState extends State<MainScreen> {
   double longitudes = 128.7544595;
   double circlelatitude = 37.588;
   double circlelongitude = 26.356;
-
+late Color overlayColor;
   bool attendance= false;
   bool isOrderlist = false;
   // late PermissionStatus _permissionGranted;
@@ -194,20 +194,23 @@ class MainScreenState extends State<MainScreen> {
 
 
       final iconImage = await NOverlayImage.fromWidget(
-        widget: Icon(Icons.circle, color: element.value<6?Color(0xB35a4dfd):element.value<16?Color(0xB3ffc800):Color(0xB3ff0084),
-          size: element.value<6?50:element.value<16?200:250,),
-          size: Size(element.value<6?50:element.value<16?200:250, element.value<6?150:element.value<16?200:250,),
+        widget: Icon(Icons.circle, color: element.value<6?overlayColor = Color(0xB3948ED2):
+        element.value<16?overlayColor = Color(0xB35D50F3):
+        overlayColor = Color(0xB33022D6),
+          size: element.value<6?100:element.value<16?250:300,),
+          size: Size(element.value<6?100:element.value<16?250:300, element.value<6?200:element.value<16?250:300,),
           context: context);
 
       final marker = NMarker(
           captionAligns : const [NAlign.center],
-        caption: NOverlayCaption(text: count.toString(), textSize: 20),
+        caption: NOverlayCaption(text: count.toString(), textSize: 30, color: Colors.white,
+            haloColor: overlayColor),
           id: element.key,
           position: NLatLng(circlelatitude, circlelongitude),
         icon: iconImage
       );
       _mapController.addOverlay(marker);
-
+      print(overlayColor);
       marker.setOnTapListener((overlay) {
         orders.clear();
         for(OrderDetail value in detaillist[(element.key)]!){
