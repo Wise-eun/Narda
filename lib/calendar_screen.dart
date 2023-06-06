@@ -301,6 +301,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         todayDistance=todayInfo2[DateTime.parse(selectedDay.toString().substring(0,10))]!;
                         todaycount=todayInfo[DateTime.parse(selectedDay.toString().substring(0,10))]!;
                       }
+                      else {
+                        todayFee=0;
+                      }
                       print(events?[selectedDay].toString());
                       _selectedEvents.value = _getEventsForDay(selectedDay);
                       print(_selectedEvents.value);
@@ -413,7 +416,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       outsideDaysVisible: true, //다른 달 날짜 노출
                       outsideTextStyle: const TextStyle(color: const Color(0xFFAEAEAE)),
 
-                      selectedTextStyle: const TextStyle(
+                      selectedTextStyle: TextStyle(
                         color: const Color(0xFF000000),
                       ),
                       selectedDecoration: BoxDecoration(
