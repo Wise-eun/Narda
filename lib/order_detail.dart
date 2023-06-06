@@ -50,15 +50,20 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   double to_longitude = 20;
   bool pickUped = false;
 
-  addressToPM(String address) async {
-    //String address = '경북 경산시 대학로 280';
+  addressToPM(String address, String address2) async {
     print('topm 주소 : $address');
     List<geo.Location> locations_Destination = await geo.locationFromAddress(address);
     to_latitude = locations_Destination[0].latitude.toDouble();
     to_longitude = locations_Destination[0].longitude.toDouble();
     print('$to_latitude, $to_longitude');
-    setState(() {
+    //address2='경상북도 경산시 삼풍동 511-4';
+    print('frompm 주소 : $address2');
+    List<geo.Location> locations_start = await geo.locationFromAddress(address2);
+    from_latitude = locations_start[0].latitude.toDouble();
+    from_longitude = locations_start[0].longitude.toDouble();
+    print('$from_latitude, $from_longitude');
 
+    setState(() {
       getCurrentLocation();
     });
   }
@@ -72,12 +77,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         // 1-2. 권한이 있는 경우 위치정보를 받아와서 변수에 저장합니다.
         // Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
         await Geolocator.getCurrentPosition(
-                desiredAccuracy: LocationAccuracy.high)
+            desiredAccuracy: LocationAccuracy.high)
             .then((position) {
           setState(() async {
-            from_latitude = position.latitude;
-            from_longitude = position.longitude;
+            //from_latitude = position.latitude;
+            //from_longitude = position.longitude;
             print('현재위치 받아옴');
+            print('$from_latitude, $from_longitude');
             Size size = new Size(20, 27);
 
             final marker = NMarker(
@@ -110,10 +116,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             double centerlon = (from_longitude + to_longitude);
             print('거리 : ${centerlon*centerlon + centerlat*centerlat}');
             double distance = centerlon*centerlon + centerlat*centerlat;
-            double zoomsize = distance>71440?14:10;
+            double zoomsize = distance>71480?10:(distance<71440?9:14);
+
             NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
                 target: NLatLng(centerlat/2, centerlon/2),
-                zoom: zoomsize
+                zoom: 8
             );
 
             if (_mapController != null)
@@ -139,10 +146,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     super.initState();
   }
 
-String ReturnPhoneNum(String num)
-{
-  String phoneNum = num.substring(0,3);
-  if(num.length==10)
+  String ReturnPhoneNum(String num)
+  {
+    String phoneNum = num.substring(0,3);
+    if(num.length==10)
     {
       phoneNum+="-";
       phoneNum+=num.substring(3,6);
@@ -150,69 +157,69 @@ String ReturnPhoneNum(String num)
       phoneNum+=num.substring(6,10);
 
     }
-  else
+    else
     {
       phoneNum+="-";
       phoneNum+=num.substring(3,7);
       phoneNum+="-";
       phoneNum+=num.substring(7,11);
     }
-  return phoneNum;
-}
-
-
-
-String ReturnPaymentString()
-{
-  switch(order!.payment)
-  {
-    case 0:
-      return "선결제";
-    case 1:
-      return "카드결제";
-    case 2:
-      return "현금결제";
+    return phoneNum;
   }
-  return "";
-}
 
-String ReturnStatusString()
-{
-  switch(order!.state)
+
+
+  String ReturnPaymentString()
   {
-    case 2:
-      return "픽업 전";
-    case 3:
-      return "배달 중";
-  }
-  return "";
-}
-
-getStore() async {
-  try {
-    var response = await http.post(Uri.parse(API.getStore), body: {
-      'storeId': widget.storeId.toString(),
-    });
-    if (response.statusCode == 200) {
-      var responseBody = jsonDecode(response.body);
-      if (responseBody['success'] == true) {
-        callOk = true;
-        print("가게정보");
-        print(responseBody['userData']);
-        store = getstore.fromJson(responseBody['userData']);
-        print(store?.storeLocation);
-      } else {
-        print("오더 디테일 불러오기 실패");
-      }
-    } else {
-      print("오더 디테일 불러오기 실패2");
+    switch(order!.payment)
+    {
+      case 0:
+        return "선결제";
+      case 1:
+        return "카드결제";
+      case 2:
+        return "현금결제";
     }
-    setState(() {
-    });
-  } catch (e) {
-    print(e.toString());
+    return "";
   }
-}
+
+  String ReturnStatusString()
+  {
+    switch(order!.state)
+    {
+      case 2:
+        return "픽업 전";
+      case 3:
+        return "배달 중";
+    }
+    return "";
+  }
+
+  getStore() async {
+    try {
+      var response = await http.post(Uri.parse(API.getStore), body: {
+        'storeId': widget.storeId.toString(),
+      });
+      if (response.statusCode == 200) {
+        var responseBody = jsonDecode(response.body);
+        if (responseBody['success'] == true) {
+          callOk = true;
+          print("가게정보");
+          print(responseBody['userData']);
+          store = getstore.fromJson(responseBody['userData']);
+          print(store?.storeLocation);
+        } else {
+          print("오더 디테일 불러오기 실패");
+        }
+      } else {
+        print("오더 디테일 불러오기 실패2");
+      }
+      setState(() {
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 
   orderDetail() async {
     try {
@@ -231,8 +238,9 @@ getStore() async {
           DateTime current = DateTime.now();
           duration = current.difference(orderTime);
           String address = order!.deliveryLocation;
+          String address2=order!.storeLocation;
           print('address : $address');
-          addressToPM(address);
+          addressToPM(address,address2 );
           print('addresstopm passing');
         } else {
           print("오더 디테일 불러오기 실패");
@@ -276,12 +284,12 @@ getStore() async {
         if(responseBody['success'] == true){
           print("Order update 완료");
           if(order?.state == 1)
-            {
-              setState(() {
-                print("배차 버튼 누르셨습니다.");
-                order?.state=2;
-              });
-            }
+          {
+            setState(() {
+              print("배차 버튼 누르셨습니다.");
+              order?.state=2;
+            });
+          }
           else if(order?.state == 2) //픽업전인 상태에서, 픽업 버튼을 눌렀을 때
               {
             setState(() {
@@ -314,7 +322,7 @@ getStore() async {
     final ScrollController _scrollController = ScrollController();
     final mediaQuery = MediaQuery.of(context);
     final mapSize =
-        Size(mediaQuery.size.width - 32, mediaQuery.size.height - 72);
+    Size(mediaQuery.size.width - 32, mediaQuery.size.height - 72);
     var valueFormat = NumberFormat('###,###,###,###');
     DateTime orderTime  = DateTime.now();
     Duration duration;
@@ -322,72 +330,72 @@ getStore() async {
     double percent  = 0.0;
 
 
-        try{
-          orderTime =  DateTime.parse(order!.orderTime);
-          duration = orderTime.difference(DateTime.now());
+    try{
+      orderTime =  DateTime.parse(order!.orderTime);
+      duration = orderTime.difference(DateTime.now());
 
-          timestamp1 = duration.inMinutes + order!.predictTime;
-          timestamp2 = order!.predictTime;
+      timestamp1 = duration.inMinutes + order!.predictTime;
+      timestamp2 = order!.predictTime;
 
-          percent = timestamp1/timestamp2;
-        }
-        catch(e)
+      percent = timestamp1/timestamp2;
+    }
+    catch(e)
     {
       print(e);
     }
 
 
-try {
-  if (order!.deliveryLocationDetail != "") {
-    print(order!.deliveryLocationDetail);
-    storeOk = true;
-    print('쌍따옴표 아님');
-  }
-}
- catch(e)
+    try {
+      if (order!.deliveryLocationDetail != "") {
+        print(order!.deliveryLocationDetail);
+        storeOk = true;
+        print('쌍따옴표 아님');
+      }
+    }
+    catch(e)
     {
 
     }
     return Scaffold(
-appBar: AppBar(
-    leading: IconButton(
-      icon: Icon(CupertinoIcons.chevron_left,
-        color: Colors.grey[400],
-        size: 30,), onPressed: () {
-        if(order?.state == 1 )
-          {
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) =>  MainScreen(userId: widget.userId)),
-            );
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(CupertinoIcons.chevron_left,
+              color: Colors.grey[400],
+              size: 30,), onPressed: () {
+            if(order?.state == 1 )
+            {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  MainScreen(userId: widget.userId)),
+              );
 
-          }
-   else
-     {
-       Navigator.pop(context);
-       Navigator.pop(context);
-       Navigator.push(
-         context,
-         MaterialPageRoute(builder: (context) =>  AfterOrderListScreen(userId: widget.userId)),
-       );
-     }
+            }
+            else
+            {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  AfterOrderListScreen(userId: widget.userId)),
+              );
+            }
 
-    },
-    ),
-  shape: Border(
-      bottom: BorderSide(
-        color: Color(0xfff1f2f3),
-        width: 2,
-      )),
-  title: Text("주문내역",
-      style: TextStyle(color: Colors.black, fontSize: 18)),
-  automaticallyImplyLeading: false,
-  centerTitle: true,
-  backgroundColor: Colors.white,
-  elevation: 0,
-),
+          },
+          ),
+          shape: Border(
+              bottom: BorderSide(
+                color: Color(0xfff1f2f3),
+                width: 2,
+              )),
+          title: Text("주문내역",
+              style: TextStyle(color: Colors.black, fontSize: 18)),
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 0,
+        ),
         body: callOk?Column(
           children: [
             callOk?Expanded(child: Scrollbar(
@@ -433,17 +441,17 @@ appBar: AppBar(
                                       color: Colors.white,
                                       width: mediaQuery.size.width-30, //위의 패딩값 뺌
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(ReturnStatusString(),style: TextStyle(fontSize: 25, color: Color(0xffFF3055)),),
-                                          timestamp1>0?Text(
-                                            "${timestamp1}분",
-                                            style: TextStyle(fontSize: 20,color: Colors.grey),
-                                          ):Text(
-                                            "+${timestamp1.abs()}분",
-                                            style: TextStyle(fontSize: 20,color: Colors.red),
-                                          ),
-                                        ]
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(ReturnStatusString(),style: TextStyle(fontSize: 25, color: Color(0xffFF3055)),),
+                                            timestamp1>0?Text(
+                                              "${timestamp1}분",
+                                              style: TextStyle(fontSize: 20,color: Colors.grey),
+                                            ):Text(
+                                              "+${timestamp1.abs()}분",
+                                              style: TextStyle(fontSize: 20,color: Colors.red),
+                                            ),
+                                          ]
                                       ),
                                     ),
 
@@ -480,46 +488,46 @@ appBar: AppBar(
                             children: [
                               Container(
                                   color: Colors.white,
-                                height: 100,
-                                width: mediaQuery.size.width-350,
-                                child: const Column(
-                                  children:<Widget>[
-                                    Icon(Icons.room, size: 16),
-                                    //Icon(Icons.more_vert, size: 35),
-                                    DottedLine(
-                                      direction: Axis.vertical,
-                                      lineLength: 60,
-                                      dashLength: 2,
-                                    ),
-                                    Icon(Icons.room, size: 16),
-                                  ]
-                                )
+                                  height: 100,
+                                  width: mediaQuery.size.width-350,
+                                  child: const Column(
+                                      children:<Widget>[
+                                        Icon(Icons.room, size: 16),
+                                        //Icon(Icons.more_vert, size: 35),
+                                        DottedLine(
+                                          direction: Axis.vertical,
+                                          lineLength: 60,
+                                          dashLength: 2,
+                                        ),
+                                        Icon(Icons.room, size: 16),
+                                      ]
+                                  )
                               ),
                               Container(
-                                color: Colors.white,
-                                child: Column(
-                                  crossAxisAlignment:  CrossAxisAlignment.start,
-                                  children: [
-                                    callOk ? Text(order!.storeName,
-                                      style:TextStyle(fontSize: 20 ) ,) : Text('가게 이름'),
-                                    callOk ? Text('${store?.storeLocation}',
-                                      style:TextStyle(fontSize: 18 ) ,) : Text('가게 주소'),
+                                  color: Colors.white,
+                                  child: Column(
+                                    crossAxisAlignment:  CrossAxisAlignment.start,
+                                    children: [
+                                      callOk ? Text(order!.storeName,
+                                        style:TextStyle(fontSize: 20 ) ,) : Text('가게 이름'),
+                                      callOk ? Text('${order?.storeLocation}',
+                                        style:TextStyle(fontSize: 18 ) ,) : Text('가게 주소'),
 
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    callOk ? Text('${order?.deliveryDistance}km',
-                                      style:TextStyle(fontSize: 15, color: Colors.grey[600])) : Text('거리'),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      callOk ? Text('${order?.deliveryDistance}km',
+                                          style:TextStyle(fontSize: 15, color: Colors.grey[600])) : Text('거리'),
 
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    callOk ? Text(order!.deliveryLocation
-                                      ,style: TextStyle(fontSize: 20),) : Text('고객 주소'),
-                                    storeOk ? Text(order!.deliveryLocationDetail,
-                                      style:TextStyle(fontSize: 18 ) ,) : Text('고객 상세 주소'),
-                                  ],
-                                )
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      callOk ? Text(order!.deliveryLocation
+                                        ,style: TextStyle(fontSize: 20),) : Text('고객 주소'),
+                                      storeOk ? Text(order!.deliveryLocationDetail,
+                                        style:TextStyle(fontSize: 18 ) ,) : Text('고객 상세 주소'),
+                                    ],
+                                  )
                               )
                             ],
                           ),
@@ -750,21 +758,21 @@ appBar: AppBar(
 
 
             )):Text("")
-          , SizedBox(height:10),
+            , SizedBox(height:10),
             SizedBox(
               width: 300,
-           height: 50,
-             child: ElevatedButton(onPressed: (){
-               setOrderState(order?.orderId,order?.state );
-             }, child: Text(ReturnStatusButtonString(),
-             style: TextStyle(fontSize: 25),),
-               style: ElevatedButton.styleFrom(
-               shape: RoundedRectangleBorder(	//모서리를 둥글게
-    borderRadius: BorderRadius.circular(10)),
-               backgroundColor: Colors.blue[700]),
+              height: 50,
+              child: ElevatedButton(onPressed: (){
+                setOrderState(order?.orderId,order?.state );
+              }, child: Text(ReturnStatusButtonString(),
+                style: TextStyle(fontSize: 25),),
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(	//모서리를 둥글게
+                        borderRadius: BorderRadius.circular(10)),
+                    backgroundColor: Colors.blue[700]),
 
-             ),
-           ),
+              ),
+            ),
             SizedBox(height:10)
           ],
         ): Container(
@@ -773,7 +781,7 @@ appBar: AppBar(
         )
 
 
-       );
+    );
 
   }
 }
