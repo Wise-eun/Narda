@@ -453,7 +453,7 @@ class _AfterOrderListScreenState extends State<AfterOrderListScreen>
                           topLeft: Radius.circular(20.0),
                           topRight: Radius.circular(20.0)
                       ),
-                      color:  Color(0xffE3E5EA),
+                      color:  Color(0xffF1F2F3),
                     ),
                     child:
                     Column(

@@ -374,7 +374,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
     }
     return Scaffold(
-appBar: AppBar(
+        appBar: AppBar(
     leading: IconButton(
       icon: Icon(CupertinoIcons.chevron_left,
         color: Color(0xffB7C1CF),
@@ -417,7 +417,6 @@ appBar: AppBar(
           children: [
             callOk?Expanded(child: Scrollbar(
               controller: _scrollController,
-              isAlwaysShown: true,
               thickness: 10,
               child:
 
@@ -425,22 +424,20 @@ appBar: AppBar(
                 Container(
                     color: Colors.white,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
                       children: [
                         const SizedBox(
                           height: 20,
                         ),
-                        callOk?Container(
-                          color: Colors.white,
-                          margin: EdgeInsets.fromLTRB(15,0,15,0),
-                          child:
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
+                        callOk?
                               Container(
+                                margin: EdgeInsets.fromLTRB(20,0,20,0),
                                 color: Colors.white,
                                 child:Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    SizedBox(height: 10,),
                                     Text("주문일시 ${order?.orderTime.substring(0,16).replaceAll('-', '.')} ",
                                       style: TextStyle( color: Color(0xffB7B7B7)),
                                       textAlign: TextAlign.left,),
@@ -460,207 +457,167 @@ appBar: AppBar(
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(ReturnStatusString(),style: TextStyle(fontSize: 25, color: Color(0xffFF4E17)),),
+                                          Text(ReturnStatusString(),style: TextStyle(fontSize: 22, color: Color(0xffFF4E17)),),
                                           timestamp1>0?Text(
                                             "${timestamp1}분",
-                                            style: TextStyle(fontSize: 20,color: Color(0xff2A274E)),
+                                            style: TextStyle(fontSize: 18,color: Color(0xff2A274E)),
                                           ):Text(
                                             "${timestamp1.abs()}분 초과",
-                                            style: TextStyle(fontSize: 20,color: Color(0xffFF4E17)),
+                                            style: TextStyle(fontSize: 18,color: Color(0xffFF4E17)),
                                           ),
                                         ]
                                       ),
                                     ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    LinearPercentIndicator(
+                                      lineHeight: 12,
+                                      percent: percent<0?1:percent,
+                                      barRadius: const Radius.circular(16),
+                                      progressColor: percent<0?Color(0xff686A70):percent<0.33?Color(0xffFF4E17):percent<0.66?Color(0xffFFBB0B):Color(0xff65C466),
+                                      backgroundColor: Color(0xffF1F2F3),
+                                    ),
 
+                                    SizedBox(
+                                      height: 30,
+                                    ),
+
+                                    Row(
+                                      children: [
+                                        Container(
+                                            color: Colors.white,
+                                            child: const Column(
+                                                children:<Widget>[
+                                                  Icon(Icons.room, size: 16),
+                                                  //Icon(Icons.more_vert, size: 35),
+                                                  DottedLine(
+                                                    direction: Axis.vertical,
+                                                    lineLength: 60,
+                                                    dashLength: 2,
+                                                  ),
+                                                  Icon(Icons.room, size: 16),
+                                                ]
+                                            )
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Container(
+                                            color: Colors.white,
+                                            child: Column(
+                                              crossAxisAlignment:  CrossAxisAlignment.start,
+                                              children: [
+                                                callOk ? Text(order!.storeName,
+                                                  style:TextStyle(fontSize: 20 ) ,) : Text('가게 이름'),
+                                                callOk ? Text('${order?.storeLocation}',
+                                                  style:TextStyle(fontSize: 16 ) ,) : Text('가게 주소'),
+
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                callOk ? Text('${order?.deliveryDistance}km',
+                                                    style:TextStyle(fontSize: 15, color: Colors.grey[600])) : Text('거리'),
+
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                callOk ? Text(order!.deliveryLocation
+                                                  ,style: TextStyle(fontSize: 20),) : Text('고객 주소'),
+                                                storeOk ? Text(order!.deliveryLocationDetail,
+                                                  style:TextStyle(fontSize: 16 ) ,) : Text('고객 상세 주소'),
+                                              ],
+                                            )
+                                        ),
+                                      ],
+                                    ),
+
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    SizedBox(
+                                      //지도 띄울 부분 (목적지까지의 거리)
+                                        width: mapSize.width,
+                                        height: 300,
+                                        child: NaverMap(
+                                          options: NaverMapViewOptions(
+                                            initialCameraPosition: NCameraPosition(
+                                                target: NLatLng(from_latitude, from_longitude),
+                                                zoom: 12,
+                                                bearing: 0,
+                                                tilt: 0),
+                                            scrollGesturesEnable: true,
+                                          ),
+                                          onMapReady: (controller) {
+                                            _mapController = controller;
+                                          },
+                                          //onCameraChange: onChanged(LatLng(latitude, longitude), CameraChangeReason.location, true),
+                                        )),
+                                    SizedBox(height: 20,),
+                                    Row(
+                                      children: [
+                                        Text("주문 번호    ",
+                                          style: TextStyle(fontSize: 18),),
+                                        Text(order!.orderInfo.hashCode.toRadixString(16).toUpperCase(),
+                                            style: TextStyle(fontSize: 18))
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Text("결제 수단    ",
+                                          style: TextStyle(fontSize: 18),),
+                                        Text(ReturnPaymentString(),
+                                            style: TextStyle(fontSize: 18))
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Text("가게 번호    ",
+                                          style: TextStyle(fontSize: 18),),
+                                        Text(ReturnPhoneNum(order!.storePhoneNum),
+                                            style: TextStyle(fontSize: 18))
+                                      ],
+                                    ),
 
                                   ],
                                 ),
-                              ),
-                            ],),)  : Text('배달상태'),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        callOk?Container(
-                          color: Colors.white,
-                          margin: EdgeInsets.fromLTRB(10,0,10,0),
-                          child:  LinearPercentIndicator(
-                            lineHeight: 12,
-                            percent: percent<0?1:percent,
-                            barRadius: const Radius.circular(16),
-                            progressColor: percent<0?Color(0xff686A70):percent<0.33?Color(0xffFF4E17):percent<0.66?Color(0xffFFBB0B):Color(0xff65C466),
-                            backgroundColor: Color(0xffF1F2F3),
-                          ),
-                        ) : Text(''),
-
-                        SizedBox(
-                          height: 30,
-                        ),
-
-                        Container(
-                          color: Colors.white,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                  color: Colors.white,
-                                  height: 100,
-                                  width: mediaQuery.size.width-350,
-                                  child: const Column(
-                                      children:<Widget>[
-                                        Icon(Icons.room, size: 16),
-                                        //Icon(Icons.more_vert, size: 35),
-                                        DottedLine(
-                                          direction: Axis.vertical,
-                                          lineLength: 60,
-                                          dashLength: 2,
-                                        ),
-                                        Icon(Icons.room, size: 16),
-                                      ]
-                                  )
-                              ),
-                              Container(
-                                  color: Colors.white,
-                                  child: Column(
-                                    crossAxisAlignment:  CrossAxisAlignment.start,
-                                    children: [
-                                      callOk ? Text(order!.storeName,
-                                        style:TextStyle(fontSize: 20 ) ,) : Text('가게 이름'),
-                                      callOk ? Text('${order?.storeLocation}',
-                                        style:TextStyle(fontSize: 18 ) ,) : Text('가게 주소'),
-
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      callOk ? Text('${order?.deliveryDistance}km',
-                                          style:TextStyle(fontSize: 15, color: Colors.grey[600])) : Text('거리'),
-
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      callOk ? Text(order!.deliveryLocation
-                                        ,style: TextStyle(fontSize: 20),) : Text('고객 주소'),
-                                      storeOk ? Text(order!.deliveryLocationDetail,
-                                        style:TextStyle(fontSize: 18 ) ,) : Text('고객 상세 주소'),
-                                    ],
-                                  )
                               )
-                            ],
-                          ),
-                        ),
+                              : Text('배달상태'),
 
-                        SizedBox(
-                          height: 20,
-                        ),
-                        SizedBox(
-                          //지도 띄울 부분 (목적지까지의 거리)
-                            width: mapSize.width,
-                            height: 300,
-                            child: NaverMap(
-                              options: NaverMapViewOptions(
-                                initialCameraPosition: NCameraPosition(
-                                    target: NLatLng(from_latitude, from_longitude),
-                                    zoom: 12,
-                                    bearing: 0,
-                                    tilt: 0),
-                                scrollGesturesEnable: true,
-                              ),
-                              onMapReady: (controller) {
-                                _mapController = controller;
-                              },
-                              //onCameraChange: onChanged(LatLng(latitude, longitude), CameraChangeReason.location, true),
-                            )),
-                        SizedBox(height: 20,),
-                        callOk? Column(
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(width: 30,),
-                                Text("주문 번호",
-                                  style: TextStyle(fontSize: 18),),
-                                SizedBox(width: 30,),
-                                Text(order!.orderInfo.hashCode.toRadixString(16).toUpperCase(),
-                                    style: TextStyle(fontSize: 18))
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Row(
-                              children: [
-                                SizedBox(width: 30,),
-                                Text("결제 수단",
-                                  style: TextStyle(fontSize: 18),),
-                                SizedBox(width: 30,),
-                                Text(ReturnPaymentString(),
-                                    style: TextStyle(fontSize: 18))
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Row(
-                              children: [
-                                SizedBox(width: 30,),
-                                Text("가게 번호",
-                                  style: TextStyle(fontSize: 18),),
-                                SizedBox(width: 30,),
-                                Text(ReturnPhoneNum(order!.storePhoneNum),
-                                    style: TextStyle(fontSize: 18))
-                              ],
-                            )
-                          ],
-                        ):Text('주문번호/결제수단/가게번호'),
+
                         SizedBox(height: 20,),
                         Container(
                           color: Color(0xffF1F2F3),
                           height: 20,
                         ),
                         SizedBox(height: 20,),
+
                         callOk ?
                         Container(
+                          margin: EdgeInsets.fromLTRB(20,0,20,0),
                           color: Colors.white,
-                          alignment: Alignment.centerLeft,
-                          child:  Row(
+                          child:Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(width: 30,)
-                              ,
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-
-                                      Text("고객 번호",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700 ),),
-                                      SizedBox(height: 5,),
-                                      Text(ReturnPhoneNum(order!.customerNum),style: TextStyle(fontSize: 18),)
-                                    ],),
-                                  SizedBox(height: 25,),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text("고객 요청사항",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700),),
-                                      SizedBox(height: 5,),
-                                      Text("리뷰이벤트 콜라 부탁드려요 :)\n수저,포크(x)",style: TextStyle(fontSize: 18),)
-                                    ],),
-                                  SizedBox(height: 25,),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text("라이더 요청사항",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700),),
-                                      SizedBox(height: 5,),
-                                      Text(order!.deliveryRequest,style: TextStyle(fontSize: 18),)
-                                    ],)
+                              Text("고객 번호",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700 ),),
+                              SizedBox(height: 5,),
+                              Text(ReturnPhoneNum(order!.customerNum),style: TextStyle(fontSize: 18),),
+                              SizedBox(height: 25,),
+                              Text("고객 요청사항",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700),),
+                              SizedBox(height: 5,),
+                              Text("리뷰이벤트 콜라 부탁드려요 :)\n수저,포크(x)",style: TextStyle(fontSize: 18),),
+                              SizedBox(height: 25,),
+                              Text("라이더 요청사항",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700),),
+                              SizedBox(height: 5,),
+                              Text(order!.deliveryRequest,style: TextStyle(fontSize: 18),),
                                 ],
-                              )
-
-                            ],
                           )   ,
                         ):Text("요청사항")
                         ,
                         SizedBox(height: 20,),
                         Container(
-
                           color: Color(0xffF1F2F3),
                           height: 20,
                         ),
@@ -671,9 +628,9 @@ appBar: AppBar(
                         SizedBox(width: 30,),
                         callOk ?
                         Container(
+                            margin: EdgeInsets.fromLTRB(20,0,20,0),
                             color: Colors.white,
-                            margin: EdgeInsets.fromLTRB(30,0,50,50),
-                            child: Column(
+                            child:Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text("주문 정보",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700)),
@@ -682,12 +639,10 @@ appBar: AppBar(
                                 SizedBox(height: 10,),
                                 Container(
                                   color: Colors.white,
-                                  width: 350,
                                   child: Divider(color: Color(0xffB7C1CF),thickness: 1.0,),),
                                 SizedBox(height: 5,),
                                 Container(
                                     color: Colors.white,
-                                    width:300,
                                     child:
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -705,67 +660,53 @@ appBar: AppBar(
                                 SizedBox(height: 5,),
                                 Container(
                                   color: Colors.white,
-                                  width: 350,
                                   child: Divider(color: Color(0xffB7C1CF),thickness: 1.0,),),
                                 SizedBox(height:10),
-                                Container(
-                                  width:300,
-                                  child:       Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
 
-                                      Text("기본 배달료",style: TextStyle(fontSize: 18)
-                                          ,  textAlign: TextAlign.start),
+                                    Text("기본 배달료",style: TextStyle(fontSize: 18)
+                                        ,  textAlign: TextAlign.start),
 
-                                      Text("1,000원",
-                                          style: TextStyle(fontSize: 18)
-                                          ,  textAlign: TextAlign.end)
-                                    ],
-                                  ),
+                                    Text("1,000원",
+                                        style: TextStyle(fontSize: 18)
+                                        ,  textAlign: TextAlign.end)
+                                  ],
                                 ),
                                 SizedBox(height:5),
-                                Container(
-                                  color: Colors.white,
-                                  width:300,
-                                  child:       Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
 
-                                      Text("거리 할증",style: TextStyle(fontSize: 18)
-                                          ,  textAlign: TextAlign.start),
+                                    Text("거리 할증",style: TextStyle(fontSize: 18)
+                                        ,  textAlign: TextAlign.start),
 
-                                      Text(valueFormat.format(order!.deliveryFee - 1000) + "원",
-                                          style: TextStyle(fontSize: 18)
-                                          ,  textAlign: TextAlign.end)
-                                    ],
-                                  ),
-                                ),SizedBox(height:10),
+                                    Text(valueFormat.format(order!.deliveryFee - 1000) + "원",
+                                        style: TextStyle(fontSize: 18)
+                                        ,  textAlign: TextAlign.end)
+                                  ],
+                                ),
+                                SizedBox(height:10),
                                 HorizontalDashedDivider(),
                                 SizedBox(height:10),
-                                Container(
-                                  color: Colors.white,
-                                  width:300,
-                                  child:       Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
 
-                                      Text("총 배달료",style: TextStyle(fontSize: 18)
-                                          ,  textAlign: TextAlign.start),
+                                    Text("총 배달료",style: TextStyle(fontSize: 18)
+                                        ,  textAlign: TextAlign.start),
 
-                                      Text(valueFormat.format(order?.deliveryFee) + "원",
-                                          style: TextStyle(fontSize: 18)
-                                          ,  textAlign: TextAlign.end)
-                                    ],
-                                  ),
+                                    Text(valueFormat.format(order?.deliveryFee) + "원",
+                                        style: TextStyle(fontSize: 18)
+                                        ,  textAlign: TextAlign.end)
+                                  ],
                                 ),
                                 SizedBox(height: 20,),
                               ],
                             )
                         ): Text("배달료")
 
-
-
-                        ,
 
                       ],
                     ))
@@ -780,7 +721,7 @@ appBar: AppBar(
               child: ElevatedButton(onPressed: (){
                 setOrderState(order?.orderId,order?.state );
               }, child: Text(ReturnStatusButtonString(),
-                style: TextStyle(fontSize: 25),),
+                style: TextStyle(fontSize: 20),),
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(	//모서리를 둥글게
                         borderRadius: BorderRadius.circular(10)),
@@ -794,7 +735,6 @@ appBar: AppBar(
           alignment: Alignment.center,
           child: CircularProgressIndicator(strokeWidth: 5,),
         )
-
 
     );
 
