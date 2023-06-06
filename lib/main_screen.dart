@@ -508,6 +508,26 @@ late Color overlayColor;
                       onToggle: (bool value) {
                         setState(() {
                           attendance = value;
+                          if(value==true){
+                            Fluttertoast.showToast(
+                                msg: "출근하였습니다.",
+                                toastLength: Toast.LENGTH_SHORT,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.grey,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                            );
+                          }
+                          else{
+                            Fluttertoast.showToast(
+                                msg: "퇴근하였습니다.",
+                                toastLength: Toast.LENGTH_SHORT,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.grey,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                            );
+                          }
                         });
 
                       },height: 40,

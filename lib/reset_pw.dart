@@ -38,8 +38,9 @@ class _ResetPwScreenState extends State<ResetPwScreen> {
                 msg: "비밀번호 변경이 완료되었습니다.",
                 toastLength: Toast.LENGTH_SHORT,
                 timeInSecForIosWeb: 1,
-                backgroundColor: Colors.green,
-                fontSize: 15.0
+                backgroundColor: Colors.grey,
+                fontSize: 15,
+                textColor: Colors.white,
             );
             Navigator.pop(context);
           }

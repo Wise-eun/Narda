@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:geolocator/geolocator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -292,6 +293,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           }
           else if(order?.state == 2) //픽업전인 상태에서, 픽업 버튼을 눌렀을 때
               {
+            Fluttertoast.showToast(
+                msg: "픽업 완료되었습니다.",
+                toastLength: Toast.LENGTH_SHORT,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.grey,
+                textColor: Colors.white,
+                fontSize: 16.0
+            );
             setState(() {
               print("픽업 버튼 누르셨습니다.");
               order?.pickupTime = DateTime.now().toString();
@@ -300,6 +309,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           }
           else if(order?.state == 3) //픽업이 이미 된 경우, 완료 버튼을 눌렀을 때
               {
+            Fluttertoast.showToast(
+                msg: "배달 완료되었습니다.",
+                toastLength: Toast.LENGTH_SHORT,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.grey,
+                textColor: Colors.white,
+                fontSize: 16.0
+            );
             Navigator.pop(context);
             Navigator.pop(context);
             Navigator.push(

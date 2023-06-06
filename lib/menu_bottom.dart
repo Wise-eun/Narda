@@ -17,6 +17,7 @@ List<BottomNavigationBarItem> navbarItems = [
   BottomNavigationBarItem(
     icon: Icon(Icons.home_filled),
     label: '홈',
+
   ),
   BottomNavigationBarItem(
 icon:Icon(Icons.list),
@@ -57,8 +58,10 @@ class _MenuBottomState extends State<MenuBottom> {
     return BottomNavigationBar(
       iconSize: 40 ,
       selectedItemColor: Color(0xff5a4dfd),
+      unselectedLabelStyle: TextStyle(color:Colors.red, fontSize: 20),
+      //selectedLabelStyle: TextStyle(color:Colors.red),
       items: [
-        _buildItem(TabItem.home),
+        _buildItem(TabItem.home,),
         _buildItem(TabItem.list),
         _buildItem(TabItem.mypage)
       ],

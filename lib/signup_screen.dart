@@ -106,7 +106,8 @@ class _SignupScreenState extends State<SignupScreen> {
               msg: "사용 가능한 아이디입니다.",
               toastLength: Toast.LENGTH_SHORT,
               timeInSecForIosWeb: 1,
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.grey,
+              textColor: Colors.white,
               fontSize: 16.0
           );
           print("존재하지 않는 아이디 ");
