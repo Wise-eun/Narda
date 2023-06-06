@@ -78,7 +78,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             from_latitude = position.latitude;
             from_longitude = position.longitude;
             print('현재위치 받아옴');
-            Size size = new Size(17, 22);
+            Size size = new Size(20, 27);
 
             final marker = NMarker(
                 id: '출발지', position: NLatLng(from_latitude, from_longitude));
@@ -99,11 +99,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               outlineWidth: 0,
             );
             path.setPatternImage(
-                NOverlayImage.fromAssetImage('asset/images/testing.png')
+                NOverlayImage.fromAssetImage('asset/images/route.png')
             );
-            path.setPatternInterval(9);
-            path.setWidth(5);
-            path.setColor(Colors.blue);
+            path.setPatternInterval(18);
+            path.setWidth(13);
+            path.setColor(Color(0xFF2C1FC7));
             _mapController.addOverlay(path);
 
             double centerlat = (from_latitude + to_latitude);
