@@ -26,7 +26,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   int monthlyFee=0;
   int delivercount=0;
 
-  int todayFee=1;
+  int todayFee=0;
   int todaycount=0;
   double todayDistance=0.0;
   CalendarFormat format = CalendarFormat.month;
