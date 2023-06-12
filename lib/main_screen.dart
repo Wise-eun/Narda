@@ -239,7 +239,7 @@ late Color overlayColor;
       //거리 가까운순
     }
     else {
-      orders.sort((a,b)=>(DateTime.parse(a.orderTime).difference(DateTime.now()).inMinutes+a.predictTime).compareTo(DateTime.parse(b.orderTime).difference(DateTime.now()).inMinutes+b.predictTime));
+      orders.sort((a,b)=>(DateTime.parse(b.orderTime).difference(DateTime.now()).inMinutes+b.predictTime).compareTo(DateTime.parse(a.orderTime).difference(DateTime.now()).inMinutes+a.predictTime));
       //남은 시간순
     }
     setState(() {});
@@ -572,6 +572,11 @@ late Color overlayColor;
                       onPressed: (){
                         setState(() {
                           isOrderlist = false;
+                          newOrders.clear();
+                          detaillist.clear();
+                          orderLocations.clear();
+                          orders.clear();
+                          newOrderList();
                         });
                         panelController.collapse();},
                       label: Container(child:Row(

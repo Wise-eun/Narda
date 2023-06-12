@@ -117,11 +117,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             double centerlon = (from_longitude + to_longitude);
             print('거리 : ${centerlon*centerlon + centerlat*centerlat}');
             double distance = centerlon*centerlon + centerlat*centerlat;
-            double zoomsize = distance>71480?10:(distance<71440?9:14);
+            double zoomsize = distance>71480?10:(distance<71440?10:12);
 
             NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
                 target: NLatLng(centerlat/2, centerlon/2),
-                zoom: 8
+                zoom: zoomsize,
             );
 
             if (_mapController != null)
@@ -193,7 +193,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       case 3:
         return "배달 중";
     }
-    return "";
+    return "배달 완료";
   }
 
   getStore() async {
@@ -375,18 +375,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     }
     return Scaffold(
         appBar: AppBar(
-    leading: IconButton(
-      icon: Icon(CupertinoIcons.chevron_left,
-        color: Color(0xffB7C1CF),
-        size: 30,), onPressed: () {
-        if(order?.state == 1 )
-          {
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) =>  MainScreen(userId: widget.userId)),
-            );
+          leading: IconButton(
+            icon: Icon(CupertinoIcons.chevron_left,
+              color: Color(0xffB7C1CF),
+              size: 30,), onPressed: () {
+            if(order?.state == 1 )
+            {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  MainScreen(userId: widget.userId)),
+              );
 
             }
             else
@@ -431,160 +431,160 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           height: 20,
                         ),
                         callOk?
-                              Container(
-                                margin: EdgeInsets.fromLTRB(20,0,20,0),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(20,0,20,0),
+                          color: Colors.white,
+                          child:Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 10,),
+                              Text("주문일시 ${order?.orderTime.substring(0,16).replaceAll('-', '.')} ",
+                                style: TextStyle( color: Color(0xffB7B7B7)),
+                                textAlign: TextAlign.left,),
+                              order?.pickupTime!=null? Text("픽업시간 ${order?.pickupTime?.substring(0,16).replaceAll('-', '.')}",
+                                  style: TextStyle( color: Color(0xffB7B7B7)),
+                                  textAlign: TextAlign.left)
+                                  :Text("픽업시간 ",
+                                textAlign: TextAlign.left,
+                                style: TextStyle( color: Color(0xffB7B7B7)),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              order!.state!=4?Container(
                                 color: Colors.white,
-                                child:Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(height: 10,),
-                                    Text("주문일시 ${order?.orderTime.substring(0,16).replaceAll('-', '.')} ",
-                                      style: TextStyle( color: Color(0xffB7B7B7)),
-                                      textAlign: TextAlign.left,),
-                                    order?.pickupTime!=null? Text("픽업시간 ${order?.pickupTime?.substring(0,16).replaceAll('-', '.')}",
-                                        style: TextStyle( color: Color(0xffB7B7B7)),
-                                        textAlign: TextAlign.left)
-                                        :Text("픽업시간 ",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle( color: Color(0xffB7B7B7)),
-                                    ),
-                                    SizedBox(
-                                      height: 15,
-                                    ),
-                                    Container(
-                                      color: Colors.white,
-                                      width: mediaQuery.size.width-30, //위의 패딩값 뺌
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(ReturnStatusString(),style: TextStyle(fontSize: 22, color: Color(0xffFF4E17)),),
-                                          timestamp1>0?Text(
-                                            "${timestamp1}분",
-                                            style: TextStyle(fontSize: 18,color: Color(0xff2A274E)),
-                                          ):Text(
-                                            "${timestamp1.abs()}분 초과",
-                                            style: TextStyle(fontSize: 18,color: Color(0xffFF4E17)),
-                                          ),
-                                        ]
+                                width: mediaQuery.size.width-30, //위의 패딩값 뺌
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(ReturnStatusString(),style: TextStyle(fontSize: 22, color: Color(0xffFF4E17)),),
+                                      timestamp1>0?Text(
+                                        "${timestamp1}분",
+                                        style: TextStyle(fontSize: 18,color: Color(0xff2A274E)),
+                                      ):Text(
+                                        "${timestamp1.abs()}분 초과",
+                                        style: TextStyle(fontSize: 18,color: Color(0xffFF4E17)),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    LinearPercentIndicator(
-                                      lineHeight: 12,
-                                      percent: percent<0?1:percent,
-                                      barRadius: const Radius.circular(16),
-                                      progressColor: percent<0?Color(0xff686A70):percent<0.33?Color(0xffFF4E17):percent<0.66?Color(0xffFFBB0B):Color(0xff65C466),
-                                      backgroundColor: Color(0xffF1F2F3),
-                                    ),
-
-                                    SizedBox(
-                                      height: 30,
-                                    ),
-
-                                    Row(
-                                      children: [
-                                        Container(
-                                            color: Colors.white,
-                                            child: const Column(
-                                                children:<Widget>[
-                                                  Icon(Icons.room, size: 16),
-                                                  //Icon(Icons.more_vert, size: 35),
-                                                  DottedLine(
-                                                    direction: Axis.vertical,
-                                                    lineLength: 60,
-                                                    dashLength: 2,
-                                                  ),
-                                                  Icon(Icons.room, size: 16),
-                                                ]
-                                            )
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Container(
-                                            color: Colors.white,
-                                            child: Column(
-                                              crossAxisAlignment:  CrossAxisAlignment.start,
-                                              children: [
-                                                callOk ? Text(order!.storeName,
-                                                  style:TextStyle(fontSize: 20 ) ,) : Text('가게 이름'),
-                                                callOk ? Text('${order?.storeLocation}',
-                                                  style:TextStyle(fontSize: 16 ) ,) : Text('가게 주소'),
-
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                callOk ? Text('${order?.deliveryDistance}km',
-                                                    style:TextStyle(fontSize: 15, color: Colors.grey[600])) : Text('거리'),
-
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                callOk ? Text(order!.deliveryLocation
-                                                  ,style: TextStyle(fontSize: 20),) : Text('고객 주소'),
-                                                storeOk ? Text(order!.deliveryLocationDetail,
-                                                  style:TextStyle(fontSize: 16 ) ,) : Text('고객 상세 주소'),
-                                              ],
-                                            )
-                                        ),
-                                      ],
-                                    ),
-
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    SizedBox(
-                                      //지도 띄울 부분 (목적지까지의 거리)
-                                        width: mapSize.width,
-                                        height: 300,
-                                        child: NaverMap(
-                                          options: NaverMapViewOptions(
-                                            initialCameraPosition: NCameraPosition(
-                                                target: NLatLng(from_latitude, from_longitude),
-                                                zoom: 12,
-                                                bearing: 0,
-                                                tilt: 0),
-                                            scrollGesturesEnable: true,
-                                          ),
-                                          onMapReady: (controller) {
-                                            _mapController = controller;
-                                          },
-                                          //onCameraChange: onChanged(LatLng(latitude, longitude), CameraChangeReason.location, true),
-                                        )),
-                                    SizedBox(height: 20,),
-                                    Row(
-                                      children: [
-                                        Text("주문 번호    ",
-                                          style: TextStyle(fontSize: 18),),
-                                        Text(order!.orderInfo.hashCode.toRadixString(16).toUpperCase(),
-                                            style: TextStyle(fontSize: 18))
-                                      ],
-                                    ),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Text("결제 수단    ",
-                                          style: TextStyle(fontSize: 18),),
-                                        Text(ReturnPaymentString(),
-                                            style: TextStyle(fontSize: 18))
-                                      ],
-                                    ),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Text("가게 번호    ",
-                                          style: TextStyle(fontSize: 18),),
-                                        Text(ReturnPhoneNum(order!.storePhoneNum),
-                                            style: TextStyle(fontSize: 18))
-                                      ],
-                                    ),
-
-                                  ],
+                                    ]
                                 ),
-                              )
-                              : Text('배달상태'),
+                              ):Text(""),
+                              order!.state!=4?SizedBox(
+                                height: 5,
+                              ):SizedBox(height: 0,),
+                              order!.state!=4?LinearPercentIndicator(
+                                lineHeight: 12,
+                                percent: percent<0?1:percent,
+                                barRadius: const Radius.circular(16),
+                                progressColor: percent<0?Color(0xff686A70):percent<0.33?Color(0xffFF4E17):percent<0.66?Color(0xffFFBB0B):Color(0xff65C466),
+                                backgroundColor: Color(0xffF1F2F3),
+                              ):SizedBox(height: 0,),
+
+                              order!.state!=4?SizedBox(
+                                height: 30,
+                              ):SizedBox(height: 0,),
+
+                              Row(
+                                children: [
+                                  Container(
+                                      color: Colors.white,
+                                      child: const Column(
+                                          children:<Widget>[
+                                            Icon(Icons.room, size: 16),
+                                            //Icon(Icons.more_vert, size: 35),
+                                            DottedLine(
+                                              direction: Axis.vertical,
+                                              lineLength: 60,
+                                              dashLength: 2,
+                                            ),
+                                            Icon(Icons.room, size: 16),
+                                          ]
+                                      )
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Container(
+                                      color: Colors.white,
+                                      child: Column(
+                                        crossAxisAlignment:  CrossAxisAlignment.start,
+                                        children: [
+                                          callOk ? Text(order!.storeName,
+                                            style:TextStyle(fontSize: 20 ) ,) : Text('가게 이름'),
+                                          callOk ? Text('${order?.storeLocation}',
+                                            style:TextStyle(fontSize: 16 ) ,) : Text('가게 주소'),
+
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          callOk ? Text('${order?.deliveryDistance}km',
+                                              style:TextStyle(fontSize: 15, color: Colors.grey[600])) : Text('거리'),
+
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          callOk ? Text(order!.deliveryLocation
+                                            ,style: TextStyle(fontSize: 20),) : Text('고객 주소'),
+                                          storeOk ? Text(order!.deliveryLocationDetail,
+                                            style:TextStyle(fontSize: 16 ) ,) : Text('고객 상세 주소'),
+                                        ],
+                                      )
+                                  ),
+                                ],
+                              ),
+
+                              SizedBox(
+                                height: 20,
+                              ),
+                              SizedBox(
+                                //지도 띄울 부분 (목적지까지의 거리)
+                                  width: mapSize.width,
+                                  height: 300,
+                                  child: NaverMap(
+                                    options: NaverMapViewOptions(
+                                      initialCameraPosition: NCameraPosition(
+                                          target: NLatLng(from_latitude, from_longitude),
+                                          zoom: 12,
+                                          bearing: 0,
+                                          tilt: 0),
+                                      scrollGesturesEnable: true,
+                                    ),
+                                    onMapReady: (controller) {
+                                      _mapController = controller;
+                                    },
+                                    //onCameraChange: onChanged(LatLng(latitude, longitude), CameraChangeReason.location, true),
+                                  )),
+                              SizedBox(height: 20,),
+                              Row(
+                                children: [
+                                  Text("주문 번호    ",
+                                    style: TextStyle(fontSize: 18),),
+                                  Text(order!.orderInfo.hashCode.toRadixString(16).toUpperCase(),
+                                      style: TextStyle(fontSize: 18))
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Text("결제 수단    ",
+                                    style: TextStyle(fontSize: 18),),
+                                  Text(ReturnPaymentString(),
+                                      style: TextStyle(fontSize: 18))
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Text("가게 번호    ",
+                                    style: TextStyle(fontSize: 18),),
+                                  Text(ReturnPhoneNum(order!.storePhoneNum),
+                                      style: TextStyle(fontSize: 18))
+                                ],
+                              ),
+
+                            ],
+                          ),
+                        )
+                            : Text('배달상태'),
 
 
                         SizedBox(height: 20,),
@@ -612,7 +612,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               Text("라이더 요청사항",style: TextStyle(fontSize: 18,fontWeight:FontWeight.w700),),
                               SizedBox(height: 5,),
                               Text(order!.deliveryRequest,style: TextStyle(fontSize: 18),),
-                                ],
+                            ],
                           )   ,
                         ):Text("요청사항")
                         ,
@@ -715,7 +715,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
             )):Text("")
             , SizedBox(height:10),
-            SizedBox(
+            order!.state!=4?SizedBox(
               width: 300,
               height: 50,
               child: ElevatedButton(onPressed: (){
@@ -723,12 +723,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               }, child: Text(ReturnStatusButtonString(),
                 style: TextStyle(fontSize: 20),),
                 style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(	//모서리를 둥글게
+                    shape: RoundedRectangleBorder(   //모서리를 둥글게
                         borderRadius: BorderRadius.circular(10)),
                     backgroundColor: Color(0xff3478F6)),
 
               ),
-            ),
+            ):Text(""),
             SizedBox(height:10)
           ],
         ): Container(
