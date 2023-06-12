@@ -4,6 +4,7 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -17,6 +18,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'model/orderDetail.dart';
 import 'order_detail.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 Map<String, int> orderLocations = {};
 Map<String, List<OrderDetail>> detaillist={};
@@ -34,7 +36,10 @@ class MainScreen extends StatefulWidget {
 class MainScreenState extends State<MainScreen> {
   late NaverMapController _mapController;
   Completer<NaverMapController> mapControllerCompleter = Completer();
-
+  StreamSubscription<BluetoothDiscoveryResult>? _streamSubscription;
+  List<BluetoothDiscoveryResult> results =
+  List<BluetoothDiscoveryResult>.empty(growable: true);
+  bool isDiscovering = false;
   List<NMarker> markers = [];
   double latitudes = 35.830624;
   double longitudes = 128.7544595;
@@ -44,6 +49,7 @@ late Color overlayColor;
   bool attendance= false;
   bool isOrderlist = false;
   // late PermissionStatus _permissionGranted;
+StreamSubscription? _subscription;
 
   late ScrollController scrollController;
   SlidingUpPanelController panelController = SlidingUpPanelController();
@@ -327,7 +333,8 @@ late Color overlayColor;
 
   List<String> list = ["배달비 높은 순", "거리순", "경과시간순"];
   String? dropdownValue = "배달비 높은 순";
-
+  late FlutterReactiveBle flutterReactiveBle = FlutterReactiveBle();
+  final _devices = <DiscoveredDevice>[];
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -509,6 +516,28 @@ late Color overlayColor;
                         setState(() {
                           attendance = value;
                           if(value==true){
+                      /*      _subscription = flutterReactiveBle.scanForDevices(withServices: [], scanMode: ScanMode.balanced).
+                           //  where((event) => event.name.contains('Buds2'))
+                           // .
+
+                             listen((device) {
+                           print('detecte device id : ${device.id} // device.rssi : ${device.rssi} //device name : ${device.name}');
+                            }, onError: (Object e) {
+                              //code for handling error
+                              print('Device scan fails with error: $e');
+                            });
+*/
+                            _streamSubscription =
+                                FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
+                                print(r);
+                                });
+
+                            _streamSubscription!.onDone(() {
+                              setState(() {
+                                isDiscovering = false;
+                              });
+                            });
+
                             Fluttertoast.showToast(
                                 msg: "출근하였습니다.",
                                 toastLength: Toast.LENGTH_SHORT,
@@ -519,6 +548,8 @@ late Color overlayColor;
                             );
                           }
                           else{
+                            _streamSubscription?.cancel();
+
                             Fluttertoast.showToast(
                                 msg: "퇴근하였습니다.",
                                 toastLength: Toast.LENGTH_SHORT,
