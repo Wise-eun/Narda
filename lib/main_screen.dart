@@ -529,7 +529,7 @@ StreamSubscription? _subscription;
 */
                             _streamSubscription =
                                 FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
-                                print(r);
+                                print(r.device.name);
                                 });
 
                             _streamSubscription!.onDone(() {
