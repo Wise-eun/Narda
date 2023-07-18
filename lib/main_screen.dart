@@ -19,12 +19,22 @@ import 'package:flutter/cupertino.dart';
 import 'model/orderDetail.dart';
 import 'order_detail.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 Map<String, int> orderLocations = {};
 Map<String, List<OrderDetail>> detaillist={};
 List<OrderDetail> newOrders = [];
 List<OrderDetail> orders = [];
+class _Message {
+  int whom;
+  String text;
 
+  _Message(this.whom, this.text);
+}
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key, required this.userId}) : super(key: key);
   final String userId;
@@ -48,9 +58,11 @@ class MainScreenState extends State<MainScreen> {
   late Color overlayColor;
   bool attendance= false;
   bool isOrderlist = false;
-  // late PermissionStatus _permissionGranted;
-StreamSubscription? _subscription;
+  List<_Message> messages = List<_Message>.empty(growable: true);
+  String _messageBuffer = '';
 
+  StreamSubscription? _subscription;
+  BluetoothConnection? connection;
   late ScrollController scrollController;
   SlidingUpPanelController panelController = SlidingUpPanelController();
   int state = 0;
@@ -62,6 +74,10 @@ StreamSubscription? _subscription;
   Color distanceColor = Colors.white;
   Color timeColor = Colors.white;
 
+  bool isConnecting = true;
+  bool get isConnected => (connection?.isConnected ?? false);
+
+  bool isDisconnecting = false;
   void dispose() {
     super.dispose();
     panelController.dispose();
@@ -301,6 +317,42 @@ StreamSubscription? _subscription;
 
   @override
   void initState() {
+
+
+    BluetoothConnection.toAddress("D8:3A:DD:18:63:E2").then((_connection) {
+      print('Connected to the device');
+      connection = _connection;
+      setState(() {
+        isConnecting = false;
+        isDisconnecting = false;
+      });
+print("===========================================================================");
+      connection!.input!.listen(_onDataReceived).onDone(() {
+        // Example: Detect which side closed the connection
+        // There should be `isDisconnecting` flag to show are we are (locally)
+        // in middle of disconnecting process, should be set before calling
+        // `dispose`, `finish` or `close`, which all causes to disconnect.
+        // If we except the disconnection, `onDone` should be fired as result.
+        // If we didn't except this (no flag set), it means closing by remote.
+        if (isDisconnecting) {
+          print('Disconnecting locally!');
+        } else {
+          print('Disconnected remotely!');
+        }
+        if (this.mounted) {
+          setState(() {});
+        }
+      });
+    }).catchError((error) {
+      print('Cannot connect, exception occured');
+      print(error);
+    });
+
+
+
+
+
+
     scrollController = ScrollController();
     scrollController.addListener(() {
       if (scrollController.offset >=
@@ -330,6 +382,57 @@ StreamSubscription? _subscription;
 
     super.initState();
   }
+
+
+  void _onDataReceived(Uint8List data) {
+    // Allocate buffer for parsed data
+    int backspacesCounter = 0;
+    data.forEach((byte) {
+      if (byte == 8 || byte == 127) {
+        backspacesCounter++;
+      }
+    });
+    Uint8List buffer = Uint8List(data.length - backspacesCounter);
+    int bufferIndex = buffer.length;
+
+    // Apply backspace control character
+    backspacesCounter = 0;
+    for (int i = data.length - 1; i >= 0; i--) {
+      if (data[i] == 8 || data[i] == 127) {
+        backspacesCounter++;
+      } else {
+        if (backspacesCounter > 0) {
+          backspacesCounter--;
+        } else {
+          buffer[--bufferIndex] = data[i];
+        }
+      }
+    }
+
+    // Create message if there is new line character
+    String dataString = String.fromCharCodes(buffer);
+    int index = buffer.indexOf(13);
+    if (~index != 0) {
+      setState(() {
+        messages.add(
+          _Message(
+            1,
+            backspacesCounter > 0
+                ? _messageBuffer.substring(
+                0, _messageBuffer.length - backspacesCounter)
+                : _messageBuffer + dataString.substring(0, index),
+          ),
+        );
+        _messageBuffer = dataString.substring(index);
+      });
+    } else {
+      _messageBuffer = (backspacesCounter > 0
+          ? _messageBuffer.substring(
+          0, _messageBuffer.length - backspacesCounter)
+          : _messageBuffer + dataString);
+    }
+  }
+
 
   List<String> list = ["배달비 높은 순", "거리순", "경과시간순"];
   String? dropdownValue = "배달비 높은 순";
@@ -516,7 +619,7 @@ StreamSubscription? _subscription;
                         setState(() {
                           attendance = value;
                           if(value==true){
-                      /*      _subscription = flutterReactiveBle.scanForDevices(withServices: [], scanMode: ScanMode.balanced).
+                            /*      _subscription = flutterReactiveBle.scanForDevices(withServices: [], scanMode: ScanMode.balanced).
                            //  where((event) => event.name.contains('Buds2'))
                            // .
 
@@ -529,7 +632,7 @@ StreamSubscription? _subscription;
 */
                             _streamSubscription =
                                 FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
-                                print(r.device.name);
+                                  print(r.device.name);
                                 });
 
                             _streamSubscription!.onDone(() {
