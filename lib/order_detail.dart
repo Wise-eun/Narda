@@ -120,8 +120,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             double zoomsize = distance>71480?10:(distance<71440?10:12);
 
             NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
-                target: NLatLng(centerlat/2, centerlon/2),
-                zoom: zoomsize,
+              target: NLatLng(centerlat/2, centerlon/2),
+              zoom: zoomsize,
             );
 
             if (_mapController != null)

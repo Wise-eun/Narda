@@ -45,7 +45,7 @@ class MainScreenState extends State<MainScreen> {
   double longitudes = 128.7544595;
   double circlelatitude = 37.588;
   double circlelongitude = 26.356;
-late Color overlayColor;
+  late Color overlayColor;
   bool attendance= false;
   bool isOrderlist = false;
   // late PermissionStatus _permissionGranted;
@@ -83,9 +83,9 @@ StreamSubscription? _subscription;
     );
 
     fToast.showToast(
-        gravity: ToastGravity.CENTER,
-        child: toast,
-        toastDuration: const Duration(seconds: 2),
+      gravity: ToastGravity.CENTER,
+      child: toast,
+      toastDuration: const Duration(seconds: 2),
     );
 
   }
@@ -105,7 +105,7 @@ StreamSubscription? _subscription;
           for (int i = 0; i < responseList.length; i++) {
             //print(OrderDetail.fromJson(responseList[i]));
             String orderLocation =
-                (responseList[i]['storeLocation']).toString();
+            (responseList[i]['storeLocation']).toString();
             final locationSplitList = orderLocation.split(' ');
             orderLocation = locationSplitList[0] +
                 " " +
@@ -160,7 +160,7 @@ StreamSubscription? _subscription;
         // 1-2. 권한이 있는 경우 위치정보를 받아와서 변수에 저장합니다.
         // Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
         await Geolocator.getCurrentPosition(
-                desiredAccuracy: LocationAccuracy.high)
+            desiredAccuracy: LocationAccuracy.high)
             .then((position) {
           setState(() {
             latitudes = position.latitude;
@@ -200,20 +200,20 @@ StreamSubscription? _subscription;
 
 
       final iconImage = await NOverlayImage.fromWidget(
-        widget: Icon(Icons.circle, color: element.value<6?overlayColor = Color(0xB3948ED2):
-        element.value<16?overlayColor = Color(0xB35D50F3):
-        overlayColor = Color(0xB33022D6),
-          size: element.value<6?100:element.value<16?250:300,),
+          widget: Icon(Icons.circle, color: element.value<6?overlayColor = Color(0xB3948ED2):
+          element.value<16?overlayColor = Color(0xB35D50F3):
+          overlayColor = Color(0xB33022D6),
+            size: element.value<6?100:element.value<16?250:300,),
           size: Size(element.value<6?100:element.value<16?250:300, element.value<6?200:element.value<16?250:300,),
           context: context);
 
       final marker = NMarker(
           captionAligns : const [NAlign.center],
-        caption: NOverlayCaption(text: count.toString(), textSize: 30, color: Colors.white,
-            haloColor: overlayColor),
+          caption: NOverlayCaption(text: count.toString(), textSize: 30, color: Colors.white,
+              haloColor: overlayColor),
           id: element.key,
           position: NLatLng(circlelatitude, circlelongitude),
-        icon: iconImage
+          icon: iconImage
       );
       _mapController.addOverlay(marker);
       print(overlayColor);
@@ -304,11 +304,11 @@ StreamSubscription? _subscription;
     scrollController = ScrollController();
     scrollController.addListener(() {
       if (scrollController.offset >=
-              scrollController.position.maxScrollExtent &&
+          scrollController.position.maxScrollExtent &&
           !scrollController.position.outOfRange) {
         panelController.expand();
       } else if (scrollController.offset <=
-              scrollController.position.minScrollExtent &&
+          scrollController.position.minScrollExtent &&
           !scrollController.position.outOfRange) {
         panelController.anchor();
       } else {}
@@ -341,7 +341,7 @@ StreamSubscription? _subscription;
     final pixelRatio = mediaQuery.devicePixelRatio;
     final mapSize = Size(mediaQuery.size.width, mediaQuery.size.height-47 );
     final physicalSize =
-        Size(mapSize.width * pixelRatio, mapSize.height * pixelRatio);
+    Size(mapSize.width * pixelRatio, mapSize.height * pixelRatio);
 
     //print("physicalSize: $physicalSize");
     //print('build : $latitudes, $longitudes');
@@ -375,57 +375,57 @@ StreamSubscription? _subscription;
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                Container(
-                  margin: EdgeInsets.all(10),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Container(
+                      margin: EdgeInsets.all(10),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                                decoration: BoxDecoration(
-                                    color: Color(0xfff1f2f3),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  child: Text(
-                                    "${storeDong} > ${deliveryDong}  |  ${orders[index].deliveryDistance.toStringAsFixed(2)}km",
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                )),
-                            Text(
-                              "${orders[index].deliveryFee}원",
-                              style: TextStyle(fontSize: 20),
-                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                    decoration: BoxDecoration(
+                                        color: Color(0xfff1f2f3),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    child: Container(
+                                      padding: EdgeInsets.all(5),
+                                      child: Text(
+                                        "${storeDong} > ${deliveryDong}  |  ${orders[index].deliveryDistance.toStringAsFixed(2)}km",
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                    )),
+                                Text(
+                                  "${orders[index].deliveryFee}원",
+                                  style: TextStyle(fontSize: 20),
+                                ),
 
-                          ],
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "${orders[index].storeName}",
-                              style: TextStyle(fontSize: 20),
+                              ],
                             ),
-                            timestamp1>0?Text(
-                              "${timestamp1}분",
-                              style: TextStyle(color: Color(0xff797979), fontSize: 16),
-                            ):Text(
-                              "${timestamp1.abs()}분 초과",
-                              style: TextStyle(color: Color(0xffFF4E17), fontSize: 16),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        ]
-                  ),
-                ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "${orders[index].storeName}",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                timestamp1>0?Text(
+                                  "${timestamp1}분",
+                                  style: TextStyle(color: Color(0xff797979), fontSize: 16),
+                                ):Text(
+                                  "${timestamp1.abs()}분 초과",
+                                  style: TextStyle(color: Color(0xffFF4E17), fontSize: 16),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                          ]
+                      ),
+                    ),
                     LinearPercentIndicator(
                       lineHeight: 12,
                       percent: percent<0?1:percent,
@@ -433,7 +433,7 @@ StreamSubscription? _subscription;
                       progressColor: percent<0?Color(0xff686A70):percent<0.33?Color(0xffFF4E17):percent<0.66?Color(0xffFFBB0B):Color(0xff65C466),
                       backgroundColor: Color(0xffE3E5EA),
                     ),
-              ])),
+                  ])),
           onTap: () {
             //toast띄우기 그리고 바로 배차
             setOrderState(orders[index].orderId);
@@ -451,7 +451,7 @@ StreamSubscription? _subscription;
     );
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: false,
         appBar:  AppBar(
           shape: Border(
               bottom: BorderSide(
