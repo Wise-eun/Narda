@@ -202,8 +202,6 @@ class MainScreenState extends State<MainScreen> {
             longitudes = position.longitude;
 
             _sendMessage("o"+longitudes.toString()+","+latitudes.toString());
-            String targetAddr = "t128.613313,35.9068477";
-            _sendMessage(targetAddr);
 
             NLatLng target = NLatLng(latitudes, longitudes);
             NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
@@ -589,6 +587,9 @@ print("=========================================================================
                   ])),
           onTap: () {
             //toast띄우기 그리고 바로 배차
+            addressToPM(orders[index].storeLocation);
+            _sendMessage("d"+circlelongitude.toString()+","+ circlelatitude.toString());
+
             setOrderState(orders[index].orderId);
             showToastMessage("배차가 완료되었습니다.");
             setState(() {
