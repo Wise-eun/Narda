@@ -211,13 +211,18 @@ class _ChatPage extends State<ChatPage> {
     }
   }
 
+
+
+
   void _sendMessage(String text) async {
+
+
     text = text.trim();
     textEditingController.clear();
 
     if (text.length > 0) {
       try {
-        connection!.output.add(Uint8List.fromList(utf8.encode(text + "\r\n")));
+        connection!.output.add(Uint8List.fromList(utf8.encode(text)));
         await connection!.output.allSent;
 
         setState(() {
