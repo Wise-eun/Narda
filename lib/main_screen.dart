@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speelow/menu_bottom.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -76,9 +78,13 @@ class MainScreenState extends State<MainScreen> {
 
   bool isConnecting = true;
   bool get isConnected => (connection?.isConnected ?? false);
+  static late Timer _refreshPositionTimer;
+  var _refreshPositionTime = 0;
+  var _isRefreshRunning = false;
 
   bool isDisconnecting = false;
   void dispose() {
+    _refreshPositionTimer?.cancel();
     super.dispose();
     panelController.dispose();
   }
@@ -105,6 +111,43 @@ class MainScreenState extends State<MainScreen> {
     );
 
   }
+
+  void StopRefresh()
+  {
+    _refreshPositionTimer?.cancel();
+  }
+
+  void StartRefresh()
+  {
+       _refreshPositionTimer = Timer.periodic(Duration(seconds:5), (timer) {
+         RefreshPosition();
+       });
+  }
+
+  RefreshPosition() async {
+    print("현재 위치 서버에 전송");
+
+    try {
+      var response = await http.post(Uri.parse(API.refreshPosition), body: {
+        'userId': widget.userId, //오른쪽에 validate 확인할 id 입력
+        'latitude': latitudes.toString(),
+        'longitude': longitudes.toString()
+      });
+      if (response.statusCode == 200) {
+        var responseBody = jsonDecode(response.body);
+        if (responseBody['success'] == true) {
+        } else {
+          print("위치 새로고침 실패");
+        }
+      }
+    } catch (e) {
+      showToastMessage("위치 새로고침 실패");
+      print(e.toString());
+    }
+  }
+
+
+
 
   newOrderList() async {
     try {
@@ -200,7 +243,6 @@ class MainScreenState extends State<MainScreen> {
           setState(() {
             latitudes = position.latitude;
             longitudes = position.longitude;
-
             _sendMessage("o"+longitudes.toString()+","+latitudes.toString());
 
             NLatLng target = NLatLng(latitudes, longitudes);
@@ -336,6 +378,23 @@ class MainScreenState extends State<MainScreen> {
     }catch(e){print(e.toString());}
   }
 
+
+  void UpdatePreferences() async
+  {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setBool('attendance',attendance);
+
+  }
+  void getPreferences() async
+  {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    try{
+      attendance = pref.getBool('attendance')!;
+    }catch(e){}
+  }
+
+
+
   @override
   void initState() {
    /* BluetoothConnection.toAddress(widget.server.address).then((_connection) {
@@ -366,7 +425,7 @@ class MainScreenState extends State<MainScreen> {
       print('Cannot connect, exception occured');
       print(error);
     });*/
-
+    getPreferences();
     BluetoothConnection.toAddress("D8:3A:DD:18:63:E2").then((_connection) {
       print('Connected to the device');
       connection = _connection;
@@ -395,9 +454,6 @@ print("=========================================================================
       print('Cannot connect, exception occured');
       print(error);
     });
-
-
-
 
 
 
@@ -670,28 +726,9 @@ print("=========================================================================
                         setState(() {
                           attendance = value;
                           if(value==true){
-                            /*      _subscription = flutterReactiveBle.scanForDevices(withServices: [], scanMode: ScanMode.balanced).
-                           //  where((event) => event.name.contains('Buds2'))
-                           // .
 
-                             listen((device) {
-                           print('detecte device id : ${device.id} // device.rssi : ${device.rssi} //device name : ${device.name}');
-                            }, onError: (Object e) {
-                              //code for handling error
-                              print('Device scan fails with error: $e');
-                            });
-*/
-                            _streamSubscription =
-                                FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
-                                  print(r.device.name);
-                                });
-
-                            _streamSubscription!.onDone(() {
-                              setState(() {
-                                isDiscovering = false;
-                              });
-                            });
-
+                                StartRefresh();
+                                UpdatePreferences();
                             Fluttertoast.showToast(
                                 msg: "출근하였습니다.",
                                 toastLength: Toast.LENGTH_SHORT,
@@ -703,7 +740,8 @@ print("=========================================================================
                           }
                           else{
                             _streamSubscription?.cancel();
-
+                            StopRefresh();
+                            UpdatePreferences();
                             Fluttertoast.showToast(
                                 msg: "퇴근하였습니다.",
                                 toastLength: Toast.LENGTH_SHORT,
