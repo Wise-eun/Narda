@@ -166,7 +166,23 @@ class MainScreenState extends State<MainScreen> {
     print(address);
     print('좌표 :$circlelatitude, $circlelongitude');
   }
+  void _sendMessage(String addr) async {
 
+
+    if (addr.length > 0) {
+      try {
+        connection!.output.add(Uint8List.fromList(utf8.encode(addr)));
+        await connection!.output.allSent;
+
+
+        Future.delayed(Duration(milliseconds: 333)).then((_) {
+        });
+      } catch (e) {
+        // Ignore error, but notify state
+        setState(() {});
+      }
+    }
+  }
   getCurrentLocation() async {
     try {
       var status_position = await Permission.location.status;
@@ -178,9 +194,14 @@ class MainScreenState extends State<MainScreen> {
         await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high)
             .then((position) {
+
+
+
           setState(() {
             latitudes = position.latitude;
             longitudes = position.longitude;
+
+            _sendMessage("o"+longitudes.toString()+","+latitudes.toString());
 
             NLatLng target = NLatLng(latitudes, longitudes);
             NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
@@ -317,7 +338,34 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
+   /* BluetoothConnection.toAddress(widget.server.address).then((_connection) {
+      print('Connected to the device');
+      connection = _connection;
+      setState(() {
+        isConnecting = false;
+        isDisconnecting = false;
+      });
 
+      connection!.input!.listen(_onDataReceived).onDone(() {
+        // Example: Detect which side closed the connection
+        // There should be `isDisconnecting` flag to show are we are (locally)
+        // in middle of disconnecting process, should be set before calling
+        // `dispose`, `finish` or `close`, which all causes to disconnect.
+        // If we except the disconnection, `onDone` should be fired as result.
+        // If we didn't except this (no flag set), it means closing by remote.
+        if (isDisconnecting) {
+          print('Disconnecting locally!');
+        } else {
+          print('Disconnected remotely!');
+        }
+        if (this.mounted) {
+          setState(() {});
+        }
+      });
+    }).catchError((error) {
+      print('Cannot connect, exception occured');
+      print(error);
+    });*/
 
     BluetoothConnection.toAddress("D8:3A:DD:18:63:E2").then((_connection) {
       print('Connected to the device');
@@ -539,6 +587,9 @@ print("=========================================================================
                   ])),
           onTap: () {
             //toast띄우기 그리고 바로 배차
+            addressToPM(orders[index].storeLocation);
+            _sendMessage("d"+circlelongitude.toString()+","+ circlelatitude.toString());
+
             setOrderState(orders[index].orderId);
             showToastMessage("배차가 완료되었습니다.");
             setState(() {
