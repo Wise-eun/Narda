@@ -76,6 +76,12 @@ class MainScreenState extends State<MainScreen> {
   Color distanceColor = Colors.white;
   Color timeColor = Colors.white;
 
+  List<int>_orderId=[];
+  bool islistEmpty=false;
+  bool newAlarm=false;
+  String newloca='';
+  int newOrderId=0;
+
   bool isConnecting = true;
   bool get isConnected => (connection?.isConnected ?? false);
   static late Timer _refreshPositionTimer;
@@ -121,6 +127,10 @@ class MainScreenState extends State<MainScreen> {
   {
        _refreshPositionTimer = Timer.periodic(Duration(seconds:5), (timer) {
          RefreshPosition();
+
+         detaillist.clear();
+         orderLocations.clear();
+         newOrderList();
        });
   }
 
@@ -160,34 +170,55 @@ class MainScreenState extends State<MainScreen> {
         var responseBody = jsonDecode(response.body);
         if (responseBody['success'] == true) {
           print("오더 리스트 불러오기 성공");
+          if(_orderId.isEmpty) islistEmpty=true;
+          else islistEmpty=false;
+
           List<dynamic> responseList = responseBody['userData'];
           for (int i = 0; i < responseList.length; i++) {
-            //print(OrderDetail.fromJson(responseList[i]));
-            String orderLocation =
-            (responseList[i]['storeLocation']).toString();
-            final locationSplitList = orderLocation.split(' ');
-            orderLocation = locationSplitList[0] +
-                " " +
-                locationSplitList[1] +
-                " " +
-                locationSplitList[2];
-            print("orderListLocation 출력 $orderLocation");
-
-            if(detaillist.containsKey(orderLocation) == false){
-              detaillist.addEntries({orderLocation: [OrderDetail.fromJson(responseList[i])]}.entries);
+            if(islistEmpty) {
+              _orderId.add(int.parse(responseList[i]['orderId']));
             }
-            else{
-              detaillist[orderLocation]?.add(OrderDetail.fromJson(responseList[i]));
-            }
-
-            if (orderLocations.containsKey(orderLocation) == false) {
-              orderLocations.addEntries({orderLocation: 1}.entries);
-            } //여기서 바로 스플릿해서 지도 넣는데 맵으로 넣자자자자자ㅏ잦
             else {
-              orderLocations[orderLocation] =
-                  orderLocations[orderLocation]! + 1;
+              if(!_orderId.contains(int.parse(responseList[i]['orderId']))) {
+                _orderId.add(int.parse(responseList[i]['orderId']));
+                newAlarm = true;
+              }
             }
-            print(orderLocations.entries);
+
+              //print(OrderDetail.fromJson(responseList[i]));
+              String orderLocation =
+              (responseList[i]['storeLocation']).toString();
+              final locationSplitList = orderLocation.split(' ');
+              orderLocation = locationSplitList[0] +
+                  " " +
+                  locationSplitList[1] +
+                  " " +
+                  locationSplitList[2];
+              print("orderListLocation 출력 $orderLocation");
+              if(newAlarm){
+                newloca=orderLocation;
+                newOrderId=(int.parse(responseList[i]['orderId']));
+                print("새로운 동: $newloca");
+                print("새로운 주문번호: $newOrderId");
+                _sendMessage("주문번호"+newOrderId.toString()+" "+newloca.toString()+"배차 받으시겠습니까?");
+              }
+              if(detaillist.containsKey(orderLocation) == false){
+                detaillist.addEntries({orderLocation: [OrderDetail.fromJson(responseList[i])]}.entries);
+              }
+              else{
+                detaillist[orderLocation]?.add(OrderDetail.fromJson(responseList[i]));
+              }
+
+              if (orderLocations.containsKey(orderLocation) == false) {
+                orderLocations.addEntries({orderLocation: 1}.entries);
+              } //여기서 바로 스플릿해서 지도 넣는데 맵으로 넣자자자자자ㅏ잦
+              else {
+                orderLocations[orderLocation] =
+                    orderLocations[orderLocation]! + 1;
+              }
+              print(orderLocations.entries);
+            newAlarm = false;
+            }
           }
         } else {
           print("오더 리스트 불러오기 실패");
@@ -196,7 +227,6 @@ class MainScreenState extends State<MainScreen> {
           circleCluster();
         });
         return orderLocations;
-      }
     } catch (e) {
       print(e.toString());
     }
@@ -480,7 +510,6 @@ print("=========================================================================
     print('clear');
     newOrderList();
 
-    print("똥");
     print(orderLocations.length);
     sorting("deliveryFee");
 
