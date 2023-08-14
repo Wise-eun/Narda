@@ -18,4 +18,5 @@ class API{
   static const setOrderState = "$hostConnect/setOrderState.php";
   static const getStore = "$hostConnect/getstore.php";
   static const refreshPosition = "$hostConnect/refreshPosition.php";
+  static const nullPosition = "$hostConnect/nullPosition.php";
 }

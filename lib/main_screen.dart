@@ -121,6 +121,7 @@ class MainScreenState extends State<MainScreen> {
   void StopRefresh()
   {
     _refreshPositionTimer?.cancel();
+    RefreshPosition();
   }
 
   void StartRefresh()
@@ -134,26 +135,52 @@ class MainScreenState extends State<MainScreen> {
        });
   }
 
+
   RefreshPosition() async {
     print("현재 위치 서버에 전송");
 
-    try {
-      var response = await http.post(Uri.parse(API.refreshPosition), body: {
-        'userId': widget.userId, //오른쪽에 validate 확인할 id 입력
-        'latitude': latitudes.toString(),
-        'longitude': longitudes.toString()
-      });
-      if (response.statusCode == 200) {
-        var responseBody = jsonDecode(response.body);
-        if (responseBody['success'] == true) {
-        } else {
-          print("위치 새로고침 실패");
+    if(attendance== true)
+      {
+        try {
+          var response = await http.post(Uri.parse(API.refreshPosition), body: {
+            'userId': widget.userId, //오른쪽에 validate 확인할 id 입력
+            'latitude': latitudes.toString(),
+            'longitude': longitudes.toString()
+          });
+          if (response.statusCode == 200) {
+            var responseBody = jsonDecode(response.body);
+            if (responseBody['success'] == true) {
+            } else {
+              print("위치 새로고침 실패");
+            }
+          }
+        } catch (e) {
+          showToastMessage("위치 새로고침 실패");
+          print(e.toString());
         }
       }
-    } catch (e) {
-      showToastMessage("위치 새로고침 실패");
-      print(e.toString());
-    }
+    else
+      {
+        try {
+          var response = await http.post(Uri.parse(API.nullPosition), body: {
+            'userId': widget.userId, //오른쪽에 validate 확인할 id 입력
+            'latitude': latitudes.toString(),
+            'longitude': longitudes.toString()
+          });
+          if (response.statusCode == 200) {
+            var responseBody = jsonDecode(response.body);
+            if (responseBody['success'] == true) {
+              print("NULL변경 성공");
+            } else {
+              print("NULL변경 실패");
+            }
+          }
+        } catch (e) {
+          showToastMessage("NULL변경 실패");
+          print(e.toString());
+        }
+      }
+
   }
 
 
@@ -516,7 +543,6 @@ print("=========================================================================
     super.initState();
   }
 
-
   void _onDataReceived(Uint8List data) {
     // Allocate buffer for parsed data
     int backspacesCounter = 0;
@@ -527,7 +553,6 @@ print("=========================================================================
     });
     Uint8List buffer = Uint8List(data.length - backspacesCounter);
     int bufferIndex = buffer.length;
-
     // Apply backspace control character
     backspacesCounter = 0;
     for (int i = data.length - 1; i >= 0; i--) {
@@ -544,6 +569,10 @@ print("=========================================================================
 
     // Create message if there is new line character
     String dataString = String.fromCharCodes(buffer);
+    print("데이터ㅓㅓㅓㅓㅓㅓㅓㅓ "+dataString);
+    if(dataString=="accepted") {
+      _sendMessage("수락했군요");
+    }
     int index = buffer.indexOf(13);
     if (~index != 0) {
       setState(() {
