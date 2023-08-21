@@ -45,6 +45,7 @@ import './selectBondedDevicePage.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 //import 'package:flutter_hooks/flutter_hooks.dart';
+//bool isConnecting=true;
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();

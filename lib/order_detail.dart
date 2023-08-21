@@ -23,7 +23,7 @@ import 'model/orderDetail.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dotted_line/dotted_line.dart';
-
+import 'package:speelow/bluetoothConnecting.dart';
 
 OrderDetail? order;
 Duration? duration;
@@ -140,11 +140,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
   void _sendMessage(String addr) async {
 
-
     if (addr.length > 0) {
       try {
-        main.connection!.output.add(Uint8List.fromList(utf8.encode(addr)));
-        await main.connection!.output.allSent;
+        connection!.output.add(Uint8List.fromList(utf8.encode(addr)));
+        await connection!.output.allSent;
 
 
         Future.delayed(Duration(milliseconds: 333)).then((_) {
@@ -321,9 +320,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             );
             setState(() {
               print("픽업 버튼 누르셨습니다.");
-              String origin=from_longitude.toString()+","+from_latitude.toString();
-              String destination=to_longitude.toString()+","+to_latitude.toString();
-              _sendMessage("p"+origin+" "+destination);
+              addressToPM(order!.storeLocation, order!.deliveryLocation);
+              String origin2=from_longitude.toString()+","+from_latitude.toString();
+              String destination2=to_longitude.toString()+","+to_latitude.toString();
+              _sendMessage("p"+origin2+" "+destination2);
               order?.pickupTime = DateTime.now().toString();
               order?.state=3;
             });

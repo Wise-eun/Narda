@@ -24,13 +24,14 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:speelow/bluetoothConnecting.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 Map<String, int> orderLocations = {};
 Map<String, List<OrderDetail>> detaillist={};
 List<OrderDetail> orders = [];
-BluetoothConnection? connection;
+//BluetoothConnection? connection;
 
 class _Message {
   int whom;
@@ -83,13 +84,16 @@ class MainScreenState extends State<MainScreen> {
   int newOrderId=0;
   int accept_orderId=0;
 
-  bool isConnecting = true;
+
+
   bool get isConnected => (connection?.isConnected ?? false);
   static late Timer _refreshPositionTimer;
   var _refreshPositionTime = 0;
   var _isRefreshRunning = false;
 
+  //
   bool isDisconnecting = false;
+
   void dispose() {
     _refreshPositionTimer?.cancel();
     super.dispose();
@@ -200,7 +204,8 @@ class MainScreenState extends State<MainScreen> {
           List<dynamic> responseList = responseBody['userData'];
           for (int i = 0; i < responseList.length; i++) {
             if(islistEmpty) {
-              final orderEntries={int.parse(responseList[i]['orderId']):responseList[i]['storeLocation']};
+              final orderEntries={int.parse(responseList[i]
+              ['orderId']):responseList[i]['storeLocation']};
               _newOrder.addEntries(orderEntries.entries);
             }
             else {
@@ -481,36 +486,35 @@ class MainScreenState extends State<MainScreen> {
       print(error);
     });*/
     getPreferences();
-    BluetoothConnection.toAddress("D8:3A:DD:18:63:E2").then((_connection) {
-      print('Connected to the device');
-      connection = _connection;
-      setState(() {
-        isConnecting = false;
-        isDisconnecting = false;
+    if(isConnecting){
+      BluetoothConnection.toAddress("D8:3A:DD:18:63:E2").then((_connection) {
+        print('Connected to the device');
+        connection = _connection;
+        setState(() {
+          isConnecting = false;
+          isDisconnecting = false;
+        });
+        print("===========================================================================");
+        connection!.input!.listen(_onDataReceived).onDone(() {
+          // Example: Detect which side closed the connection
+          // There should be `isDisconnecting` flag to show are we are (locally)
+          // in middle of disconnecting process, should be set before calling
+          // If we except the disconnection, `onDone` should be fired as result.
+          // If we didn't except this (no flag set), it means closing by remote.
+          if (isDisconnecting) {
+            print('Disconnecting locally!');
+          } else {
+            print('Disconnected remotely!');
+          }
+          if (this.mounted) {
+            //setState(() {});
+          }
+        });
+      }).catchError((error) {
+        print('Cannot connect, exception occured');
+        print(error);
       });
-      print("===========================================================================");
-      connection!.input!.listen(_onDataReceived).onDone(() {
-        // Example: Detect which side closed the connection
-        // There should be `isDisconnecting` flag to show are we are (locally)
-        // in middle of disconnecting process, should be set before calling
-        // `dispose`, `finish` or `close`, which all causes to disconnect.
-        // If we except the disconnection, `onDone` should be fired as result.
-        // If we didn't except this (no flag set), it means closing by remote.
-        if (isDisconnecting) {
-          print('Disconnecting locally!');
-        } else {
-          print('Disconnected remotely!');
-        }
-        if (this.mounted) {
-          setState(() {});
-        }
-      });
-    }).catchError((error) {
-      print('Cannot connect, exception occured');
-      print(error);
-    });
-
-
+    }
 
     scrollController = ScrollController();
     scrollController.addListener(() {
