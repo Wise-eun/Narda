@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart' as geo;
@@ -14,7 +15,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:speelow/HorizontalDashedDivider.dart';
 import 'package:http/http.dart' as http;
 import 'package:speelow/calendar_screen.dart';
-import 'package:speelow/main_screen.dart';
+import 'package:speelow/main_screen.dart' as main;
 import 'after_order_list.dart';
 import 'api/api.dart';
 import 'model/getstore.dart';
@@ -22,6 +23,7 @@ import 'model/orderDetail.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dotted_line/dotted_line.dart';
+
 
 OrderDetail? order;
 Duration? duration;
@@ -134,6 +136,22 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       }
     } catch (e) {
       print(e);
+    }
+  }
+  void _sendMessage(String addr) async {
+
+
+    if (addr.length > 0) {
+      try {
+        main.connection!.output.add(Uint8List.fromList(utf8.encode(addr)));
+        await main.connection!.output.allSent;
+
+
+        Future.delayed(Duration(milliseconds: 333)).then((_) {
+        });
+      } catch (e) {
+        // Ignore error, but notify state
+      }
     }
   }
 
@@ -303,6 +321,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             );
             setState(() {
               print("픽업 버튼 누르셨습니다.");
+              String origin=from_longitude.toString()+","+from_latitude.toString();
+              String destination=to_longitude.toString()+","+to_latitude.toString();
+              _sendMessage("p"+origin+" "+destination);
               order?.pickupTime = DateTime.now().toString();
               order?.state=3;
             });
@@ -385,7 +406,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  MainScreen(userId: widget.userId)),
+                MaterialPageRoute(builder: (context) =>  main.MainScreen(userId: widget.userId)),
               );
 
             }

@@ -29,8 +29,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 Map<String, int> orderLocations = {};
 Map<String, List<OrderDetail>> detaillist={};
-List<OrderDetail> newOrders = [];
 List<OrderDetail> orders = [];
+BluetoothConnection? connection;
+
 class _Message {
   int whom;
   String text;
@@ -64,7 +65,6 @@ class MainScreenState extends State<MainScreen> {
   String _messageBuffer = '';
 
   StreamSubscription? _subscription;
-  BluetoothConnection? connection;
   late ScrollController scrollController;
   SlidingUpPanelController panelController = SlidingUpPanelController();
   int state = 0;
@@ -76,11 +76,12 @@ class MainScreenState extends State<MainScreen> {
   Color distanceColor = Colors.white;
   Color timeColor = Colors.white;
 
-  List<int>_orderId=[];
+  Map<int,dynamic>_newOrder={};
   bool islistEmpty=false;
   bool newAlarm=false;
   String newloca='';
   int newOrderId=0;
+  int accept_orderId=0;
 
   bool isConnecting = true;
   bool get isConnected => (connection?.isConnected ?? false);
@@ -126,13 +127,13 @@ class MainScreenState extends State<MainScreen> {
 
   void StartRefresh()
   {
-       _refreshPositionTimer = Timer.periodic(Duration(seconds:5), (timer) {
-         RefreshPosition();
+    _refreshPositionTimer = Timer.periodic(Duration(seconds:5), (timer) {
+      RefreshPosition();
 
-         detaillist.clear();
-         orderLocations.clear();
-         newOrderList();
-       });
+      detaillist.clear();
+      orderLocations.clear();
+      newOrderList();
+    });
   }
 
 
@@ -140,51 +141,48 @@ class MainScreenState extends State<MainScreen> {
     print("현재 위치 서버에 전송");
 
     if(attendance== true)
-      {
-        try {
-          var response = await http.post(Uri.parse(API.refreshPosition), body: {
-            'userId': widget.userId, //오른쪽에 validate 확인할 id 입력
-            'latitude': latitudes.toString(),
-            'longitude': longitudes.toString()
-          });
-          if (response.statusCode == 200) {
-            var responseBody = jsonDecode(response.body);
-            if (responseBody['success'] == true) {
-            } else {
-              print("위치 새로고침 실패");
-            }
+    {
+      try {
+        var response = await http.post(Uri.parse(API.refreshPosition), body: {
+          'userId': widget.userId, //오른쪽에 validate 확인할 id 입력
+          'latitude': latitudes.toString(),
+          'longitude': longitudes.toString()
+        });
+        if (response.statusCode == 200) {
+          var responseBody = jsonDecode(response.body);
+          if (responseBody['success'] == true) {
+          } else {
+            print("위치 새로고침 실패");
           }
-        } catch (e) {
-          showToastMessage("위치 새로고침 실패");
-          print(e.toString());
         }
+      } catch (e) {
+        showToastMessage("위치 새로고침 실패");
+        print(e.toString());
       }
+    }
     else
-      {
-        try {
-          var response = await http.post(Uri.parse(API.nullPosition), body: {
-            'userId': widget.userId, //오른쪽에 validate 확인할 id 입력
-            'latitude': latitudes.toString(),
-            'longitude': longitudes.toString()
-          });
-          if (response.statusCode == 200) {
-            var responseBody = jsonDecode(response.body);
-            if (responseBody['success'] == true) {
-              print("NULL변경 성공");
-            } else {
-              print("NULL변경 실패");
-            }
+    {
+      try {
+        var response = await http.post(Uri.parse(API.nullPosition), body: {
+          'userId': widget.userId, //오른쪽에 validate 확인할 id 입력
+          'latitude': latitudes.toString(),
+          'longitude': longitudes.toString()
+        });
+        if (response.statusCode == 200) {
+          var responseBody = jsonDecode(response.body);
+          if (responseBody['success'] == true) {
+            print("NULL변경 성공");
+          } else {
+            print("NULL변경 실패");
           }
-        } catch (e) {
-          showToastMessage("NULL변경 실패");
-          print(e.toString());
         }
+      } catch (e) {
+        showToastMessage("NULL변경 실패");
+        print(e.toString());
       }
+    }
 
   }
-
-
-
 
   newOrderList() async {
     try {
@@ -193,67 +191,68 @@ class MainScreenState extends State<MainScreen> {
       );
       if (response.statusCode == 200) {
         //orderLocations= [];
-        newOrders.clear();
         var responseBody = jsonDecode(response.body);
         if (responseBody['success'] == true) {
           print("오더 리스트 불러오기 성공");
-          if(_orderId.isEmpty) islistEmpty=true;
+          if(_newOrder.isEmpty) islistEmpty=true;
           else islistEmpty=false;
 
           List<dynamic> responseList = responseBody['userData'];
           for (int i = 0; i < responseList.length; i++) {
             if(islistEmpty) {
-              _orderId.add(int.parse(responseList[i]['orderId']));
+              final orderEntries={int.parse(responseList[i]['orderId']):responseList[i]['storeLocation']};
+              _newOrder.addEntries(orderEntries.entries);
             }
             else {
-              if(!_orderId.contains(int.parse(responseList[i]['orderId']))) {
-                _orderId.add(int.parse(responseList[i]['orderId']));
+              if (!_newOrder.containsKey(int.parse(responseList[i]['orderId']))) {
+                final orderEntries = {int.parse(responseList[i]['orderId']): responseList[i]['storeLocation']};
+                _newOrder.addEntries(orderEntries.entries);
                 newAlarm = true;
               }
             }
 
-              //print(OrderDetail.fromJson(responseList[i]));
-              String orderLocation =
-              (responseList[i]['storeLocation']).toString();
-              final locationSplitList = orderLocation.split(' ');
-              orderLocation = locationSplitList[0] +
-                  " " +
-                  locationSplitList[1] +
-                  " " +
-                  locationSplitList[2];
-              print("orderListLocation 출력 $orderLocation");
-              if(newAlarm){
-                newloca=orderLocation;
-                newOrderId=(int.parse(responseList[i]['orderId']));
-                print("새로운 동: $newloca");
-                print("새로운 주문번호: $newOrderId");
-                _sendMessage("주문번호"+newOrderId.toString()+" "+newloca.toString()+"배차 받으시겠습니까?");
-              }
-              if(detaillist.containsKey(orderLocation) == false){
-                detaillist.addEntries({orderLocation: [OrderDetail.fromJson(responseList[i])]}.entries);
-              }
-              else{
-                detaillist[orderLocation]?.add(OrderDetail.fromJson(responseList[i]));
-              }
-
-              if (orderLocations.containsKey(orderLocation) == false) {
-                orderLocations.addEntries({orderLocation: 1}.entries);
-              } //여기서 바로 스플릿해서 지도 넣는데 맵으로 넣자자자자자ㅏ잦
-              else {
-                orderLocations[orderLocation] =
-                    orderLocations[orderLocation]! + 1;
-              }
-              print(orderLocations.entries);
-            newAlarm = false;
+            //print(OrderDetail.fromJson(responseList[i]));
+            String orderLocation =
+            (responseList[i]['storeLocation']).toString();
+            final locationSplitList = orderLocation.split(' ');
+            orderLocation = locationSplitList[0] +
+                " " +
+                locationSplitList[1] +
+                " " +
+                locationSplitList[2];
+            print("orderListLocation 출력 $orderLocation");
+            if(newAlarm){
+              newloca=orderLocation;
+              newOrderId=(int.parse(responseList[i]['orderId']));
+              print("새로운 동: $newloca");
+              print("새로운 주문번호: $newOrderId");
+              _sendMessage("n주문번호"+newOrderId.toString()+" "+newloca.toString()+"배차 받으시겠습니까?");
             }
+            if(detaillist.containsKey(orderLocation) == false){
+              detaillist.addEntries({orderLocation: [OrderDetail.fromJson(responseList[i])]}.entries);
+            }
+            else{
+              detaillist[orderLocation]?.add(OrderDetail.fromJson(responseList[i]));
+            }
+
+            if (orderLocations.containsKey(orderLocation) == false) {
+              orderLocations.addEntries({orderLocation: 1}.entries);
+            } //여기서 바로 스플릿해서 지도 넣는데 맵으로 넣자자자자자ㅏ잦
+            else {
+              orderLocations[orderLocation] =
+                  orderLocations[orderLocation]! + 1;
+            }
+            print(orderLocations.entries);
+            newAlarm = false;
           }
-        } else {
-          print("오더 리스트 불러오기 실패");
         }
-        setState(() {
-          circleCluster();
-        });
-        return orderLocations;
+      } else {
+        print("오더 리스트 불러오기 실패");
+      }
+      setState(() {
+        circleCluster();
+      });
+      return orderLocations;
     } catch (e) {
       print(e.toString());
     }
@@ -279,7 +278,6 @@ class MainScreenState extends State<MainScreen> {
         });
       } catch (e) {
         // Ignore error, but notify state
-        setState(() {});
       }
     }
   }
@@ -454,7 +452,7 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
-   /* BluetoothConnection.toAddress(widget.server.address).then((_connection) {
+    /* BluetoothConnection.toAddress(widget.server.address).then((_connection) {
       print('Connected to the device');
       connection = _connection;
       setState(() {
@@ -490,7 +488,7 @@ class MainScreenState extends State<MainScreen> {
         isConnecting = false;
         isDisconnecting = false;
       });
-print("===========================================================================");
+      print("===========================================================================");
       connection!.input!.listen(_onDataReceived).onDone(() {
         // Example: Detect which side closed the connection
         // There should be `isDisconnecting` flag to show are we are (locally)
@@ -528,7 +526,6 @@ print("=========================================================================
     });
 
     //addressToPM();
-    newOrders.clear();
     detaillist.clear();
     getCurrentLocation();
 
@@ -569,10 +566,22 @@ print("=========================================================================
 
     // Create message if there is new line character
     String dataString = String.fromCharCodes(buffer);
-    print("데이터ㅓㅓㅓㅓㅓㅓㅓㅓ "+dataString);
-    if(dataString=="accepted") {
-      _sendMessage("수락했군요");
+    print(dataString);
+    if(dataString.contains("accepted")) {
+      print("1단계통과");
+      accept_orderId=int.parse(dataString.substring(8));
+      print(accept_orderId);
+      if(_newOrder.containsKey(accept_orderId)){
+        print("2단계통과");
+        addressToPM(_newOrder[accept_orderId]);
+        _sendMessage("d"+circlelongitude.toString()+","+ circlelatitude.toString());
+        print("임무완수");
+      }
     }
+    setOrderState(accept_orderId);
+
+    print("heyyyyyyyyyyyyyyyyyyyy");
+
     int index = buffer.indexOf(13);
     if (~index != 0) {
       setState(() {
@@ -785,8 +794,8 @@ print("=========================================================================
                           attendance = value;
                           if(value==true){
 
-                                StartRefresh();
-                                UpdatePreferences();
+                            StartRefresh();
+                            UpdatePreferences();
                             Fluttertoast.showToast(
                                 msg: "출근하였습니다.",
                                 toastLength: Toast.LENGTH_SHORT,
@@ -853,7 +862,6 @@ print("=========================================================================
                       onPressed: (){
                         setState(() {
                           isOrderlist = false;
-                          newOrders.clear();
                           detaillist.clear();
                           orderLocations.clear();
                           orders.clear();
