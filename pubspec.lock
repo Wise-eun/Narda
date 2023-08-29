@@ -342,14 +342,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
-  flutter_reactive_ble:
-    dependency: "direct main"
-    description:
-      name: flutter_reactive_ble
-      sha256: dfcd3cca271a054121ef96fde0fdad43274a5a38b423fc3f519fd9edc43e42c9
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.1.1"
   flutter_sliding_up_panel:
     dependency: "direct main"
     description:
@@ -384,14 +376,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.2.2"
-  functional_data:
-    dependency: transitive
-    description:
-      name: functional_data
-      sha256: aefdec4365452283b2a7cf420a3169654d51d3e9553069a22d76680d7a9d7c3d
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1"
   geocoding:
     dependency: "direct main"
     description:
@@ -552,6 +536,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.0"
+  latlong2:
+    dependency: "direct main"
+    description:
+      name: latlong2
+      sha256: "08ef7282ba9f76e8495e49e2dc4d653015ac929dce5f92b375a415d30b407ea0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.2"
   lints:
     dependency: transitive
     description:
@@ -737,22 +729,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
-  reactive_ble_mobile:
-    dependency: transitive
-    description:
-      name: reactive_ble_mobile
-      sha256: "2fdd8bcd00533f3e1e544030edeba723ce2dfdd24c3b22a04103b410b1272290"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.1.1"
-  reactive_ble_platform_interface:
-    dependency: transitive
-    description:
-      name: reactive_ble_platform_interface
-      sha256: d0c0041de584df5c697d276ae8c3ddc767b2c364ed29b4ae25126c57e4467cba
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.1.1"
   rxdart:
     dependency: transitive
     description:

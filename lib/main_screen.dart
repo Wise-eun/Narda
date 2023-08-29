@@ -5,7 +5,7 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+//import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -25,6 +25,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:speelow/bluetoothConnecting.dart';
+import 'package:latlong2/latlong.dart';
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
@@ -188,6 +190,14 @@ class MainScreenState extends State<MainScreen> {
 
   }
 
+  calculateDistance(destinationLat,destinationLong)  {
+    double distance = 0;
+
+
+    return distance;
+  }
+
+
   newOrderList() async {
     try {
       var response = await http.post(
@@ -202,6 +212,7 @@ class MainScreenState extends State<MainScreen> {
           else islistEmpty=false;
 
           List<dynamic> responseList = responseBody['userData'];
+          String newStoreLocation = "";
           for (int i = 0; i < responseList.length; i++) {
             if(islistEmpty) {
               final orderEntries={int.parse(responseList[i]
@@ -211,6 +222,7 @@ class MainScreenState extends State<MainScreen> {
             else {
               if (!_newOrder.containsKey(int.parse(responseList[i]['orderId']))) {
                 final orderEntries = {int.parse(responseList[i]['orderId']): responseList[i]['storeLocation']};
+                newStoreLocation = responseList[i]['storeLocation'];
                 _newOrder.addEntries(orderEntries.entries);
                 newAlarm = true;
               }
@@ -227,11 +239,24 @@ class MainScreenState extends State<MainScreen> {
                 locationSplitList[2];
             print("orderListLocation 출력 $orderLocation");
             if(newAlarm){
-              newloca=orderLocation;
-              newOrderId=(int.parse(responseList[i]['orderId']));
-              print("새로운 동: $newloca");
-              print("새로운 주문번호: $newOrderId");
-              _sendMessage("n주문번호"+newOrderId.toString()+" "+newloca.toString()+"배차 받으시겠습니까?");
+              newOrderAddress(orderLocation).then((result) async {
+                print("주소변환 결과 $result");
+                var distance = Distance();
+                final km = distance.as(LengthUnit.Meter, LatLng(result[0], result[1]),
+                    LatLng(latitudes, longitudes));
+                print("새로운 오더와 현재 위치 거리 : ${km/1000}");
+                final SharedPreferences pref = await SharedPreferences.getInstance();
+                try{
+                  double deliveryRadius = pref.getDouble('_deliveryRadius')!;
+                  if(deliveryRadius >= km/1000){
+                    newloca=orderLocation;
+                    newOrderId=(int.parse(responseList[i]['orderId']));
+                    print("새로운 동: $newloca");
+                    print("새로운 주문번호: $newOrderId");
+                    _sendMessage("n주문번호"+newOrderId.toString()+" "+newloca.toString()+"배차 받으시겠습니까?");
+                  }
+                }catch(e){}
+              });
             }
             if(detaillist.containsKey(orderLocation) == false){
               detaillist.addEntries({orderLocation: [OrderDetail.fromJson(responseList[i])]}.entries);
@@ -270,6 +295,15 @@ class MainScreenState extends State<MainScreen> {
     print(address);
     print('좌표 :$circlelatitude, $circlelongitude');
   }
+
+  newOrderAddress(String address) async {
+    List<Location> locations = await locationFromAddress(address);
+    List<double> list = [];
+    list.add(locations[0].latitude.toDouble());
+    list.add(locations[0].longitude.toDouble());
+    return list;
+  }
+
   void _sendMessage(String addr) async {
 
 
@@ -303,7 +337,6 @@ class MainScreenState extends State<MainScreen> {
           setState(() {
             latitudes = position.latitude;
             longitudes = position.longitude;
-            _sendMessage("o"+longitudes.toString()+","+latitudes.toString());
 
             NLatLng target = NLatLng(latitudes, longitudes);
             NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
@@ -328,7 +361,7 @@ class MainScreenState extends State<MainScreen> {
     print('circlecluster');
     print(orderLocations["경상북도 경산시 대동"]);
     for (MapEntry element in orderLocations.entries) {
-      //addressToPM(element.key);
+      addressToPM(element.key);
       List<Location> locations = await locationFromAddress(element.key);
       circlelatitude = locations[0].latitude.toDouble();
       circlelongitude = locations[0].longitude.toDouble();
@@ -611,8 +644,8 @@ class MainScreenState extends State<MainScreen> {
 
   List<String> list = ["배달비 높은 순", "거리순", "경과시간순"];
   String? dropdownValue = "배달비 높은 순";
-  late FlutterReactiveBle flutterReactiveBle = FlutterReactiveBle();
-  final _devices = <DiscoveredDevice>[];
+  //late FlutterReactiveBle flutterReactiveBle = FlutterReactiveBle();
+  //final _devices = <DiscoveredDevice>[];
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -715,6 +748,7 @@ class MainScreenState extends State<MainScreen> {
           onTap: () {
             //toast띄우기 그리고 바로 배차
             addressToPM(orders[index].storeLocation);
+            _sendMessage("o"+longitudes.toString()+","+latitudes.toString());
             _sendMessage("d"+circlelongitude.toString()+","+ circlelatitude.toString());
 
             setOrderState(orders[index].orderId);
