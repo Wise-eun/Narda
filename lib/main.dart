@@ -5,7 +5,6 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 //import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import 'package:kakao_flutter_sdk_navi/kakao_flutter_sdk_navi.dart';
 import 'package:speelow/find_id_screen.dart';
 import 'package:speelow/main_screen.dart';
 import 'package:speelow/selectBondedDevicePage.dart';
@@ -51,7 +50,6 @@ import 'package:flutter/material.dart';
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  KakaoSdk.init(nativeAppKey: '3e8531d2fdf84a885535fc7c4ac309ca');
   await initializeDateFormatting();
   WidgetsFlutterBinding.ensureInitialized();
   await NaverMapSdk.instance.initialize(clientId: '41fe7y8m8r');
