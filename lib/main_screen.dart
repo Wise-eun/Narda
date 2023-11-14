@@ -246,16 +246,16 @@ class MainScreenState extends State<MainScreen> {
                     LatLng(latitudes, longitudes));
                 print("새로운 오더와 현재 위치 거리 : ${km/1000}");
                 final SharedPreferences pref = await SharedPreferences.getInstance();
-                try{
-                  double deliveryRadius = pref.getDouble('_deliveryRadius')!;
-                  if(deliveryRadius >= km/1000){
+                //try{
+                  //double deliveryRadius = pref.getDouble('_deliveryRadius')!;
+                  //if(deliveryRadius >= km/1000){
                     newloca=orderLocation;
                     newOrderId=(int.parse(responseList[i]['orderId']));
                     print("새로운 동: $newloca");
                     print("새로운 주문번호: $newOrderId");
                     _sendMessage("n주문번호"+newOrderId.toString()+" "+newloca.toString()+"배차 받으시겠습니까?");
-                  }
-                }catch(e){}
+                  //}
+                //}catch(e){ print("개빡침");}
               });
             }
             if(detaillist.containsKey(orderLocation) == false){
@@ -337,6 +337,7 @@ class MainScreenState extends State<MainScreen> {
           setState(() {
             latitudes = position.latitude;
             longitudes = position.longitude;
+            _sendMessage("o"+longitudes.toString()+","+latitudes.toString());
 
             NLatLng target = NLatLng(latitudes, longitudes);
             NCameraUpdate nCameraUpdate = NCameraUpdate.withParams(
@@ -666,10 +667,10 @@ class MainScreenState extends State<MainScreen> {
         String deliveryDong = "";
 
         final storeLocationList = orders[index].storeLocation.split(' ');
-        storeDong = storeLocationList[storeLocationList.length - 2];
+        storeDong = storeLocationList[storeLocationList.length - 1];
 
         final deliveryLocationList = orders[index].deliveryLocation.split(' ');
-        deliveryDong = deliveryLocationList[deliveryLocationList.length - 2];
+        deliveryDong = deliveryLocationList[deliveryLocationList.length - 1];
 
         DateTime orderTime = DateTime.parse(orders[index].orderTime);
 
