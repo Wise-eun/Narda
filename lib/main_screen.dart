@@ -169,21 +169,19 @@ class MainScreenState extends State<MainScreen> {
     else
     {
       try {
-        var response = await http.post(Uri.parse(API.nullPosition), body: {
+        var response = await http.post(Uri.parse(API.deletePosition), body: {
           'userId': widget.userId, //오른쪽에 validate 확인할 id 입력
-          'latitude': latitudes.toString(),
-          'longitude': longitudes.toString()
         });
         if (response.statusCode == 200) {
           var responseBody = jsonDecode(response.body);
           if (responseBody['success'] == true) {
-            print("NULL변경 성공");
+            print("Delete 성공");
           } else {
-            print("NULL변경 실패");
+            print("Delete 실패");
           }
         }
       } catch (e) {
-        showToastMessage("NULL변경 실패");
+        showToastMessage("Delete 실패");
         print(e.toString());
       }
     }
@@ -848,6 +846,7 @@ class MainScreenState extends State<MainScreen> {
                             _streamSubscription?.cancel();
                             StopRefresh();
                             UpdatePreferences();
+
                             Fluttertoast.showToast(
                                 msg: "퇴근하였습니다.",
                                 toastLength: Toast.LENGTH_SHORT,
